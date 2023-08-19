@@ -61,8 +61,11 @@ print("letsgooooo")
 # testing 6
 print("loooooo")
 
-print("text")
 
-# I still don't know what Iam doing !!
-print("text")
-print("text")
+# things changed in the letsgoo branch
+print("Claskyyy")
+
+
+# plsdiosidj
+print("shlusky")
+
