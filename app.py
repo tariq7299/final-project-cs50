@@ -36,7 +36,7 @@ def extract_all_user_transactions(current_user_id):
     return db.execute("SELECT ROW_NUMBER() OVER (ORDER BY transaction_date DESC) AS RowNumber, transaction_id, transaction_date, quote_symbol, price_per_share, shares, holding_value, trading_fees, total_amount, transaction_type FROM transactions WHERE user_id = ?", current_user_id)
 
 
-print("text")
+print("text")      
 print("text")
 
 print("text")
@@ -66,9 +66,9 @@ print("loooooo")
 print("Claskyyy")
 
 
-# plsdiosidj
-print("shlusky")
+# things changed in the bebe branch
+print("Claskyyy")
 
 
- # things changed in the main branch
-print("goooooo")
+ # things changed in the bebe branch
+print("Claskyyy")
