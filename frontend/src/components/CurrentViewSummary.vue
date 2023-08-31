@@ -14,6 +14,7 @@
 
 <script>
     import UserFinance from './UserFinance.vue'
+    import axios from 'axios'
 
     export default {
         name: "CurrentViewSummary",
