@@ -29,7 +29,6 @@ class UsersSpendings(db.Model):
     date = db.Column(db.Date, default=datetime.now(), nullable=False)
     amount_spent = db.Column(db.Integer, nullable=False)
     item_type = db.Column(db.String(64), unique=False)
-
     # Define the relationship between UserSpending and User
     user = db.relationship('Users', backref=db.backref('spendings', lazy=True))
     

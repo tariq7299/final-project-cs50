@@ -126,3 +126,29 @@ def show_years():
     print('result is ', result)
     for year, in result:
         print(f'Year: {year}')
+        
+def show_months():
+    
+    selected_year   = 2023
+    
+    # Replace this user id from by the one foumd in session['user_id']
+    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+
+    # extract() is used to get the years from date object !, of the column 'date' of type 'db.date'
+    # with_entities() It gets specific columns only
+    months = UsersSpendings.query.with_entities(
+            extract('month', UsersSpendings.date)
+        ).filter(
+            UsersSpendings.user_id == salah_id
+        ).filter(
+            extract('year', UsersSpendings.date) == selected_year
+        ) .group_by(
+            extract('month', UsersSpendings.date)
+        ).all()
+
+    str_month_list = []
+    for int_month, in months:
+        str_month = datetime(1, int_month, 1).strftime('%b')
+        str_month_list.append(str_month)
+
+    [print(month) for month in str_month_list]

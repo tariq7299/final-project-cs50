@@ -8,87 +8,67 @@ appRoutes = Blueprint("routes", __name__)
 
 # @<bluebrint name>.route()
 @appRoutes.route("/fetchYears", methods=["POST","GET"])
-def submitData():
+def fetchYears():
     response_object = {'status':'success'}
     if request.method == "GET":
         
-        # Take user id from session['user_id']
+        # Replace this user id from by the one foumd in session['user_id']
         salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
 
+        # extract() is used to get the years from date object !, of the column 'date' of type 'db.date'
+        # with_entities() It gets specific columns only
         years = UsersSpendings.query.with_entities(
                 extract('year', UsersSpendings.date)
             ).filter(
                 UsersSpendings.user_id == salah_id
             ).group_by(
                 extract('year', UsersSpendings.date)
+            ).order_by(
+                extract('year', UsersSpendings.date).desc()
             ).all()
         
         # Add years data to response object
+        # years[0] this will access the first value/element in the tuple of 'year' in 'years' list
         response_object['years'] = [year[0] for year in years]
-
         print(response_object['years'])
     # Return response object as JSON
     return jsonify(response_object)
         
-            
-        
-        
-        
-    
-
-# @<bluebrint name>.route()
-@appRoutes.route("/dataentry2", methods=["POST","GET"])
-def submitData2():
+@appRoutes.route("/fetchMonths", methods=["POST","GET"])
+def fetchMonths():
     response_object = {'status':'success'}
     if request.method == "POST":
-        post_data = request.get_json()
-        company   = post_data.get('company'),
-        print(company)
-        response_object['message'] ='Data added!'
         
-        # You can do this 
-        response_object['message'] ='Data added!'
-        response_object['company'] = company
-    
-        print(response_object)
-    return jsonify(response_object)
-
-# @<bluebrint name>.route()
-@appRoutes.route("/showUsers", methods=["POST","GET"])
-def showUsers():
-    response_object = {'status':'success'}
-    if request.method == "POST":
         post_data = request.get_json()
-        company   = post_data.get('company'),
-        print(company)
-        response_object['message'] ='Data added!'
+        selected_year   = post_data.get('selectedYear')
         
-        # You can do this 
-        response_object['message'] ='Data added!'
-        response_object['company'] = company
-    
-        print(response_object)
-    return jsonify(response_object)
-    
+        # Replace this user id from by the one foumd in session['user_id']
+        salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
 
-        ## some very important notes:
-"""
-However, if you need to access the SECRET_KEY or any other configuration value within your routes, you can import them from app.config in your routes.py file:
+        # extract() is used to get the years from date object !, of the column 'date' of type 'db.date'
+        # with_entities() It gets specific columns only
+        months = UsersSpendings.query.with_entities(
+                extract('month', UsersSpendings.date)
+            ).filter(
+                UsersSpendings.user_id == salah_id
+            ).filter(
+                extract('year', UsersSpendings.date) == selected_year
+            ) .group_by(
+                extract('month', UsersSpendings.date)
+            ).order_by(
+                extract('month', UsersSpendings.date).desc()
+            ).all()
 
-from app import app  # Import the 'app' instance from __init__.py
-from flask import request, jsonify
-
-@app.route("/dataentry", methods=["POST", "GET"])
-def submitData():
-    secret_key = app.config.get("SECRET_KEY")
-    # ... your route logic ...
-    
-            &#&&#&&#&#&#&#&#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$$#$#$#
+        str_month_list = []
+        for int_month, in months:
+            str_month = datetime(1, int_month, 1).strftime('%b')
+            str_month_list.append(str_month)
             
-You should not import anything from the run.py or config.py files in your routes.py file. These files are used to run and configure your Flask application, respectively. They should not be imported by your routes or view functions.
-
-If you have defined any custom modules or objects that are required by your route and view function, you can import them in your routes.py file as well. For example, if you have defined a custom database model in a separate module, you can import it like this:
-
-from mymodule import MyModel
-    
-"""
+        # Add years data to response object
+        # years[0] this will access the first value/element in the tuple of 'year' in 'years' list
+        print(selected_year)
+        response_object['months'] = str_month_list
+        
+    # Return response object as JSON
+    return jsonify(response_object)
+        
