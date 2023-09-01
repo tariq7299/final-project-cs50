@@ -5,9 +5,6 @@
 </template>
 
 <script>
-    import UserFinance from './UserFinance'
-    import axios from 'axios'
-
     export default {
         name: "Header",
         components: {

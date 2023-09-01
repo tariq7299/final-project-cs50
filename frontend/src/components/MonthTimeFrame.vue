@@ -100,7 +100,7 @@ import axios from 'axios'
             emitTimeFrame () {
                 const spendingTimeFrame = {year: this.selectedYear, month: this.selectedMonth}
                 this.$emit('userChoseMonthTimeFrame', spendingTimeFrame)
-                console.log(spendingTimeFrame)
+                // console.log(spendingTimeFrame)
             },
         },
         mounted() {

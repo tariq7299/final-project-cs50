@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <nav class="navbar bg-body-tertiary fixed-top">
             <div class="container-fluid">
             <a class="navbar-brand" href="#">goldgardyn</a>
@@ -41,25 +42,46 @@
             </div>
         </div>
         </nav>
+
         <Header title="Spending"/>
+
         <CurrentViewSummary></CurrentViewSummary>
-        <MonthTimeFrame></MonthTimeFrame>
+
+        <MonthTimeFrame @userChoseMonthTimeFrame="extractTimeFrame"></MonthTimeFrame>
+
+        <SpendingsDays :year="selectedYear" :month="selectedMonth"></SpendingsDays>
+
     </div>
 </template>
 
 <script>
     import Header from './../components/Header'
     import CurrentViewSummary from './../components/CurrentViewSummary'
-import MonthTimeFrame from '@/components/MonthTimeFrame.vue';
+    import MonthTimeFrame from '@/components/MonthTimeFrame.vue';
+    import SpendingsDays from '@/components/SpendingsDays.vue';
 
     export default {
         name: "Home",
         components: {
-    Header,
-    CurrentViewSummary,
-    MonthTimeFrame
-},
-
+            Header,
+            CurrentViewSummary,
+            MonthTimeFrame,
+            SpendingsDays,
+        },
+        data() {
+            return {
+                selectedYear: null,
+                selectedMonth: null
+            }
+        },
+        methods: {
+            extractTimeFrame(spendingTimeFrame) {
+                this.selectedYear = spendingTimeFrame.year
+                this.selectedMonth = spendingTimeFrame.month
+                console.log(this.selectedYear)
+                console.log(this.selectedMonth)
+            }
+        },
 }
 </script>
 

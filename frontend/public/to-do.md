@@ -27,3 +27,15 @@
 - Change the years drop down and make more user friendly
 - Remove the input argument 'selectYear' fetchMonths(selectYear), and instead rely on v-model version of "selectedYear" @#
 
+
+
+
+
+                                # TOMMOROOE
+                                -----------
+
+- Creta the initiona html and css for spendings days
+- GET spendings of days in the slected month and all the spending info in each day from SERVER
+- Creata inside spendings days, days as child component that precious the day name, total spending in that day, Item Type
+
+- Create a part where a user can enter a new daily spend (amount, item type) !
