@@ -37,42 +37,66 @@ import axios from 'axios'
             }
         },
         methods: {
-            // This function will populate <select> of months, and also emits the timeFrame (selectedYear & selectedMonth)
-            fetchYearsAndEmitTimeFrame () {
-                const path = 'http://127.0.0.1:8081/fetchYears'
-                axios.get(path)
-                    .then(response => {
+            // **NOTICE** ---> THERE IS ANOTHER WAY TO DO THE FOLLOWING PART OF CODE, which can be found in 'monthTimeFrame' branch
 
-                        // The response is basically an Object ('response' = { data:{ years:[] } } ) and inside it there are another objects one of them is  "data" and inside "data" there are another objects one of them is 'years' and 'years' is a list [] ! 
-                        this.years = response.data.years
-
-                        // Assign the first elemnt of years[] (that will be the most recent spendings year of the current user, becasue i have ordered them as DESC) to "selectedYear"
-                        this.selectedYear = this.years[0]
-
-                        // 
-                        this.fetchMonthsAndEmitTimeFrame()
-
-                    })
-                    .catch(error => {
-                        console.error('Error fetching data:', error)
-                    })
+            // This function will GET spendings years[] from server which belongs to the current user
+            async fetchYears() {
+                try {
+                    const path = 'http://127.0.0.1:8081/fetchYears'
+                    const response = await axios.get(path);
+                    this.years = response.data.years;
+                    this.selectedYear = this.years[0];
+                    await this.fetchMonths();
+                }   catch (error) {
+                    console.error('Error fetching data:', error);
+                }
             },
-            fetchMonthsAndEmitTimeFrame() {
-            const path = 'http://127.0.0.1:8081/fetchMonths'
-            axios.post(path, {
-                selectedYear:this.selectedYear
-            })
-            .then(response => {
-                this.months = response.data.months
-                this.selectedMonth = this.months[0]
-                this.emitTimeFrame()
-            })
-            .catch(err =>{
-                console.log(err);
-            });
-          },
-            //    fetch all months in the selected year
-            // return months in the choosen year (months)
+
+            // This function will GET spendings months[] of 'selectedYear' from server which belongs to the current user
+            async fetchMonths() {
+                try {
+                    const path = 'http://127.0.0.1:8081/fetchMonths'
+
+                    // Perform asynchronous operation
+                    const response = await axios.post(path,{
+                        selectedYear:this.selectedYear
+                    });
+
+                    this.months = response.data.months
+                    this.selectedMonth = this.months[0]
+                    
+                } catch (error) {
+                    // Handle error
+                    console.error(error);
+                }
+            },
+
+            // This function will GET spendings years[] from server which belongs to the current user, and the emits timeFrame (selectedYear & selectedMonth) to parent component (Home.vue)
+            // This gets called when user reloads the page only !!
+            async fetchYearsAndEmitTimeFrame() {
+                try {
+                    await this.fetchYears();
+                    await this.fetchMonths();
+                    this.emitTimeFrame();
+                }   catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            },
+
+            // This function will GET spendings months[] from server which belongs to the current user, and the emits timeFrame (selectedYear & selectedMonth) to parent component (Home.vue)
+            // This gets called when user choose a "year" from <select> input of years
+            async fetchMonthsAndEmitTimeFrame() {
+                try {
+                    await this.fetchMonths();
+                    this.emitTimeFrame();
+                    
+                } catch (error) {
+                    // Handle error
+                    console.error(error);
+                }
+            },
+
+            // THis gets called when user loads the page, or chooses a year or use chooses a month 
             emitTimeFrame () {
                 const spendingTimeFrame = {year: this.selectedYear, month: this.selectedMonth}
                 this.$emit('userChoseMonthTimeFrame', spendingTimeFrame)
@@ -80,9 +104,8 @@ import axios from 'axios'
             },
         },
         mounted() {
-            // change fetchYears to fetchYear
+            // When user loads the page
             this.fetchYearsAndEmitTimeFrame()
-            // this.emitMonthTimeFrame()
 
         }
     }
