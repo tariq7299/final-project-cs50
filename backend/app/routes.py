@@ -1,6 +1,7 @@
 from flask import request, jsonify, Blueprint
 from app.models import db, Users, UsersSpendings
 from datetime import datetime
+from sqlalchemy import extract, func
 
 
 appRoutes = Blueprint("routes", __name__)
@@ -14,25 +15,23 @@ def submitData():
         # Take user id from session['user_id']
         salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
 
+        years = UsersSpendings.query.with_entities(
+                extract('year', UsersSpendings.date)
+            ).filter(
+                UsersSpendings.user_id == salah_id
+            ).group_by(
+                extract('year', UsersSpendings.date)
+            ).all()
         
-        # Get all spendings for Ahmed in the year 2020
-        start_date = datetime(2020, 1, 1)
-        end_date = datetime(2020, 12, 31)
-        salah_spendings_2020 = UsersSpendings.query.filter_by(user_id=salah_id).filter(UsersSpendings.date >= start_date, UsersSpendings.date <= end_date).all()
-        
-        # Convert the spendings data to a list of dictionaries
-        spendings_data = []
-        for spending in salah_spendings_2020:
-            spending_dict = {
-                'spending_id': spending.spending_id,
-                'user_id': spending.user_id,
-                'date': spending.date,
-                'item_type': spending.item_type
-            }
-            spendings_data.append(spending_dict)
+        # Add years data to response object
+        response_object['years'] = [year[0] for year in years]
 
-        # Return the spendings data as a JSON response
-        return jsonify(spendings_data)
+        print(response_object['years'])
+    # Return response object as JSON
+    return jsonify(response_object)
+        
+            
+        
         
         
     

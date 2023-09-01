@@ -1,5 +1,6 @@
 from datetime import datetime
 from app.models import db, Users, UsersSpendings
+from sqlalchemy import extract, func
 
 def create_db():
     
@@ -89,3 +90,39 @@ def pop_spend():
     
     db.session.commit()
     
+def show_years():
+    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    
+    result = db.session.query(
+        extract('year', UsersSpendings.date)
+    ).filter(
+        UsersSpendings.user_id == salah_id
+    ).group_by(
+        extract('year', UsersSpendings.date)
+    ).all()
+    
+    # Same but with the usage of ClassName.query()
+    """
+        result = UsersSpendings.query.with_entities(
+                extract('year', UsersSpendings.date)
+            ).filter(
+                UsersSpendings.user_id == mark_id
+            ).group_by(
+                extract('year', UsersSpendings.date)
+            ).all()
+            
+        ------> # A note about with_entities()
+        In this example, we use the with_entities() method to specify that we want to select only the date and amount_spent columns from the UsersSpendings table. The result is a list of tuples where each tuple contains the values of these two columns for one row.
+        result = UsersSpendings.query.with_entities(
+            UsersSpendings.date,
+            UsersSpendings.amount_spent
+        ).all()
+
+        # Print the result
+        for date, amount_spent in result:
+            print(f'Date: {date}, Amount Spent: {amount_spent}')
+    """
+    # Print the result
+    print('result is ', result)
+    for year, in result:
+        print(f'Year: {year}')

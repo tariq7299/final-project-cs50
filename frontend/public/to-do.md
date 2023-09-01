@@ -1,6 +1,7 @@
 - Change routes.vue to index.js
 
 # Backend 
+=========
 
 ## models.py
 - Add indexes to databases to make querieas it faster
@@ -11,6 +12,7 @@
 - Find a better way to import datetime module in models.py
 
 # Frontend
+==========
 
 ## GLOBAL
 - Add login and register page
@@ -18,3 +20,5 @@
 
 ## MonthTimeFram
 - Remove async and await from mounted() {}
+- Choose the last/current year of User's spendings by default from the select input
+-

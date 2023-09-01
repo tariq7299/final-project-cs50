@@ -2,13 +2,13 @@
     <div class="row text-start">
         <div class="col-6">
             <select v-model="selectedYear" @change="fetchMonths">
-                <option disabled value="">Please select one</option>
-                <option v-for="year in years" :value="year.value">{{ year.label }}</option>
+                <option disabled value="">Select year</option>
+                <option v-for="year in years" :value="year">{{ year }}</option>
             </select>
         </div>
         <div class="col-6">
             <select v-model="selectedMonth" @change="fetchMonthData">
-                <option disabled value="">Please select one</option>
+                <option disabled value="">Select month</option>
                 <option v-for="month in months" :value="month.value">{{ month.label }}</option>
             </select>
         </div>
@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
     export default {
         name: "MonthTimeFrame",
         data () {
@@ -24,11 +26,11 @@
 
                 years: [],
 
-                selectedYear: 'option2',
+                selectedYear: '',
 
                 months: [],
 
-                selectedMonth: 'option3'
+                selectedMonth: ''
                 
             }
         },
@@ -37,7 +39,9 @@
                 const path = 'http://127.0.0.1:5000/fetchYears'
                 axios.get(path)
                     .then(response => {
-                        this.years = response.data
+                        this.years = response.data.years
+                        console.log("response.data", response.data)
+                        console.log("response.data.years", response.data.years)
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error)
