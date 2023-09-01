@@ -1,5 +1,7 @@
 from flask import request, jsonify, Blueprint
-from app.models import db, User, UserSpending
+from app.models import db, Users, UsersSpendings
+from datetime import datetime
+
 
 appRoutes = Blueprint("routes", __name__)
 
@@ -9,10 +11,31 @@ def submitData():
     response_object = {'status':'success'}
     if request.method == "GET":
         
+        # Take user id from session['user_id']
+        salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+
+        
+        # Get all spendings for Ahmed in the year 2020
+        start_date = datetime(2020, 1, 1)
+        end_date = datetime(2020, 12, 31)
+        salah_spendings_2020 = UsersSpendings.query.filter_by(user_id=salah_id).filter(UsersSpendings.date >= start_date, UsersSpendings.date <= end_date).all()
+        
+        # Convert the spendings data to a list of dictionaries
+        spendings_data = []
+        for spending in salah_spendings_2020:
+            spending_dict = {
+                'spending_id': spending.spending_id,
+                'user_id': spending.user_id,
+                'date': spending.date,
+                'item_type': spending.item_type
+            }
+            spendings_data.append(spending_dict)
+
+        # Return the spendings data as a JSON response
+        return jsonify(spendings_data)
+        
         
     
-        print(response_object)
-    return jsonify(response_object)
 
 # @<bluebrint name>.route()
 @appRoutes.route("/dataentry2", methods=["POST","GET"])
