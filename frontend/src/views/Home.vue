@@ -49,6 +49,8 @@
 
         <MonthTimeFrame @userChoseMonthTimeFrame="extractTimeFrame"></MonthTimeFrame>
 
+        <MonthTotal :year="selectedYear" :month="selectedMonth"></MonthTotal>
+        
         <SpendingsDays :year="selectedYear" :month="selectedMonth"></SpendingsDays>
 
     </div>
@@ -59,6 +61,7 @@
     import CurrentViewSummary from './../components/CurrentViewSummary'
     import MonthTimeFrame from '@/components/MonthTimeFrame.vue';
     import SpendingsDays from '@/components/SpendingsDays.vue';
+    import MonthTotal from '@/components/MonthTotal.vue';
 
     export default {
         name: "Home",
@@ -67,6 +70,7 @@
             CurrentViewSummary,
             MonthTimeFrame,
             SpendingsDays,
+            MonthTotal,
         },
         data() {
             return {

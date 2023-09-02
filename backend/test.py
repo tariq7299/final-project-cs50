@@ -152,3 +152,43 @@ def show_months():
         str_month_list.append(str_month)
 
     [print(month) for month in str_month_list]
+    
+def month_spendings():
+    
+    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    
+    years = UsersSpendings.query.with_entities(
+                extract('year', UsersSpendings.date)
+            ).filter(
+                UsersSpendings.user_id == salah_id
+            ).group_by(
+                extract('year', UsersSpendings.date)
+            ).order_by(
+                extract('year', UsersSpendings.date).desc()
+            ).all()
+            
+    most_recent_year = years[0][0]
+    print("most_recent_year", most_recent_year)
+            
+    most_recent_month_list = UsersSpendings.query.with_entities(
+                    extract('month', UsersSpendings.date)
+                ).filter(
+                    UsersSpendings.user_id == salah_id
+                ).filter(
+                    extract('year', UsersSpendings.date) == most_recent_year
+                ) .group_by(
+                    extract('month', UsersSpendings.date)
+                ).order_by(
+                    extract('month', UsersSpendings.date).desc()
+                ).first()
+
+    most_recent_month = most_recent_month_list[0]
+    print("most_recent_month", most_recent_month)
+            
+    MonthSpendings = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == most_recent_year).filter(extract('month', UsersSpendings.date) == most_recent_month).order_by(UsersSpendings.date.desc()).all()
+    
+    print("MonthSpendings", MonthSpendings)
+    for spend in MonthSpendings:
+        print("spend", spend)
+        print(spend.date, spend.amount_spent)
+        

@@ -1,4 +1,5 @@
-- Change routes.vue to index.js
+# GLOBAL
+- Remove to-do.md from remote
 
 # Backend 
 =========
@@ -19,14 +20,17 @@
 
 ## GLOBAL
 - Add login and register page
+- 
 
-
+## routes.vue
+- Change routes.vue to index.js
 ## MonthTimeFram
 - Remove async and await from mounted() {} @#
 - Choose the last/current year of User's spendings by default from the select input
 - Change the years drop down and make more user friendly
 - Remove the input argument 'selectYear' fetchMonths(selectYear), and instead rely on v-model version of "selectedYear" @#
-
+- Change the "MonthTimeFrame" to somthing good
+- Make the  most recent month and most_recent_year be calculated in backend
 
 
 

@@ -3,7 +3,7 @@
 config.py
 instance
 additionalComments.md
-to-do.txt
+to-do.md
 .DS_Store
 node_modules
 /dist

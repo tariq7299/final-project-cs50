@@ -30,6 +30,7 @@ import axios from 'axios'
         name: "MonthTimeFrame",
         data () {
             return {
+                
                 years: [],
                 selectedYear:'',
                 months: [],
@@ -42,7 +43,7 @@ import axios from 'axios'
             // This function will GET spendings years[] from server which belongs to the current user
             async fetchYears() {
                 try {
-                    const path = 'http://127.0.0.1:8081/fetchYears'
+                    const path = 'http://127.0.0.1:8081/spendings'
                     const response = await axios.get(path);
                     this.years = response.data.years;
                     this.selectedYear = this.years[0];
@@ -55,7 +56,7 @@ import axios from 'axios'
             // This function will GET spendings months[] of 'selectedYear' from server which belongs to the current user
             async fetchMonths() {
                 try {
-                    const path = 'http://127.0.0.1:8081/fetchMonths'
+                    const path = 'http://127.0.0.1:8081/spendings'
 
                     // Perform asynchronous operation
                     const response = await axios.post(path,{
