@@ -11,6 +11,7 @@
 - Explain lazy=True
 - Understand more db.relationship
 - Find a better way to import datetime module in models.py
+- Removes the zeros in Wed, 13 Sep 2023 00:00:00 GMT ?? from the column of USerSpendings
 
 ## run.py
 - How to find a way to the server url dynamic in the frontend ??, like every time I want to make a axios request I won't have to type the exactly localhost...:5000, because sometimes the port number changes !

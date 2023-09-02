@@ -82,8 +82,6 @@
             extractTimeFrame(spendingTimeFrame) {
                 this.selectedYear = spendingTimeFrame.year
                 this.selectedMonth = spendingTimeFrame.month
-                console.log(this.selectedYear)
-                console.log(this.selectedMonth)
             }
         },
 }

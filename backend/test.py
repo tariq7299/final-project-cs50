@@ -63,8 +63,8 @@ def pop_spend():
     
     salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
     
-    monthStart = 1
-    monthEnd = 5
+    monthStart = 9
+    monthEnd = 10
     monthStep = 1
     dayStart = 1
     dayEnd = 20
