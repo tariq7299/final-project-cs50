@@ -188,7 +188,26 @@ def month_spendings():
     MonthSpendings = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == most_recent_year).filter(extract('month', UsersSpendings.date) == most_recent_month).order_by(UsersSpendings.date.desc()).all()
     
     print("MonthSpendings", MonthSpendings)
-    for spend in MonthSpendings:
-        print("spend", spend)
-        print(spend.date, spend.amount_spent)
+    
+    month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date, 'amount_spent': spending.amount_spent, 'item_type': spending.item_type} for spending in MonthSpendings]
+    
+    # [print(spending) for spending in month_spendings_list]
+    
+    for spending in month_spendings_list:
+        print("spending['date']", spending['date'])
         
+    print('month_spendings_list', month_spendings_list)
+    
+    for spend in MonthSpendings:
+        print("spend.date", spend.date)
+        
+def total_d_spend():
+    
+    # Calculate the total amount spent for each day
+    total_amount_spent_per_day = func.sum(UsersSpendings.amount_spent).label('total_amount_spent_per_day')
+
+    # Modify the query to include the sum calculation and group by day
+    month_spendings = UsersSpendings.query.filter(UsersSpendings.user_id == 2).filter(extract('year', UsersSpendings.date) == 2023).filter(extract('month', UsersSpendings.date) == 9).with_entities(UsersSpendings.date, total_amount_spent_per_day)  # Include the date and sum calculation.group_by(UsersSpendings.date)  # Group by day.order_by(UsersSpendings.date.desc()) \.all() 
+    
+    [print(spending) for spending in month_spendings]
+    

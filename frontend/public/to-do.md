@@ -12,6 +12,7 @@
 - Understand more db.relationship
 - Find a better way to import datetime module in models.py
 - Removes the zeros in Wed, 13 Sep 2023 00:00:00 GMT ?? from the column of USerSpendings
+- 
 
 ## run.py
 - How to find a way to the server url dynamic in the frontend ??, like every time I want to make a axios request I won't have to type the exactly localhost...:5000, because sometimes the port number changes !
@@ -32,6 +33,8 @@
 - Remove the input argument 'selectYear' fetchMonths(selectYear), and instead rely on v-model version of "selectedYear" @#
 - Change the "MonthTimeFrame" to somthing good
 - Make the  most recent month and most_recent_year be calculated in backend
+- Create a total_daily_spendings
+- 
 
 
 
@@ -39,8 +42,6 @@
                                 # TOMMOROOE
                                 -----------
 
-- Creta the initiona html and css for spendings days
-- GET spendings of days in the slected month and all the spending info in each day from SERVER
-- Creata inside spendings days, days as child component that precious the day name, total spending in that day, Item Type
-
-- Create a part where a user can enter a new daily spend (amount, item type) !
+- Remove 00:00 GMT
+- Style the Home page a little biy
+- Create the Add new Expense

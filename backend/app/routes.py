@@ -69,16 +69,24 @@ def spendings():
 
         total_monthly_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == most_recent_year).filter(extract('month', UsersSpendings.date) == most_recent_month).scalar()
         
-        print(total_monthly_spendings)
+        # print(total_monthly_spendings)
         
-        total_daily_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == most_recent_year).filter(extract('month', UsersSpendings.date) == most_recent_month).filter().group_by(extract('day', UsersSpendings.date)).order_by(extract('month', UsersSpendings.date).desc()).all()
+        # total_daily_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == most_recent_year).filter(extract('month', UsersSpendings.date) == most_recent_month).filter().group_by(extract('day', UsersSpendings.date)).order_by(UsersSpendings.date.desc()).all()
         
-        total_daily_spendings_list = [{'total_daily_spending': row[0]} for row in total_daily_spendings]
+        # total_daily_spendings_list = [{'total_daily_spending': row[0]} for row in total_daily_spendings]
         
-        print("total_daily_spendings", total_daily_spendings_list)
-        print("month_spendings", month_spendings)
+        # print("total_daily_spendings", total_daily_spendings_list)
+        # print("month_spendings", month_spendings)
         
-        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date, 'amount_spent': spending.amount_spent, 'item_type': spending.item_type} for spending in month_spendings]
+        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'item_type': spending.item_type} for spending in month_spendings]
+        
+        # print(len(month_spendings_list))        
+        # print(len(total_daily_spendings_list))        
+        # for i in range(len(month_spendings_list)):
+        #     month_spendings_list[i].update(total_daily_spendings_list[i])
+        
+        
+        # [print(spending) for spending in month_spendings_list]
         
         # Add years data to response object
         # years[0] this will access the first value/element in the tuple of 'year' in 'years' list
@@ -94,7 +102,7 @@ def spendings():
         
         response_object['total_monthly_spendings'] = total_monthly_spendings
         
-        response_object['total_daily_spendings'] = total_daily_spendings_list
+        # response_object['total_daily_spendings'] = total_daily_spendings_list
         
         # Return response object as JSON∆
         return jsonify(response_object)
@@ -140,7 +148,6 @@ def RecentMonthSpendings():
                 ).order_by(
                     extract('month', UsersSpendings.date).desc()
                 ).all()
-
         str_month_list = []
         
         for int_month, in months:
@@ -149,18 +156,18 @@ def RecentMonthSpendings():
             
         month_spendings = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).order_by(UsersSpendings.date.desc()).all()
     
-        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date, 'amount_spent': spending.amount_spent, 'item_type': spending.item_type} for spending in month_spendings]
+        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'item_type': spending.item_type} for spending in month_spendings]
         
         total_monthly_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).scalar()
 
-        total_daily_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).filter().group_by(extract('day', UsersSpendings.date)).order_by(extract('month', UsersSpendings.date).desc()).all()
+        # total_daily_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).filter().group_by(extract('day', UsersSpendings.date)).order_by(extract('month', UsersSpendings.date).desc()).all()
 
-        total_daily_spendings_list = [{'total_daily_spending': row[0]} for row in total_daily_spendings]
+        # total_daily_spendings_list = [{'total_daily_spending': row[0]} for row in total_daily_spendings]
 
         response_object['total_monthly_spendings'] = total_monthly_spendings
 
         
-        response_object['total_daily_spendings'] = total_daily_spendings_list
+        # response_object['total_daily_spendings'] = total_daily_spendings_list
 
         response_object['months'] = str_month_list
         response_object['monthSpendings'] = month_spendings_list
@@ -184,23 +191,21 @@ def selectedMonthSpendings():
         selected_month_str   = post_data.get('selectedMonth')
         selected_month_int = datetime.strptime(selected_month_str, '%b').month
 
-     
-        
         month_spendings = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).order_by(UsersSpendings.date.desc()).all()
         
     
-        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date, 'amount_spent': spending.amount_spent, 'item_type': spending.item_type} for spending in month_spendings]
+        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'item_type': spending.item_type} for spending in month_spendings]
         
         total_monthly_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).scalar()
 
-        total_daily_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).filter().group_by(extract('day', UsersSpendings.date)).order_by(extract('month', UsersSpendings.date).desc()).all()
+        # total_daily_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).filter().group_by(extract('day', UsersSpendings.date)).order_by(extract('month', UsersSpendings.date).desc()).all()
 
-        total_daily_spendings_list = [{'total_daily_spending': row[0]} for row in total_daily_spendings]
-
-        response_object['total_monthly_spendings'] = total_monthly_spendings
+        # total_daily_spendings_list = [{'total_daily_spending': row[0]} for row in total_daily_spendings]
+# 
+        # response_object['total_daily_spendings'] = total_daily_spendings_list
 
         
-        response_object['total_daily_spendings'] = total_daily_spendings_list
+        response_object['total_monthly_spendings'] = total_monthly_spendings
 
         response_object['monthSpendings'] = month_spendings_list
 

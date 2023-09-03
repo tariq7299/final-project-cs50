@@ -47,11 +47,11 @@
 
         <CurrentViewSummary></CurrentViewSummary>
 
-        <MonthTimeFrame @userChoseMonthTimeFrame="extractTimeFrame"></MonthTimeFrame>
+        <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlySpendings"></MonthTimeFrame>
 
-        <MonthTotal :year="selectedYear" :month="selectedMonth"></MonthTotal>
+        <MonthTotal :total_monthly_spendings="total_monthly_spendings"></MonthTotal>
         
-        <SpendingsDays :year="selectedYear" :month="selectedMonth"></SpendingsDays>
+        <SpendingsDays :monthSpendings="monthSpendings" ></SpendingsDays>
 
     </div>
 </template>
@@ -62,7 +62,7 @@
     import MonthTimeFrame from '@/components/MonthTimeFrame.vue';
     import SpendingsDays from '@/components/SpendingsDays.vue';
     import MonthTotal from '@/components/MonthTotal.vue';
-
+    ;
     export default {
         name: "Home",
         components: {
@@ -74,14 +74,14 @@
         },
         data() {
             return {
-                selectedYear: null,
-                selectedMonth: null
+                total_monthly_spendings: null,
+                monthSpendings: null,
             }
         },
         methods: {
-            extractTimeFrame(spendingTimeFrame) {
-                this.selectedYear = spendingTimeFrame.year
-                this.selectedMonth = spendingTimeFrame.month
+            extractMonthlySpendings(monthSpendings) {
+                this.monthSpendings = monthSpendings.monthSpendings
+                this.total_monthly_spendings = monthSpendings.total_monthly_spendings
             }
         },
 }

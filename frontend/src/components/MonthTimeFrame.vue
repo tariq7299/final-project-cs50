@@ -20,21 +20,6 @@
                 <option v-for="(month, index) in months" :value="month" :key="index">{{ month }}</option>
             </select>
         </div>
-        <div class="col-6">
-            <h1>{{ total_monthly_spendings }}</h1>
-        </div>
-        <div class="col-6">
-            <!-- Wheu user choose a month (@change=emitTimeFrame), app will 'emit' TimeFrame (selectedYear & selectedMonth) to parent component (Home.vue) -->
-            <ul v-for="dailySpending in monthSpendings" :key="dailySpending.spending_id">
-                <!-- <option disabled value="">Select month</option> -->
-                <li> {{ dailySpending.date }}</li>
-                <li> {{ dailySpending.item_type }}</li>
-                <li> {{ dailySpending.amount_spent }}</li>
-            </ul>
-            <ul v-for="(daily_spendings, index) in total_daily_spendings" :key="index">
-                <li> {{ daily_spendings.total_daily_spending }}</li>
-            </ul>
-        </div>
     </div>
 </template>
 
@@ -46,8 +31,7 @@ import axios from 'axios'
         data () {
             return {
                 monthSpendings: [],
-                total_monthly_spendings: [],
-                total_daily_spendings: [],
+                total_monthly_spendings: '',
                 years: [],
                 selectedYear:'',
                 months: [],
@@ -81,6 +65,7 @@ import axios from 'axios'
                         selectedMonth:this.selectedMonth,
                     });
                     this.monthSpendings = response.data.monthSpendings
+                    this.total_monthly_spendings = response.data.total_monthly_spendings
                     this.emitSpendings()
                     
                 } catch (error) {
@@ -101,11 +86,8 @@ import axios from 'axios'
                     this.months = response.data.months
                     this.monthSpendings = response.data.monthSpendings
                     this.total_monthly_spendings = response.data.total_monthly_spendings
-                    this.total_daily_spendings = response.data.total_daily_spendings
-
                     this.selectedYear = this.years[0];
                     this.selectedMonth = this.months[0]
-                    console.log(this.total_daily_spendings)
                     this.emitSpendings();
                 }   catch (error) {
                     console.error('Error fetching data:', error);
@@ -124,9 +106,9 @@ import axios from 'axios'
                     });
                     this.months = response.data.months
                     this.monthSpendings = response.data.monthSpendings
-
+                    this.total_monthly_spendings = response.data.total_monthly_spendings
                     this.selectedMonth = this.months[0]
-                    
+                    this.emitSpendings()
                 } catch (error) {
                     // Handle error
                     console.error(error);
@@ -135,8 +117,8 @@ import axios from 'axios'
 
             // THis gets called when user loads the page, or chooses a year or use chooses a month 
             emitSpendings () {
-                // const monthSpendings = {monthSpendings : this.monthSpendings}
-                this.$emit('userChoseMonthTimeFrame', this.monthSpendings)
+                const monthSpendings = {monthSpendings : this.monthSpendings, total_monthly_spendings : this.total_monthly_spendings}
+                this.$emit('userChoseMonthTimeFrame', monthSpendings)
             },
         },
         mounted() {

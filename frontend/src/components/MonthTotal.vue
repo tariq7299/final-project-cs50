@@ -1,7 +1,7 @@
 <template>
     <div>
-        <h1>{{ year }}</h1>
-        <h1>{{ month }}</h1>
+        <h4>{{ total_monthly_spendings }}</h4>
+        <p>Total Monthly Spendings</p>
     </div>
 </template>
 
@@ -10,8 +10,7 @@ export default {
     name: "MonthTotal",
 
     props: {
-        year: Number,
-        month: String,
+        total_monthly_spendings: Number,
     }
 }
 </script>
