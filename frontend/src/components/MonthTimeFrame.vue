@@ -36,6 +36,7 @@ import axios from 'axios'
                 selectedYear:'',
                 months: [],
                 selectedMonth: '',
+                calenderDays: [],
             }
         },
         methods: {
@@ -53,7 +54,8 @@ import axios from 'axios'
             //         console.error('Error fetching data:', error);
             //     }
             // },
-
+            
+            // USER CHOOSE A MONTH
             // This function will GET spendings months[] of 'selectedYear' from server which belongs to the current user
             async fetchAndEmitSelectedMonthSpendings() {
                 try {
@@ -64,6 +66,8 @@ import axios from 'axios'
                         selectedYear:this.selectedYear, 
                         selectedMonth:this.selectedMonth,
                     });
+                    this.calenderDays = response.data.calender_days_in_month
+                    this.currentDay = response.data.current_day
                     this.monthSpendings = response.data.monthSpendings
                     this.total_monthly_spendings = response.data.total_monthly_spendings
                     this.emitSpendings()
@@ -73,7 +77,7 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
-
+            // USER LOAD PAGE
             // This function will GET spendings years[] from server which belongs to the current user, and the emits timeFrame (selectedYear & selectedMonth) to parent component (Home.vue)
             // This gets called when user reloads the page only !!
             async fetchYearsAndEmitRecentSpendings() {
@@ -84,6 +88,8 @@ import axios from 'axios'
 
                     this.years = response.data.years;
                     this.months = response.data.months
+                    this.calenderDays = response.data.calender_days_in_month
+                    this.currentDay = response.data.current_day
                     this.monthSpendings = response.data.monthSpendings
                     this.total_monthly_spendings = response.data.total_monthly_spendings
                     this.selectedYear = this.years[0];
@@ -94,17 +100,20 @@ import axios from 'axios'
                 }
             },
 
+            // USER CHOOSE A YEAR
             // This function will GET spendings months[] from server which belongs to the current user, and the emits timeFrame (selectedYear & selectedMonth) to parent component (Home.vue)
             // This gets called when user choose a "year" from <select> input of years
             async fetchMonthsAndEmitRecentSpendings() {
                 try {
-                    const path = 'http://127.0.0.1:8083/RecentMonthSpendings'
+                const path = 'http://127.0.0.1:8083/RecentMonthSpendings'
 
                     // Perform asynchronous operation
                     const response = await axios.post(path,{
                         selectedYear:this.selectedYear
                     });
                     this.months = response.data.months
+                    this.calenderDays = response.data.calender_days_in_month
+                    this.currentDay = response.data.current_day
                     this.monthSpendings = response.data.monthSpendings
                     this.total_monthly_spendings = response.data.total_monthly_spendings
                     this.selectedMonth = this.months[0]
@@ -117,7 +126,7 @@ import axios from 'axios'
 
             // THis gets called when user loads the page, or chooses a year or use chooses a month 
             emitSpendings () {
-                const monthSpendings = {monthSpendings : this.monthSpendings, total_monthly_spendings : this.total_monthly_spendings}
+                const monthSpendings = {monthSpendings : this.monthSpendings, total_monthly_spendings : this.total_monthly_spendings, calenderDays : this.calenderDays, currentDay: this.currentDay}
                 this.$emit('userChoseMonthTimeFrame', monthSpendings)
             },
         },

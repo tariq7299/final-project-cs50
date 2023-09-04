@@ -12,7 +12,7 @@
 - Understand more db.relationship
 - Find a better way to import datetime module in models.py
 - Removes the zeros in Wed, 13 Sep 2023 00:00:00 GMT ?? from the column of USerSpendings
-- 
+- Change "item_type" to "category"
 
 ## run.py
 - How to find a way to the server url dynamic in the frontend ??, like every time I want to make a axios request I won't have to type the exactly localhost...:5000, because sometimes the port number changes !
@@ -22,6 +22,13 @@
 
 ## GLOBAL
 - Add login and register page
+- Add nav bar to every view
+
+## Home.vue
+- Make the nav bar stick at top by bootstrap not plain css
+- What is '/@/component'
+
+## CurrentViewSummary
 - 
 
 ## routes.vue
@@ -36,6 +43,9 @@
 - Create a total_daily_spendings
 - 
 
+## AddExpense
+- Create a num pad instead of phone num pad
+- 
 
 
 

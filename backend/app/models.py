@@ -26,7 +26,7 @@ class UsersSpendings(db.Model):
     spending_id = db.Column(db.Integer, primary_key=True)
     # Define the foreign key column
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    date = db.Column(db.Date, default=datetime.now(), nullable=False)
+    date = db.Column(db.Date, default=datetime.now().date(), nullable=False)
     amount_spent = db.Column(db.Integer, nullable=False)
     item_type = db.Column(db.String(64), unique=False)
     # Define the relationship between UserSpending and User

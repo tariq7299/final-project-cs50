@@ -2,11 +2,14 @@ from flask import request, jsonify, Blueprint
 from app.models import db, Users, UsersSpendings
 from datetime import datetime
 from sqlalchemy import extract, func
+from calendar import monthrange, day_name
 
 
 appRoutes = Blueprint("routes", __name__)
 
 # @<bluebrint name>.route()
+
+# USER LOADS SPENDING PAGE
 @appRoutes.route("/spendings", methods=["POST","GET"])
 def spendings():
     
@@ -63,8 +66,17 @@ def spendings():
         for int_month, in months:
             str_month = datetime(1, int_month, 1).strftime('%b')
             str_month_list.append(str_month)
-            
-
+        
+        #  monthrange() outputs the total number of days in a specific month
+        # first_day : Is actually the correspondednt int day of the first day of month in calender, so for example if the first dat is Friday so int day will be '4', becasue Monday is '0'
+        first_day, num_days = monthrange(most_recent_year, most_recent_month)
+        
+        # 'calender_days_in_month' is a list of tuples, where each tuple is (str day, Int day)
+        # day_name[] : First of all notice that day_name[] is not a function !, it is an attribute, It takes int day as an index, then outputs the string name of day, where monday is '0' and tuseday is '1' ..etc
+        calender_days_in_month = [{'day_name': day_name[(first_day + i) % 7],  'day_num' : i + 1} for i in range(num_days)]
+        
+        current_day = datetime.now().day
+                    
         month_spendings = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == most_recent_year).filter(extract('month', UsersSpendings.date) == most_recent_month).order_by(UsersSpendings.date.desc()).all()
 
         total_monthly_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == most_recent_year).filter(extract('month', UsersSpendings.date) == most_recent_month).scalar()
@@ -95,6 +107,10 @@ def spendings():
         # years[0] this will access the first value/element in the tuple of 'year' in 'years' list
         response_object['months'] = str_month_list
         
+        response_object['calender_days_in_month'] = calender_days_in_month
+        
+        response_object['current_day'] = current_day
+        
         # For tests
         # [print('spending', spending) for spending in month_spendings]
         
@@ -102,12 +118,14 @@ def spendings():
         
         response_object['total_monthly_spendings'] = total_monthly_spendings
         
+        
         # response_object['total_daily_spendings'] = total_daily_spendings_list
         
         # Return response object as JSON∆
         return jsonify(response_object)
     
 # @<bluebrint name>.route()
+# USER CHOOSE YEAR IN SPENDING PAGE
 @appRoutes.route("/RecentMonthSpendings", methods=["POST","GET"])
 def RecentMonthSpendings():
     
@@ -154,6 +172,17 @@ def RecentMonthSpendings():
             str_month = datetime(1, int_month, 1).strftime('%b')
             str_month_list.append(str_month)
             
+                    #  monthrange() outputs the total number of days in a specific month
+
+        # first_day : Is actually the correspondednt int day of the first day of month in calender, so for example if the first dat is Friday so int day will be '4', becasue Monday is '0'
+        first_day, num_days = monthrange(selected_year, most_recent_month)
+
+        # 'calender_days_in_month' is a list of tuples, where each tuple is (str day, Int day)
+        # day_name[] : First of all notice that day_name[] is not a function !, it is an attribute, It takes int day as an index, then outputs the string name of day, where monday is '0' and tuseday is '1' ..etc
+        calender_days_in_month = [{'day_name': day_name[(first_day + i) % 7],  'day_num' : i + 1} for i in range(num_days)]
+
+        current_day = datetime.now().day
+        
         month_spendings = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).order_by(UsersSpendings.date.desc()).all()
     
         month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'item_type': spending.item_type} for spending in month_spendings]
@@ -163,19 +192,27 @@ def RecentMonthSpendings():
         # total_daily_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).filter().group_by(extract('day', UsersSpendings.date)).order_by(extract('month', UsersSpendings.date).desc()).all()
 
         # total_daily_spendings_list = [{'total_daily_spending': row[0]} for row in total_daily_spendings]
+        
+        response_object['calender_days_in_month'] = calender_days_in_month
 
+        response_object['current_day'] = current_day
+
+        response_object['months'] = str_month_list
+        
         response_object['total_monthly_spendings'] = total_monthly_spendings
+        
+
 
         
         # response_object['total_daily_spendings'] = total_daily_spendings_list
 
-        response_object['months'] = str_month_list
         response_object['monthSpendings'] = month_spendings_list
 
         # Return response object as JSON
         return jsonify(response_object)
     
 # @<bluebrint name>.route()
+# USER CHOOSE MONTH IN SPENDING PAGE
 @appRoutes.route("/selectedMonthSpendings", methods=["POST","GET"])
 def selectedMonthSpendings():
     
@@ -190,6 +227,12 @@ def selectedMonthSpendings():
         selected_year   = post_data.get('selectedYear')
         selected_month_str   = post_data.get('selectedMonth')
         selected_month_int = datetime.strptime(selected_month_str, '%b').month
+        
+        first_day, num_days = monthrange(selected_year, selected_month_int)
+
+        calender_days_in_month = [{'day_name': day_name[(first_day + i) % 7],  'day_num' : i + 1} for i in range(num_days)]
+
+        current_day = datetime.now().day
 
         month_spendings = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).order_by(UsersSpendings.date.desc()).all()
         
@@ -203,6 +246,10 @@ def selectedMonthSpendings():
         # total_daily_spendings_list = [{'total_daily_spending': row[0]} for row in total_daily_spendings]
 # 
         # response_object['total_daily_spendings'] = total_daily_spendings_list
+        
+        response_object['current_day'] = current_day
+
+        response_object['calender_days_in_month'] = calender_days_in_month
 
         
         response_object['total_monthly_spendings'] = total_monthly_spendings
