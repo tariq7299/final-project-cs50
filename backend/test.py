@@ -24,11 +24,11 @@ def create_db():
     
     mark_id = Users.query.filter_by(name="Mark Mork").first().user_id
     
-    emad_spendings = UsersSpendings(user_id=emad_id, amount_spent="200", item_type="food")
+    emad_spendings = UsersSpendings(user_id=emad_id, amount_spent="200", category="food")
     
-    salah_spendings = UsersSpendings(user_id=salah_id, amount_spent="40", item_type="seed")
+    salah_spendings = UsersSpendings(user_id=salah_id, amount_spent="40", category="seed")
     
-    mark_spendings = UsersSpendings(user_id=mark_id, amount_spent="90", item_type="need")
+    mark_spendings = UsersSpendings(user_id=mark_id, amount_spent="90", category="need")
     
     db.session.add(emad_spendings)
     db.session.add(salah_spendings)
@@ -54,7 +54,7 @@ def show_spend():
         print(f'User ID: {spend_day.user_id}')
         print(f'Date: {spend_day.date}')
         print(f'amount: {spend_day.amount_spent}')
-        print(f'Item Type: {spend_day.item_type}')
+        print(f'Item Type: {spend_day.category}')
         print()
 
         
@@ -84,7 +84,7 @@ def pop_spend():
             
     for date in spendings_dates:
         
-        salah_spendings = UsersSpendings(user_id=salah_id, amount_spent="40", item_type="Food", date=date)
+        salah_spendings = UsersSpendings(user_id=salah_id, amount_spent="40", category="Food", date=date)
                     
         db.session.add(salah_spendings)
     
@@ -189,7 +189,7 @@ def month_spendings():
     
     print("MonthSpendings", MonthSpendings)
     
-    month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date, 'amount_spent': spending.amount_spent, 'item_type': spending.item_type} for spending in MonthSpendings]
+    month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date, 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in MonthSpendings]
     
     # [print(spending) for spending in month_spendings_list]
     

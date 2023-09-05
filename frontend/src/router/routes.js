@@ -14,7 +14,7 @@ const routes = [
     // '?' indicates that 'currentDay' variable is optional and not required, and I put it becasue when i remove it and try to navigate to the previous url/page it outputs an error
     
     // 'calenderDays*' the '*' indicates that 'calenderDays' is a normal variable, but instead it is an iterable (like an array)
-    path: '/addExpense/:calenderDays*/:currentDay?',
+    path: '/addExpense',
     name: 'addExpense',
     component: AddExpense,
     // props: ture : this means that the variables 'calenderDays' and 'currentDay' will be passed to "addexpense" component as 'props'

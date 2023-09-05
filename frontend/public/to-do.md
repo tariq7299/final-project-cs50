@@ -12,11 +12,15 @@
 - Understand more db.relationship
 - Find a better way to import datetime module in models.py
 - Removes the zeros in Wed, 13 Sep 2023 00:00:00 GMT ?? from the column of USerSpendings
-- Change "item_type" to "category"
+- Change "item_type" to "category" @#
+- Make sure string(64) nummbers is corerect for each column
+- Add a new column to USerSpendings whcih contain the total spenf¥ding of each day !, if it was too hard then try to creat a compnent called <Day> then inside day there is {{ total daily spendingas }} and all the days spendings child components whxuh contint the daily spendings details
+- Add History table which view all the history of transactions !
 
 ## run.py
 - How to find a way to the server url dynamic in the frontend ??, like every time I want to make a axios request I won't have to type the exactly localhost...:5000, because sometimes the port number changes !
-
+## routes.py
+- filter each currency to be viewed as currency like in finance problem from CS50 usd() function
 # Frontend
 ==========
 
@@ -45,6 +49,8 @@
 
 ## AddExpense
 - Create a num pad instead of phone num pad
+- Clear days <sleelct> after user changes month 
+- Add an alert after user adds/submits an expenses
 - 
 
 
