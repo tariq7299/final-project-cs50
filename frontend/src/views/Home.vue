@@ -52,7 +52,7 @@
             <MonthTotal :total_monthly_spendings="total_monthly_spendings"></MonthTotal>
         </div>
         
-        <SpendingsDays :monthSpendings="monthSpendings" ></SpendingsDays>
+        <SpendingsDays :groupedSpendings="groupedSpendings" ></SpendingsDays>
 
         <!-- you have to JSON.stringify() arrays before passing it to urls !, and then on the other side when you extract this array from the url, you have to JSON.parse() it -->
         <!-- Notice that we didnot do that with  'currentDay' because it is not an array-->
@@ -81,17 +81,33 @@
             return {
 
                 total_monthly_spendings: null,
-                monthSpendings: null,
+                monthSpendings: [],
             }
         },
         methods: {
             extractMonthlySpendings(monthSpendings) {
-                this
                 this.monthSpendings = monthSpendings.monthSpendings
                 this.total_monthly_spendings = monthSpendings.total_monthly_spendings
             }
         },
-}
+        computed: {
+            groupedSpendings() {
+                return this.monthSpendings.reduce((acc, spending) => {
+                if (!acc[spending.date]) {
+                    acc[spending.date] = {
+                    spendings: [],
+                    totalAmount: 0
+                    };
+                }
+                
+                acc[spending.date].spendings.push(spending);
+                acc[spending.date].totalAmount += spending.amount_spent;
+                
+                return acc;
+                }, {});
+            }
+        } 
+    }
 </script>
 
 <style>

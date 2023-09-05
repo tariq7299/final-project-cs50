@@ -1,22 +1,29 @@
 <template>
-    <div>
-        <p>{{ dailySpending.date }}</p>
-        <p>{{ dailySpending.item_type }}</p>
-        <p>{{ dailySpending.amount_spent }}</p>
+    <div class="center">
+        <ul>
+            <!-- <li v-for="" >{{ date }}{{  }}</li> -->
+            <li>{{ date }} - Total Amount: {{ totalAmount }}</li>
+        </ul>
+        <div class="center" v-for="spending in spendings" :key="spending.spending_id">
+            <p>Amount: {{ spending.amount_spent }} - Category: {{ spending.item_type }}</p>
+        </div>
     </div>
-</template>
+  </template>
 
 <script>
     export default {
         name: 'SpendingsDay',
         props: {
-            dailySpending: Object,
+            date: String,
+            spendings: Array,
+            totalAmount: Number
         }
-
     }
 </script>
 
-<style>
-
+<style scoped>
+    .center {
+        margin: auto;
+    }
 </style>
 

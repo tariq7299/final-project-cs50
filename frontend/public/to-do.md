@@ -16,6 +16,8 @@
 - Make sure string(64) nummbers is corerect for each column
 - Add a new column to USerSpendings whcih contain the total spenf¥ding of each day !, if it was too hard then try to creat a compnent called <Day> then inside day there is {{ total daily spendingas }} and all the days spendings child components whxuh contint the daily spendings details
 - Add History table which view all the history of transactions !
+- Populate UserSpendings with some samole rows with coulumns called 'catogory' insterad of "item_type"
+- Change the date columns to be datetime().now() and not datetime.now().date() to be able to sort it later !
 
 ## run.py
 - How to find a way to the server url dynamic in the frontend ??, like every time I want to make a axios request I won't have to type the exactly localhost...:5000, because sometimes the port number changes !

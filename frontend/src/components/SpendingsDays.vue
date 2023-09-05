@@ -2,9 +2,8 @@
    <div class="col-6">
         <!-- Wheu user choose a month (@change=emitTimeFrame), app will 'emit' TimeFrame (selectedYear & selectedMonth) to parent component (Home.vue) -->
         
-        <div :key="dailySpending.spending_id" v-for="dailySpending in monthSpendings">
-            <SpendingsDay :dailySpending="dailySpending"/>
-        </div>
+        <SpendingsDay v-for="(spendingsObj, date) in groupedSpendings" :key="date" :date="date" :spendings="spendingsObj.spendings" :totalAmount="spendingsObj.totalAmount"/>
+        
     </div>
 </template>
 
@@ -15,7 +14,7 @@ export default {
     name: "SpendingsDays",
 
     props: {
-        monthSpendings: Array,
+        groupedSpendings: Object,
     },
     components: {
         SpendingsDay

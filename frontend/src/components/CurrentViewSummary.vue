@@ -4,10 +4,10 @@
         <UserFinance amountTitle="Balance" :amount="money.balance"/>        
     </div>
     <div class="col-6">
-        <UserFinance amountTitle="Money I owe" :amount="money.moneyIOwe"/>
+        <UserFinance amountTitle="Debt" :amount="money.moneyIOwe"/>
     </div>
     <div class="col-12">
-        <UserFinance amountTitle="Money owed to me" :amount="money.moneyOwedToMe"/>
+        <UserFinance amountTitle="Credit" :amount="money.moneyOwedToMe"/>
     </div>
   </div>
 </template>

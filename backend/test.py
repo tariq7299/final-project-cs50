@@ -1,6 +1,12 @@
 from datetime import datetime
 from app.models import db, Users, UsersSpendings
-from sqlalchemy import extract, func
+from sqlalchemy import extract, func, and_
+
+emad_id = Users.query.filter_by(name="Emad Eiad").first().user_id
+
+salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+
+mark_id = Users.query.filter_by(name="Mark Mork").first().user_id
 
 def create_db():
     
@@ -18,11 +24,6 @@ def create_db():
 
     db.session.commit()
     
-    emad_id = Users.query.filter_by(name="Emad Eiad").first().user_id
-    
-    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
-    
-    mark_id = Users.query.filter_by(name="Mark Mork").first().user_id
     
     emad_spendings = UsersSpendings(user_id=emad_id, amount_spent="200", category="food")
     
@@ -66,29 +67,44 @@ def pop_spend():
     monthStart = 9
     monthEnd = 10
     monthStep = 1
-    dayStart = 1
-    dayEnd = 20
+    dayStart = 4
+    dayEnd = 5
     dayStep = 1
     
     spendings_dates = []
     
-    for month in range(monthStart, monthEnd, monthStep):
-        for day in range(dayStart, dayEnd, dayStep):
-            spending_date = datetime(2020, month, day).date()
-            spendings_dates.append(spending_date)
+    # for month in range(monthStart, monthEnd, monthStep):
+    #     for day in range(dayStart, dayEnd, dayStep):
+    #         spending_date = datetime(2020, month, day).date()
+    #         spendings_dates.append(spending_date)
             
-    for month in range(monthStart, monthEnd, monthStep):
-        for day in range(dayStart, dayEnd, dayStep):
-            spending_date = datetime(2023, month, day).date()
-            spendings_dates.append(spending_date)
+    # for month in range(monthStart, monthEnd, monthStep):
+    #     for day in range(dayStart, dayEnd, dayStep):
+    #         spending_date = datetime(2023, month, day).date()
+    #         spendings_dates.append(spending_date)
             
-    for date in spendings_dates:
+
+    
+    # for date in spendings_dates:
+        # salah_spendings = UsersSpendings(user_id=salah_id, amount_spent=40, category="Bills", date=date.date())
         
-        salah_spendings = UsersSpendings(user_id=salah_id, amount_spent="40", category="Food", date=date)
+        
+    amounts = [100, 140, 200, 143, 334, 234, 452, 233]
+    
+    for amount in amounts:
+        salah_spendings = UsersSpendings(user_id=salah_id, amount_spent=amount, category="Bills", date=datetime(2023, 9, 5).date())
                     
         db.session.add(salah_spendings)
     
     db.session.commit()
+    print('222')
+     # Modify the query to include the sum calculation and group by day
+    user_spendings_today = UsersSpendings.query.filter(and_(UsersSpendings.user_id == salah_id, UsersSpendings.date == datetime(2023, 9, 5).date())).all()
+    
+    spendings_str = [str(spending) for spending in user_spendings_today]
+    print('\n'.join(spendings_str))
+        
+    
     
 def show_years():
     salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
@@ -203,11 +219,28 @@ def month_spendings():
         
 def total_d_spend():
     
-    # Calculate the total amount spent for each day
-    total_amount_spent_per_day = func.sum(UsersSpendings.amount_spent).label('total_amount_spent_per_day')
-
-    # Modify the query to include the sum calculation and group by day
-    month_spendings = UsersSpendings.query.filter(UsersSpendings.user_id == 2).filter(extract('year', UsersSpendings.date) == 2023).filter(extract('month', UsersSpendings.date) == 9).with_entities(UsersSpendings.date, total_amount_spent_per_day)  # Include the date and sum calculation.group_by(UsersSpendings.date)  # Group by day.order_by(UsersSpendings.date.desc()) \.all() 
+    daily_spendings = db.session.query(
+        func.date(UsersSpendings.date).label("spending_date"),
+        func.sum(UsersSpendings.amount_spent).label("total_spent")
+    ).filter(UsersSpendings.user_id == salah_id).\
+        group_by("spending_date").\
+        order_by("spending_date").all()
+    
+    for date, total_spent in daily_spendings:
+        print(f"Date: {date}, Total Spent: {total_spent}")
     
     [print(spending) for spending in month_spendings]
+    
+def show_days():
+    days = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).group_by(extract('month', UsersSpendings.date)).order_by(extract('day', UsersSpendings.date).desc()).all()
+    
+    # print(days)
+    
+    # [print(f"day.date: {day.date}") for day in days]
+    
+    # print(extract('day', UsersSpendings.date))
+    
+    tests = UsersSpendings.query.filter(extract('day', UsersSpendings.date)).order_by(extract('day', UsersSpendings.date).desc()).all()
+    # [print(f"day.date: {test.date}") for test in tests]
+    
     
