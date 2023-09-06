@@ -81,7 +81,6 @@ def addExpenses():
         submitted_category  = post_data.get('category')
                 
         new_expense = UsersSpendings(user_id=salah_id, date=datetime(current_year, selected_month_int, selected_day).date(), amount_spent=submitted_amount_spent, category=submitted_category)
-        
        
         try:
             db.session.add(new_expense)
@@ -99,8 +98,8 @@ def addExpenses():
 
 
 # USER LOADS SPENDING PAGE
-@appRoutes.route("/spendings", methods=["POST","GET"])
-def spendings():
+@appRoutes.route("/load_recent_month_expenses", methods=["POST","GET"])
+def load_recent_month_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
     salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
@@ -159,9 +158,9 @@ def spendings():
         
         month_spendings = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == most_recent_year).filter(extract('month', UsersSpendings.date) == most_recent_month).order_by(UsersSpendings.date.desc()).all()
 
-        total_monthly_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == most_recent_year).filter(extract('month', UsersSpendings.date) == most_recent_month).scalar()
+        total_monthly_expenses = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == most_recent_year).filter(extract('month', UsersSpendings.date) == most_recent_month).scalar()
         
-        # print(total_monthly_spendings)
+        # print(total_monthly_expenses)
         
         # total_daily_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == most_recent_year).filter(extract('month', UsersSpendings.date) == most_recent_month).filter().group_by(extract('day', UsersSpendings.date)).order_by(UsersSpendings.date.desc()).all()
         
@@ -190,9 +189,9 @@ def spendings():
         # For tests
         # [print('spending', spending) for spending in month_spendings]
         
-        response_object['monthSpendings'] = month_spendings_list
+        response_object['monthly_expenses'] = month_spendings_list
         
-        response_object['total_monthly_spendings'] = total_monthly_spendings
+        response_object['total_monthly_expenses'] = total_monthly_expenses
         
         
         # response_object['total_daily_spendings'] = total_daily_spendings_list
@@ -202,8 +201,8 @@ def spendings():
     
 # @<bluebrint name>.route()
 # USER CHOOSE YEAR IN SPENDING PAGE
-@appRoutes.route("/RecentMonthSpendings", methods=["POST","GET"])
-def RecentMonthSpendings():
+@appRoutes.route("/fetch_months_and_recent_month_expenses", methods=["POST","GET"])
+def fetch_months_and_recent_month_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
     salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
@@ -254,7 +253,7 @@ def RecentMonthSpendings():
     
         month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_spendings]
         
-        total_monthly_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).scalar()
+        total_monthly_expenses = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).scalar()
 
         # total_daily_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).filter().group_by(extract('day', UsersSpendings.date)).order_by(extract('month', UsersSpendings.date).desc()).all()
 
@@ -262,57 +261,53 @@ def RecentMonthSpendings():
         
         response_object['months'] = str_month_list
         
-        response_object['total_monthly_spendings'] = total_monthly_spendings
+        response_object['total_monthly_expenses'] = total_monthly_expenses
         
 
 
         
         # response_object['total_daily_spendings'] = total_daily_spendings_list
 
-        response_object['monthSpendings'] = month_spendings_list
+        response_object['monthly_expenses'] = month_spendings_list
 
         # Return response object as JSON
         return jsonify(response_object)
     
 # @<bluebrint name>.route()
 # USER CHOOSE MONTH IN SPENDING PAGE
-@appRoutes.route("/selectedMonthSpendings", methods=["POST","GET"])
-def selectedMonthSpendings():
+@appRoutes.route("/fetch_selected_month_expenses", methods=["POST","GET"])
+def fetch_selected_month_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
     salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
     response_object = {'status':'success'}
     
     if request.method == "POST":
+        
+        try:    
+            post_data = request.get_json()
             
-        post_data = request.get_json()
+            selected_year   = post_data.get('selectedYear')
+            selected_month_str   = post_data.get('selectedMonth')
+            selected_month_int = datetime.strptime(selected_month_str, '%b').month
+            
+            month_spendings = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).order_by(UsersSpendings.date.desc()).all()
+            
         
-        selected_year   = post_data.get('selectedYear')
-        selected_month_str   = post_data.get('selectedMonth')
-        selected_month_int = datetime.strptime(selected_month_str, '%b').month
-        
-        month_spendings = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).order_by(UsersSpendings.date.desc()).all()
-        
-    
-        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_spendings]
-        
-        total_monthly_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).scalar()
+            month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_spendings]
+            
+            total_monthly_expenses = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).scalar()
+                    
+            response_object['total_monthly_expenses'] = total_monthly_expenses
 
-        # total_daily_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).filter().group_by(extract('day', UsersSpendings.date)).order_by(extract('month', UsersSpendings.date).desc()).all()
+            response_object['monthly_expenses'] = month_spendings_list
 
-        # total_daily_spendings_list = [{'total_daily_spending': row[0]} for row in total_daily_spendings]
-# 
-        # response_object['total_daily_spendings'] = total_daily_spendings_list
-                
-        response_object['total_monthly_spendings'] = total_monthly_spendings
-
-        response_object['monthSpendings'] = month_spendings_list
-
+            # Return response object as JSON
+            return jsonify(response_object)
         
-        
-        # Return response object as JSON
-        return jsonify(response_object)
-        
+        except Exception as e:
+            error_message = 'An error occurred while adding the expense! Error message: ' + str(e)
+            return jsonify({'error_message': error_message}), 400
         
         
         

@@ -1,107 +1,125 @@
 <template>
     <div>
-        <div class="sticky-header">
-            <nav class="navbar bg-body-tertiary fixed-top">
+
+        <nav class="navbar bg-body-tertiary fixed-top">
             <div class="container-fluid">
-            <a class="navbar-brand" href="#">goldgardyn</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <a class="navbar-brand" href="#">goldgardyn</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Dropdown
+                            </a>
+                            <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                        </li>
+                        </ul>
+                        <form class="d-flex mt-3" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+                
             </div>
-            <div class="offcanvas-body">
-                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Dropdown
-                    </a>
-                    <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-                </ul>
-                <form class="d-flex mt-3" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-            </div>
-            </div>
+        </nav>
+
+        <!-- 'sticky-header' will make the the indented elemnts stick at the top-->
+        <div class="sticky-header">
             
-        </div>
-            </nav>
-            <Header title="Spending"/>
-    
+            <!-- This contains the page title only -->
+            <Header pageTitle="Expenses"/>
+
+            <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
             <CurrentViewSummary></CurrentViewSummary>
-    
-            <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlySpendings"></MonthTimeFrame>
-    
-            <MonthTotal :total_monthly_spendings="total_monthly_spendings"></MonthTotal>
+            
+            <!-- This contains :
+                - input for year
+                - input for month
+                - Also it is resposible for fetching monthly expenses from server that belonged to the iputted time frame by the cirrent user
+             -->
+            <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses"></MonthTimeFrame>
+            
+            <!-- This holds the total Expenses of the choosen month -->
+            <MonthTotal :totalMonthlyExpenses="totalMonthlyExpenses"></MonthTotal>
         </div>
         
-        <SpendingsDays :groupedSpendings="groupedSpendings" ></SpendingsDays>
+        <!-- THis contains a child components called 'Day' which each one of them contains the daily expenses details -->
+        <Days :groupedExpensesByDay="groupedExpensesByDay" ></Days>
 
-        <!-- you have to JSON.stringify() arrays before passing it to urls !, and then on the other side when you extract this array from the url, you have to JSON.parse() it -->
-        <!-- Notice that we didnot do that with  'currentDay' because it is not an array-->
-        <router-link class="sticky-bottom" to="addExpense" >Add Expenses</router-link>
+        <!-- This will route the user to 'AddExpenses' view enable users to add new expenses  -->
+        <router-link class="sticky-bottom" to="addExpenses" >Add Expenses</router-link>
+
     </div>
 </template>
 
 <script>
+
     import Header from './../components/Header'
     import CurrentViewSummary from './../components/CurrentViewSummary'
     import MonthTimeFrame from '@/components/MonthTimeFrame.vue';
-    import SpendingsDays from '@/components/SpendingsDays.vue';
+    import Days from '@/components/Days.vue';
     import MonthTotal from '@/components/MonthTotal.vue';
-    import AddExpense from './AddExpense.vue';
+    import AddExpenses from './AddExpenses.vue';
+
     export default {
         name: "Home",
         components: {
             Header,
             CurrentViewSummary,
             MonthTimeFrame,
-            SpendingsDays,
+            Days,
             MonthTotal,
-            AddExpense,
+            AddExpenses,
         },
         data() {
             return {
-
-                total_monthly_spendings: null,
-                monthSpendings: [],
+                // This is emmited from <MonthTimeFrame> component, it represents the total expenses of the current user
+                totalMonthlyExpenses: 0,
+                // This is emmited from <MonthTimeFrame> component, it represents the monthly expenses details of current user
+                monthlyExpenses: [],
             }
         },
         methods: {
-            extractMonthlySpendings(monthSpendings) {
-                this.monthSpendings = monthSpendings.monthSpendings
-                this.total_monthly_spendings = monthSpendings.total_monthly_spendings
+            // THis is will extract the monthly expenses details, that emmited from <MonthTimeFrame> child component
+            extractMonthlyExpenses(monthlyExpenses) {
+                this.monthlyExpenses = monthlyExpenses.monthlyExpenses
+                this.totalMonthlyExpenses = monthlyExpenses.totalMonthlyExpenses
             }
         },
         computed: {
-            groupedSpendings() {
-                return this.monthSpendings.reduce((acc, spending) => {
-                if (!acc[spending.date]) {
-                    acc[spending.date] = {
-                    spendings: [],
+            // This is computed property, which actully groups thr monthly expenses by day (So each day date will be an object that holds inside it a list [] of monthly expenses details and total amount spend in the month as object {})
+            groupedExpensesByDay() {
+                return this.monthlyExpenses.reduce((acc, expenses) => {
+                if (!acc[expenses.date]) {
+                    acc[expenses.date] = {
+                    expenses: [],
                     totalAmount: 0
                     };
                 }
                 
-                acc[spending.date].spendings.push(spending);
-                acc[spending.date].totalAmount += spending.amount_spent;
+                acc[expenses.date].expenses.push(expenses);
+                acc[expenses.date].totalAmount += expenses.amount_spent;
                 
                 return acc;
                 }, {});
