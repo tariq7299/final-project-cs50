@@ -1,15 +1,20 @@
 <template>
-  <div class="row">
-    <div class="col-6">
-        <UserWallet walletTitle="Balance" :amount="wallet.balance"/>        
-    </div>
-    <div class="col-6">
-        <UserWallet walletTitle="Debt" :amount="wallet.debt"/>
-    </div>
-    <div class="col-12">
-        <UserWallet walletTitle="Credit" :amount="wallet.credit"/>
-    </div>
-  </div>
+        <div v-if="loading" class="row loading-indicator">
+            <div class="col-12">
+                <h3>Loading...</h3>        
+            </div>
+        </div>
+        <div class="row" v-else>
+            <div class="col-6">
+                <UserWallet walletTitle="Balance" :amount="wallet.balance"/>        
+            </div>
+            <div class="col-6">
+                <UserWallet walletTitle="Debt" :amount="wallet.debt"/>
+            </div>
+            <div class="col-12">
+                <UserWallet walletTitle="Credit" :amount="wallet.credit"/>
+            </div>
+        </div>
 </template>
 
 <script>
@@ -24,7 +29,8 @@
         data () {
             return {
                 // Initialize as an empty object
-                wallet: {}
+                wallet: {},
+                loading: true, // Add a loading indicator state
             }
         },
         methods: {
@@ -35,8 +41,10 @@
                     const response = await axios.get(path);
 
                     this.wallet = response.data.wallet;
+                    this.loading = false; // Set loading to false when data is fetched
                 }   catch (error) {
                     console.error('Error fetching data:', error);
+                    this.loading = false; // Set loading to false in case of an error
                 }
             },
         },

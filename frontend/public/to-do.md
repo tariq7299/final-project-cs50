@@ -38,6 +38,11 @@
 - Add login and register page
 - Add nav bar to every view
 - Apply egp() to each currency in the whole app
+- add Loading indicatior in every fetch request happens in any page ! (I actually have made a working one in 'CurrentViewSummary' )
+- Use Environment Variables: Instead of hardcoding the API endpoint path (http://127.0.0.1:8083/userWallet), consider using environment variables to make your code more configurable and to easily switch between different API endpoints for development, testing, and production environments.
+- Use Caching or Memoization: If you frequently fetch the same data and it doesn't change often, you could consider implementing caching or memoization techniques to reduce unnecessary API requests.
+- Use Reusable Axios Instance: Depending on your project, you may want to create a reusable Axios instance with default configurations (e.g., base URL, headers) instead of configuring Axios in every component. This can help centralize your API configuration and simplify maintenance.
+- Code organization: It’s generally a good idea to keep your code organized and modular. In this case, you could consider moving the code for fetching the user’s wallet data into a separate module or service, and then importing that module into your component. This would make your component code cleaner and easier to read, and would also make it easier to reuse the code for fetching the user’s wallet data in other parts of your application.
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css
