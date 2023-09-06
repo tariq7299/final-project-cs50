@@ -81,3 +81,9 @@
 - Remove 00:00 GMT
 - Style the Home page a little biy
 - Create the Add new Expense
+
+                                # TOMMOROOE
+                                -----------
+
+- Security Considerations: Be cautious about displaying too much technical information to the user, as it could potentially expose sensitive information or be exploited by malicious users. Ensure that the error message does not leak sensitive data.
+

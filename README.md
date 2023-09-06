@@ -3,7 +3,9 @@
 ## Project setup
 ```
 npm install
+npm install --save-dev dotenv-webpack # To be able to use env variables in vue
 ```
+
 
 ### Compiles and hot-reloads for development
 ```
