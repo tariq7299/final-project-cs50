@@ -2,22 +2,22 @@
    <div class="col-6">
         <!-- Wheu user choose a month (@change=emitTimeFrame), app will 'emit' TimeFrame (selectedYear & selectedMonth) to parent component (Home.vue) -->
         
-        <SpendingsDay v-for="(spendingsObj, date) in groupedSpendings" :key="date" :date="date" :spendings="spendingsObj.spendings" :totalAmount="spendingsObj.totalAmount"/>
+        <Day v-for="(expensesObj, date) in groupedExpensesByDay" :key="date" :dayDate="date" :expenses="expensesObj.expenses" :totalAmount="expensesObj.totalAmount"/>
         
     </div>
 </template>
 
 <script>
-import SpendingsDay from './SpendingsDay';
+import Day from './Day';
 
 export default {
-    name: "SpendingsDays",
+    name: "Days",
 
     props: {
-        groupedSpendings: Object,
+        groupedExpensesByDay: Object,
     },
     components: {
-        SpendingsDay
+        Day
     }
 }
 </script>

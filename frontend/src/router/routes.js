@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home'
-import AddExpense from '../views/AddExpense.vue'
+import AddExpenses from '../views/AddExpenses.vue'
 
 const routes = [
   {
@@ -14,9 +14,9 @@ const routes = [
     // '?' indicates that 'currentDay' variable is optional and not required, and I put it becasue when i remove it and try to navigate to the previous url/page it outputs an error
     
     // 'calenderDays*' the '*' indicates that 'calenderDays' is a normal variable, but instead it is an iterable (like an array)
-    path: '/addExpense',
-    name: 'addExpense',
-    component: AddExpense,
+    path: '/addExpenses',
+    name: 'addExpenses',
+    component: AddExpenses,
     // props: ture : this means that the variables 'calenderDays' and 'currentDay' will be passed to "addexpense" component as 'props'
     props: true
   },

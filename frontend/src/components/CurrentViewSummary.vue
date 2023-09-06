@@ -49,7 +49,7 @@
                     this.loading = false; // Set loading to false when data is fetched
                 }   catch (error) {
                     console.error('Error fetching data:', error);
-                    alert(`Oops! Something went wrong while adding the expense. Please try again or contact support for assistance. Error message: ${error}`);
+                    alert(`Oops! Something went wrong. Please try again or contact support for assistance. Error message: ${error}`);
                     this.loading = false; // Set loading to false in case of an error
                 }
             },

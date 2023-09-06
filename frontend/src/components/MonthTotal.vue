@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4>{{ total_monthly_spendings }}</h4>
+        <h4>{{ totalMonthlyExpenses }}</h4>
         <p>Total Monthly Spendings</p>
     </div>
 </template>
@@ -10,7 +10,7 @@ export default {
     name: "MonthTotal",
 
     props: {
-        total_monthly_spendings: Number,
+        totalMonthlyExpenses: Number,
     }
 }
 </script>
