@@ -209,12 +209,69 @@ import axios from 'axios'
                     });
             },
 
-            // THis gets called when user loads the page, or chooses a year or use chooses a month 
-            // Emits "monthlyExpenses" and "totalMonthlyExpenses" out to parent component of Home.vue, so it will be used in another sibiling component 
-            emitMonthlyExpenses () {
-                const monthlyExpenses = {monthlyExpenses : this.monthlyExpenses, totalMonthlyExpenses : this.totalMonthlyExpenses}
+            // USER HAVE CHOOSEN A MONTH
+            // This function will:  1- FETCH the monthly spendings for the selected month 
+            async fetchAndEmitSelectedMonthlExpenses() {
 
-                this.$emit('userChoseMonthTimeFrame', monthlyExpenses)
+                const apiUrl = process.env.VUE_APP_API_BASE_URL;
+                const path = apiUrl + '/fetch_selected_month_expenses';
+                // Prepare the request data
+                const requestData = {
+
+                    // Send to server the choosen/selected year by user "selectedYear", to get its expenses months.
+                    selectedYear: this.selectedYear,
+
+                    // Send to server the choosen/selected month by user "selectedMonth", to get its expenses.
+                    selectedMonth: this.selectedMonth,
+                };
+
+                axios
+                    .post(path, requestData)
+
+                    .then((response) => {
+
+                        // Update component data based on the response
+
+                        // // GET the monthly expenses in the "selectedMonth" (selected by user) which belongs to the "selectedYear" (selected by user)
+                        this.monthlyExpenses = response.data.monthly_expenses;
+
+                        // // // GET the total monthly expenses in the "selectedMonth" (selected by user) which belongs to the "selectedYear" (selected by user)
+                        this.totalMonthlyExpenses = response.data.total_monthly_expenses;
+
+                        // Finaly Emit "monthlyExpenses" and "totalMonthlyExpenses" out to parent component of Home.vue, so it will be used in another sibiling component
+                        this.emitMonthlyExpenses();
+
+                        // After all the above is done, remove the loading indicator
+                        this.loading = false;
+
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                            console.error(error);
+                            // The request was made, and the server responded with a non-2xx status code
+                            // Handle the error based on the HTTP status code and error message
+                            const status = error.response.status;
+                            const message = error.response.data.error_message;
+                            alert(`Error! Status: ${status}, Message: ${message}`);
+                            this.loading = false; // Set loading to false in case of an error
+                        } else if (error.request) {
+                            console.error(error);
+                            // The request was made, but no response was received
+                            alert('Error! No response received from the server. Please try again or contact support for assistance.');
+                            this.loading = false; // Set loading to false in case of an error
+                        } else {
+                            console.error(error);
+                            // Something else happened while setting up the request
+                            alert(`Oops! Something went wrong while fetch your expenses. Please try again or contact support for assistance.`);
+                            this.loading = false; // Set loading to false in case of an error
+                        }
+                    });
+            },
+
+            // THis gets called when user loads the page, or chooses a year or use chooses a month 
+            emitSpendings () {
+                const monthSpendings = {monthSpendings : this.monthSpendings, total_monthly_spendings : this.total_monthly_spendings, calenderDays : this.calenderDays, currentDay: this.currentDay}
+                this.$emit('userChoseMonthTimeFrame', monthSpendings)
             },
         },
         mounted() {
