@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint
-from app.models import db, Users, UsersSpendings
+from app.models import db, Users, UsersSpendings, UsersWallets
 from datetime import datetime
 from sqlalchemy import extract, func
 from calendar import monthrange, day_name, month_abbr
@@ -7,6 +7,32 @@ from calendar import monthrange, day_name, month_abbr
 
 appRoutes = Blueprint("routes", __name__)
 
+
+def egp(value):
+    """Format value as USD."""
+    return f"{value:,.2f} EGP"
+
+@appRoutes.route("/userWallet", methods=["POST","GET"])
+def userWallet():
+    # Replace this user id from by the one foumd in session['user_id']
+    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    
+    # IF we GET this route, to we need to sent to frontend the months and days of the current year
+    if request.method == "GET":
+        
+        wallet_object  = db.session.query(UsersWallets).filter(UsersWallets.user_id == 2).first()
+        
+        wallet_object.balance = egp(wallet_object.balance/100)
+        wallet_object.debt = egp(wallet_object.debt/100)
+        wallet_object.credit = egp(wallet_object.credit/100)
+        
+        wallet = {'balance': wallet_object.balance, 'debt': wallet_object.debt, 'credit': wallet_object.credit}
+        
+        response_object = {'status':'success', 'wallet': wallet}
+        
+        
+        return jsonify(response_object)
+        
 @appRoutes.route("/addExpenses", methods=["POST","GET"])
 def addExpenses():
     
@@ -144,7 +170,7 @@ def spendings():
         # print("total_daily_spendings", total_daily_spendings_list)
         # print("month_spendings", month_spendings)
         
-        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'item_type': spending.category} for spending in month_spendings]
+        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_spendings]
         
         # print(len(month_spendings_list))        
         # print(len(total_daily_spendings_list))        
@@ -226,7 +252,7 @@ def RecentMonthSpendings():
 
         month_spendings = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).order_by(UsersSpendings.date.desc()).all()
     
-        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'item_type': spending.category} for spending in month_spendings]
+        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_spendings]
         
         total_monthly_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).scalar()
 
@@ -268,7 +294,7 @@ def selectedMonthSpendings():
         month_spendings = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).order_by(UsersSpendings.date.desc()).all()
         
     
-        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'item_type': spending.category} for spending in month_spendings]
+        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_spendings]
         
         total_monthly_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).scalar()
 

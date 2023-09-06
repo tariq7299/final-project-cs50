@@ -5,7 +5,7 @@
             <li>{{ date }} - Total Amount: {{ totalAmount }}</li>
         </ul>
         <div class="center" v-for="spending in spendings" :key="spending.spending_id">
-            <p>Amount: {{ spending.amount_spent }} - Category: {{ spending.item_type }}</p>
+            <p>Amount: {{ spending.amount_spent }} - Category: {{ spending.category }}</p>
         </div>
     </div>
   </template>

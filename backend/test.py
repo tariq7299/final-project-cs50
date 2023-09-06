@@ -1,12 +1,11 @@
-from datetime import datetime
-from app.models import db, Users, UsersSpendings
+from datetime import datetime, timedelta
+from app.models import db, Users, UsersSpendings, UsersWallets
 from sqlalchemy import extract, func, and_
 
-emad_id = Users.query.filter_by(name="Emad Eiad").first().user_id
+def egp(value):
+    """Format value as USD."""
+    return f"{value:,.2f} EGP"
 
-salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
-
-mark_id = Users.query.filter_by(name="Mark Mork").first().user_id
 
 def create_db():
     
@@ -24,43 +23,43 @@ def create_db():
 
     db.session.commit()
     
+def add_wallet():
     
-    emad_spendings = UsersSpendings(user_id=emad_id, amount_spent="200", category="food")
+    emad_first = Users.query.filter_by(name="Emad Eiad").first()
+    print('emad_first', emad_first)
+    emad_id = Users.query.filter_by(name="Emad Eiad").first().user_id
+    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    mark_id = Users.query.filter_by(name="Mark Mork").first().user_id
     
-    salah_spendings = UsersSpendings(user_id=salah_id, amount_spent="40", category="seed")
+    print(salah_id)
+    print(mark_id)
     
-    mark_spendings = UsersSpendings(user_id=mark_id, amount_spent="90", category="need")
     
-    db.session.add(emad_spendings)
-    db.session.add(salah_spendings)
-    db.session.add(mark_spendings)
+    emad_wallet = UsersWallets(user_id=emad_id, balance=int(3000*100), debt=int(200*100), credit=int(300*100))
+    salah_wallet = UsersWallets(user_id=salah_id, balance=int(8000*100), debt=int(1000*100), credit=int(2000*100))
+    mark_wallet = UsersWallets(user_id=mark_id, balance=int(5000*100), debt=int(200*100), credit=int(300*100))
+    
+    
+    db.session.add(emad_wallet)
+    db.session.add(salah_wallet)
+    db.session.add(mark_wallet)
     
     db.session.commit()
     
-    print(user_Emad, user_salah, user_mark)
+    print(emad_wallet, salah_wallet, mark_wallet)
+
+def show_wallet():
+    wallet  = db.session.query(UsersWallets).filter(UsersWallets.user_id == 2).first()
         
+    wallet.balance = egp(wallet.balance/100)
+    wallet.debt = egp(wallet.debt/100)
+    wallet.credit = egp(wallet.credit/100)
     
-
-def show_spend():
+    print('wallet.balance:', wallet.balance, 'wallet.debt:', wallet.debt, 'wallet.credit:', wallet.credit)
     
-    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
-    
-    # Get all spendings for Ahmed in the year 2020
-    start_date = datetime(2020, 1, 1)
-    end_date = datetime(2020, 12, 31)
-    salah_spendings_2020 = UsersSpendings.query.filter_by(user_id=salah_id).filter(UsersSpendings.date >= start_date, UsersSpendings.date <= end_date).all()
-    
-    for spend_day in salah_spendings_2020:
-        print(f'Spending ID: {spend_day.spending_id}')
-        print(f'User ID: {spend_day.user_id}')
-        print(f'Date: {spend_day.date}')
-        print(f'amount: {spend_day.amount_spent}')
-        print(f'Item Type: {spend_day.category}')
-        print()
-
-        
-
 def pop_spend():
+    
+    db.session.query(UsersSpendings).delete()
     
     salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
     
@@ -88,21 +87,100 @@ def pop_spend():
     # for date in spendings_dates:
         # salah_spendings = UsersSpendings(user_id=salah_id, amount_spent=40, category="Bills", date=date.date())
         
-        
+    spend_date = datetime()
+    
     amounts = [100, 140, 200, 143, 334, 234, 452, 233]
     
     for amount in amounts:
-        salah_spendings = UsersSpendings(user_id=salah_id, amount_spent=amount, category="Bills", date=datetime(2023, 9, 5).date())
-                    
+        salah_spendings = UsersSpendings(user_id=salah_id, amount_spent=amount, category="Bills", date=datetime.now())        
+        db.session.add(salah_spendings)
+        
+    for amount in amounts:
+        salah_spendings = UsersSpendings(user_id=salah_id, amount_spent=amount, category="Car", date=datetime.now())
+        db.session.add(salah_spendings)
+        
+    for amount in amounts:
+        salah_spendings = UsersSpendings(user_id=salah_id, amount_spent=amount, category="Food", date=datetime.now())            
         db.session.add(salah_spendings)
     
-    db.session.commit()
-    print('222')
-     # Modify the query to include the sum calculation and group by day
-    user_spendings_today = UsersSpendings.query.filter(and_(UsersSpendings.user_id == salah_id, UsersSpendings.date == datetime(2023, 9, 5).date())).all()
     
-    spendings_str = [str(spending) for spending in user_spendings_today]
-    print('\n'.join(spendings_str))
+    specific_date = datetime(2023, 9, 6)
+    start_of_day = specific_date
+    end_of_day = specific_date + timedelta(days=1)
+    
+     # Modify the query to include the sum calculation and group by day
+    user_spendings_today = UsersSpendings.query.filter(and_(UsersSpendings.user_id == salah_id, UsersSpendings.date >= start_of_day, UsersSpendings.date < end_of_day)).order_by(UsersSpendings.date.desc()).all()
+    
+    [print(spending) for spending in user_spendings_today]
+    
+def pop_spend2():
+    
+    # Assuming 'db' is your SQLAlchemy instance
+    date_to_insert = datetime(2022, 1, 5)
+
+    # Generate 10 different times on the same date
+    time_intervals = [timedelta(hours=i) for i in range(8)]
+
+    spending_time_list = []
+    
+    for time_interval in time_intervals:
+        spending_time = date_to_insert + time_interval
+        spending_time_list.append(spending_time)
+        
+    amounts = [100, 140, 200, 143, 334, 234, 452, 233]
+    
+    categories = ['Bills', 'Car', 'Clothes', 'Communication', 'Eating out', 'Entertainment', 'Food', 'Gifts']
+    
+    for amount, spending_time, category in zip(amounts, spending_time_list, categories):
+        salah_spendings = UsersSpendings(
+            user_id=2,
+            amount_spent=amount,
+            category=category,
+            date=spending_time
+        )
+        
+        db.session.add(salah_spendings)
+    
+    
+    db.session.commit()
+    
+    user_spendings = db.session.query(UsersSpendings).filter(UsersSpendings.user_id == 2)
+    
+    [print(spending) for spending in user_spendings]
+    
+    
+    
+    
+    
+def show_spend():
+    
+    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    
+    # # Get all spendings for Ahmed in the year 2020
+    # start_date = datetime(2020, 1, 1)
+    # end_date = datetime(2020, 12, 31)
+    # salah_spendings_2020 = UsersSpendings.query.filter_by(user_id=salah_id).filter(UsersSpendings.date >= start_date, UsersSpendings.date <= end_date).all()
+    
+    # for spend_day in salah_spendings_2020:
+    #     print(f'Spending ID: {spend_day.spending_id}')
+    #     print(f'User ID: {spend_day.user_id}')
+    #     print(f'Date: {spend_day.date}')
+    #     print(f'amount: {spend_day.amount_spent}')
+    #     print(f'Item Type: {spend_day.category}')
+    #     print()
+
+    specific_date = datetime(2023, 9, 6)
+    start_of_day = specific_date
+    end_of_day = specific_date + timedelta(days=1)
+     
+    user_spendings_today = UsersSpendings.query.filter(and_(UsersSpendings.user_id == salah_id, UsersSpendings.date >= start_of_day, UsersSpendings.date < end_of_day)).order_by(UsersSpendings.date.desc()).all()
+    
+    [print(spending) for spending in user_spendings_today]
+    
+    # user_spendings = UsersSpendings.query.filter_by(user_id= 2).all()
+    # [print(spending) for spending in user_spendings]
+
+
         
     
     

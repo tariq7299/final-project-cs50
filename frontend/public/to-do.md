@@ -1,5 +1,8 @@
 # GLOBAL
 - Remove to-do.md from remote
+- Connect to api that gets the value of current dollar **OR** make the user write the doller currency when he opens the app !
+- Enable users to view any money as Egp or $
+-  
 
 # Backend 
 =========
@@ -18,24 +21,31 @@
 - Add History table which view all the history of transactions !
 - Populate UserSpendings with some samole rows with coulumns called 'catogory' insterad of "item_type"
 - Change the date columns to be datetime().now() and not datetime.now().date() to be able to sort it later !
+- Consider adding a column called "Currency" "UsersDebts and UsersCredits" to enable users to store value of money indifferent currencires
+- Consider removing "wallet_id" from UsersWallets as serves the purpose as "user_id"
+
 
 ## run.py
 - How to find a way to the server url dynamic in the frontend ??, like every time I want to make a axios request I won't have to type the exactly localhost...:5000, because sometimes the port number changes !
 ## routes.py
 - filter each currency to be viewed as currency like in finance problem from CS50 usd() function
+- Ask GPT if there a better names for the routing functions in routes.py
+- Handle affexpnse() error usererrors/amliciousUsers/...etc
 # Frontend
 ==========
 
 ## GLOBAL
 - Add login and register page
 - Add nav bar to every view
+- Apply egp() to each currency in the whole app
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css
 - What is '/@/component'
 
 ## CurrentViewSummary
-- 
+- Enable the users to store a second currency in balance and debt and credit
+- Handle error in fetchUserWallet() like you did in 'AddExpenses()' in AddEspenes.vue
 
 ## routes.vue
 - Change routes.vue to index.js
@@ -48,6 +58,9 @@
 - Make the  most recent month and most_recent_year be calculated in backend
 - Create a total_daily_spendings
 - 
+
+## SpendingsDays
+- Enable Users to view there expenses/spendings in different currencies !
 
 ## AddExpense
 - Create a num pad instead of phone num pad

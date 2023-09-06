@@ -1,43 +1,47 @@
 <template>
   <div class="row">
     <div class="col-6">
-        <UserFinance amountTitle="Balance" :amount="money.balance"/>        
+        <UserWallet walletTitle="Balance" :amount="wallet.balance"/>        
     </div>
     <div class="col-6">
-        <UserFinance amountTitle="Debt" :amount="money.moneyIOwe"/>
+        <UserWallet walletTitle="Debt" :amount="wallet.debt"/>
     </div>
     <div class="col-12">
-        <UserFinance amountTitle="Credit" :amount="money.moneyOwedToMe"/>
+        <UserWallet walletTitle="Credit" :amount="wallet.credit"/>
     </div>
   </div>
 </template>
 
 <script>
-    import UserFinance from './UserFinance.vue'
+    import UserWallet from './UserWallet.vue'
     import axios from 'axios'
 
     export default {
         name: "CurrentViewSummary",
         components: {
-            UserFinance, 
+            UserWallet, 
         },
         data () {
             return {
                 // Initialize as an empty object
-                money: {}
+                wallet: {}
             }
         },
         methods: {
-            async fetchUserFinance() {
-                // const res = await axios.get('api/userFinance')
-                // const data = await res.data
-                // return data
-                // This is a test
-                return { balance: 1000, moneyIOwe: 500, moneyOwedToMe: 200 }
+            async fetchUserWallet() {
+                try {
+                    const path = 'http://127.0.0.1:8083/userWallet'
+
+                    const response = await axios.get(path);
+
+                    this.wallet = response.data.wallet;
+                }   catch (error) {
+                    console.error('Error fetching data:', error);
+                }
             },
         },
         async created() {
-            this.money = await this.fetchUserFinance() 
+            await this.fetchUserWallet() 
         }
     }
 </script>

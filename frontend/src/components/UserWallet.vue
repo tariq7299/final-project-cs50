@@ -1,18 +1,18 @@
 <template>
   <div>
-    <h4>{{ amountTitle }}</h4>
+    <h4>{{ walletTitle }}</h4>
     <p>{{ amount }}</p>
   </div>
 </template>
 
 <script>
     export default {
-        name: "UserFinance",
+        name: "UserWallet",
         props: {
-            amountTitle: String,
+          walletTitle: String,
             amount: {
-                type: Number,
-                default: 0
+                type: String,
+                default: "0"
             }
             
         }
