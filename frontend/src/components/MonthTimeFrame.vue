@@ -36,7 +36,7 @@ import axios from 'axios'
        data () {
            return {
                monthlyExpenses: [],
-               total_monthly_expenses: '',
+               total_amount_of_month_expenses: '',
                years: [],
                selectedYear:'',
                months: [],
@@ -74,7 +74,7 @@ import axios from 'axios'
                    this.monthlyExpenses = response.data.monthly_expenses
                    
                    // GET the total monthly expenses amount which belongs to "selectedMonth" (the most recent month) 
-                   this.totalMonthlyExpenses = response.data.total_monthly_expenses
+                   this.totalMonthlyExpenses = response.data.total_amount_of_month_expenses
 
                    // Finaly Emit "monthlyExpenses" and "totalMonthlyExpenses" out to parent component of Home.vue, so it will be used in another sibiling component 
                    this.emitMonthlyExpenses();
@@ -117,7 +117,7 @@ import axios from 'axios'
                    this.monthlyExpenses = response.data.monthly_expenses
 
                    // GET the total monthly expenses amount which belongs to "selectedMonth" (the most recent month) which belongs to the "selectedYear" (the year the user have choosen)
-                   this.totalMonthlyExpenses = response.data.total_monthly_expenses
+                   this.totalMonthlyExpenses = response.data.total_amount_of_month_expenses
 
                    // Finaly Emit "monthlyExpenses" and "totalMonthlyExpenses" out to parent component of Home.vue, so it will be used in another sibiling component 
                    this.emitMonthlyExpenses()
@@ -176,7 +176,7 @@ import axios from 'axios'
                        this.monthlyExpenses = response.data.monthly_expenses;
 
                        // // // GET the total monthly expenses in the "selectedMonth" (selected by user) which belongs to the "selectedYear" (selected by user)
-                       this.totalMonthlyExpenses = response.data.total_monthly_expenses;
+                       this.totalMonthlyExpenses = response.data.total_amount_of_month_expenses;
 
                        // Finaly Emit "monthlyExpenses" and "totalMonthlyExpenses" out to parent component of Home.vue, so it will be used in another sibiling component
                        this.emitMonthlyExpenses();

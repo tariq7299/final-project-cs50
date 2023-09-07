@@ -69,4 +69,14 @@ def get_calendar_days(year, month_as_int):
     
     return calender_days_in_month
 
+
+def convert_num_months_to_abbr_months(months_as_num):
+    
+    months_as_abbr = []
+    for month_as_num, in months_as_num:
+        str_month = datetime(1, month_as_num, 1).strftime('%b')
+        months_as_abbr.append(str_month)
+        
+    return months_as_abbr
                 ### ### ### ### ### ### ### ### ### ### ### ### 
+                
