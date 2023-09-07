@@ -21,11 +21,20 @@ def get_user_wallet(user_id):
     Because money amounts are stored as int(amount*100) we have to convert it back to float, before displaying it on user screen.
     And also notice that I'm doing so because money columns stored in my db models as "Integer" not "Numaric" or "REAL" becasue after searching and asking GPT and bing, it seems that "Integer" data type is much better for storing money values.
     """
-    wallet_class_instance.balance = app.helpers.convert_int_to_float(wallet_class_instance.balance)
-    wallet_class_instance.debt = app.helpers.convert_int_to_float(wallet_class_instance.debt)
-    wallet_class_instance.credit = app.helpers.convert_int_to_float(wallet_class_instance.credit)
+    balance = wallet_class_instance.balance
+    balance = app.helpers.convert_int_to_float(balance)
+    balance_as_egp_currency = app.helpers.egp(balance) 
+    
+    debt = wallet_class_instance.debt
+    debt = app.helpers.convert_int_to_float(debt)
+    debt_as_egp_currency = app.helpers.egp(debt) 
+    
+    credit = wallet_class_instance.credit
+    credit = app.helpers.convert_int_to_float(credit)
+    credit_as_egp_currency = app.helpers.egp(credit) 
+    
     
     # Convert users' wallet row from 'class instance' to 'Dictionary', So to be able to jsonify() (So we can send it in the response as JSON), and access it in frontend.
-    wallet = {'balance': wallet_class_instance.balance, 'debt': wallet_class_instance.debt, 'credit': wallet_class_instance.credit}
+    wallet = {'balance': balance_as_egp_currency, 'debt': debt_as_egp_currency, 'credit': credit_as_egp_currency}
     
     return wallet

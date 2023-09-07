@@ -7,9 +7,11 @@ from calendar import monthrange, day_name, month_abbr
 
 
 # It formats any number given to a Egypting currency format
-def egp(value):
+def egp(amount):
     """Format value as USD."""
-    return f"{value:,.2f} EGP"
+        # Becasue the amount can sometimes be a string, so I need to covert tot a number first
+    amount = float(amount)
+    return f"{amount:,.2f} EGP"
 
 # This converts money values stored in db as int(amount*100) to float by doing amount/100.
 """
@@ -17,5 +19,54 @@ Because money amounts are stored as int(amount*100) we have to convert it back t
 And also notice that I'm doing so because money columns stored in my db models as "Integer" not "Numaric" or "REAL" becasue after searching and asking GPT and bing, it seems that "Integer" data type is much better for storing money values.
 """
 def convert_int_to_float(amount):
-    return egp(amount/100)
+    # Becasue the amount can sometimes be a string, so I need to covert tot a number first
+    amount = int(amount)
+    return amount/100
 
+def convert_float_to_int(amount):
+        # Becasue the amount can sometimes be a string, so I need to covert tot a number first
+    amount = float(amount)
+    return int(amount*100)
+
+
+            ### ### ### ### ### ### # TO-DO ---> Write comments ### ### ### ### ### ### ### ###
+
+def get_days_of_a_month_in_calendar_as_abbr(year, month_as_int):
+    
+    #  monthrange() outputs the total number of days in a specific month
+    # first_day : Is actually the correspondednt int day of the first day of month in calender, so for example if the first dat is Friday so int day will be '4', becasue Monday is '0'
+    first_day, num_days = monthrange(year, month_as_int)
+    
+    # 'calender_days_in_month' is a list of dict, where each dict is {day_name:str day, day_num:Int day}
+    # day_name[] : First of all notice that day_name[] is not a function !, it is an attribute, It takes int day as an index, then outputs the string name of day, where monday is '0' and tuseday is '1' ..etc
+    calender_days_in_month_as_abbr = [{'day_name': day_name[(first_day + i) % 7]} for i in range(num_days)]
+
+    return calender_days_in_month_as_abbr
+
+
+def get_days_of_a_month_in_calendar_as_int(year, month_as_int):
+    
+    _, num_days = monthrange(year, month_as_int)
+    
+    calender_days_in_month_as_int = [{'day_num' : i + 1} for i in range(num_days)]
+    
+    return calender_days_in_month_as_int
+
+def combine_int_days_and_abbr_days_in_one_list(calender_days_in_month_as_abbr, calender_days_in_month_as_int):
+    
+    calender_days_in_month = calender_days_in_month_as_abbr.copy()
+    
+    for i in range(len(calender_days_in_month)):
+        calender_days_in_month[i].update(calender_days_in_month_as_int[i])
+    
+    return  calender_days_in_month
+    
+def get_calendar_days(year, month_as_int):
+    
+    calender_days_in_month_as_abbr = get_days_of_a_month_in_calendar_as_abbr(year, month_as_int)
+    calender_days_in_month_as_int = get_days_of_a_month_in_calendar_as_int(year, month_as_int)
+    calender_days_in_month = combine_int_days_and_abbr_days_in_one_list(calender_days_in_month_as_abbr, calender_days_in_month_as_int)
+    
+    return calender_days_in_month
+
+                ### ### ### ### ### ### ### ### ### ### ### ### 

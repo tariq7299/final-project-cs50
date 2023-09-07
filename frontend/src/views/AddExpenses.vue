@@ -7,7 +7,7 @@
         <div class="col">
             <!-- <h1>{{ calenderDays }}</h1> -->
             <label for="day">Month</label>
-            <select v-model="selectedMonth" name="month" id="month" @change="fetchSelectedMonthDays">
+            <select v-model="selectedMonth" name="month" id="month" @change="fetchDaysForSelectedMonth">
                 <!-- We have to JSON.parse(calenderDays) because we have JSON.strigify() it in HOME.vue-->
                 <option v-for="(month, index) in months" :value="month" :key="index">{{ month }}</option>
             </select>

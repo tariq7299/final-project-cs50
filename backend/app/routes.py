@@ -41,28 +41,29 @@ def user_wallet():
 
 @appRoutes.route("/get_calendar", methods=["POST","GET"])
 def get_calendar():
-    
-    current_year = datetime.now().year
-    
+        
     # When user loads the page, it will populate the two <select> tags with calendar months of the current year, and calendar days of the current month
     if request.method == "GET":
+
+        """
+        I will actually view the months of current year only, because I didn't yet add the ability to enable users to choose a differnet year than the current one, to add expenses.
+        So currently users can only choose a month and day from the current year.
+        """
+        current_year = datetime.now().year
         
+        # I fetched current month, and selected it for user automtically, Because this route gets requested when user loads the page only
         current_month_int = datetime.now().month
-
-        # Get the abbreviated list of month names
+        
+        # Defines the months short names (abbreviations) in a list
         current_year_months_abbr = month_abbr[1:]
-
+        
+        # The current month name abbreviated (short name of month)
         current_month_abbr = month_abbr[current_month_int]
 
         current_day = datetime.now().day
 
-        #  monthrange() outputs the total number of days in a specific month
-        # first_day : Is actually the correspondednt int day of the first day of month in calender, so for example if the first dat is Friday so int day will be '4', becasue Monday is '0'
-        first_day, num_days = monthrange(current_year, current_month_int)
-        
-        # 'calender_days_in_month' is a list of tuples, where each tuple is (str day, Int day)
-        # day_name[] : First of all notice that day_name[] is not a function !, it is an attribute, It takes int day as an index, then outputs the string name of day, where monday is '0' and tuseday is '1' ..etc
-        calender_days_in_month = [{'day_name': day_name[(first_day + i) % 7],  'day_num' : i + 1} for i in range(num_days)]
+        # This is a list of dicts, where each elemn¥ent cosists of two dictioneries the first contains day short name as "value", and the second dict contains the day as integer to be a "vale"  ---> [{'day_name': 'Thursday', 'day_num': 1}, {'day_name': 'Friday', 'day_num': 2}, ..... ] 
+        calender_days_in_month = app.helpers.get_calendar_days(current_year, current_month_int)
         
         # THese are the expenses categories that will be sent to client, to choose one, so the expenses client made is added to that very categoty in db
         categories = ['Bills', 'Car', 'Clothes', 'Communication', 'Eating out', 'Entertainment', 'Food', 'Gifts', 'Health', 'House', 'Kids', 'Sports', 'Transport']
@@ -71,21 +72,24 @@ def get_calendar():
 
         return jsonify(response_object)
     
+    # Now this gets requested whenever user chooses a month, so then it will populate the <select> tag of days, calendar days of that selected Month.
     elif request.method == "POST":
         
         post_data = request.get_json()
+        
+        # The selected month sent from client as the string short name of month, so we have to covert it to the Integer value, in order to be used later in code.
         selected_month_str   = post_data.get('selectedMonth')
         selected_month_int = datetime.strptime(selected_month_str, '%b').month
         
-        first_day, num_days = monthrange(current_year, selected_month_int)
-
-        calender_days_in_selected_month = [{'day_name': day_name[(first_day + i) % 7],  'day_num' : i + 1} for i in range(num_days)]
-
+        current_year = datetime.now().year
+        
+        calender_days_in_selected_month = app.helpers.get_calendar_days(current_year, selected_month_int)
+        
         response_object = {'status':'success', 'days':calender_days_in_selected_month}
          
         return jsonify(response_object)
     
-    
+# This route will get requested when user tries to submit his new expense
 @appRoutes.route("/add_expenses", methods=["POST","GET"])
 def add_expenses():
     
@@ -101,22 +105,27 @@ def add_expenses():
         selected_month_int = datetime.strptime(selected_month_str, '%b').month
         selected_day  = post_data.get('selectedDay')
         submitted_amount_spent  = post_data.get('amountSpent')
-        submitted_category  = post_data.get('category')
-                
-        new_expense = UsersSpendings(user_id=salah_id, date=datetime(current_year, selected_month_int, selected_day).date(), amount_spent=submitted_amount_spent, category=submitted_category)
+        submitted_category  = post_data.get('category') 
        
         try:
-            db.session.add(new_expense)
-            response_object = {'submitedAmountSpent': submitted_amount_spent, 'submitedCategory':submitted_category}
             
-            # You cannot rollback() if you executed commit()
-            db.session.commit()
+            app.queries.expenses_queries.insert_new_expense_into_db(salah_id, current_year, selected_month_int, selected_day, submitted_amount_spent, submitted_category)
+            
+            submitted_amount_spent_as_egp_currency = app.helpers.egp(submitted_amount_spent)
+            
+            response_object = {'submitedAmountSpent': submitted_amount_spent_as_egp_currency, 'submitedCategory':submitted_category}
+            
             return jsonify(response_object)
+        
         except Exception as e:
+            
             db.session.rollback()
+            
             error_message = 'An error occurred while adding the expense! Error message: ' + str(e)
             return jsonify({'error_message': error_message}), 400
+        
         finally:
+            
             db.session.close()
 
 

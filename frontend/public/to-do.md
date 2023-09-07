@@ -34,6 +34,9 @@
 - filter each currency to be viewed as currency like in finance problem from CS50 usd() function
 - Ask GPT if there a better names for the routing functions in routes.py
 - Handle affexpnse() error usererrors/amliciousUsers/...etc
+
+## helpers.py
+- Write comments for calendar days functions 
 # Frontend
 ==========
 
