@@ -7,7 +7,7 @@
         <div class="col">
             <!-- <h1>{{ calenderDays }}</h1> -->
             <label for="day">Month</label>
-            <select v-model="selectedMonth" name="month" id="month" @change="clearSlectedDay">
+            <select v-model="selectedMonth" name="month" id="month" @change="fetchSelectedMonthDays">
                 <!-- We have to JSON.parse(calenderDays) because we have JSON.strigify() it in HOME.vue-->
                 <option v-for="(month, index) in months" :value="month" :key="index">{{ month }}</option>
             </select>
@@ -56,9 +56,10 @@ export default {
         }
     },
     methods: {
+
         async  fetchYearsAndMonths () {
             try {
-                    const path = 'http://127.0.0.1:8083/add_expenses'
+                    const path = 'http://127.0.0.1:8083/get_calendar'
 
                     const response = await axios.get(path);
 
@@ -72,7 +73,37 @@ export default {
                     console.error('Error fetching data:', error);
                 }
             },
-            addExpense() {
+
+        fetchDaysForSelectedMonth () {
+            const path = 'http://127.0.0.1:8083/get_calendar';
+
+            axios
+                .post(path, {
+                    selectedMonth: this.selectedMonth,
+                })
+                .then((response) => {
+                    // Handle success response
+                    this.days = response.data.days;
+                    // this.selectedDay = response.data.days[0]
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        // The request was made, and the server responded with a non-2xx status code
+                        // Handle the error based on the HTTP status code and error message
+                        const status = error.response.status;
+                        const message = error.response.data.error_message;
+                        alert(`Error! Status: ${status}, Message: ${message}`);
+                    } else if (error.request) {
+                        // The request was made, but no response was received
+                        alert('Error! No response received from the server. Please try again or contact support for assistance.');
+                    } else {
+                        // Something else happened while setting up the request
+                        alert(`Oops! Something went wrong while adding the expense. Please try again or contact support for assistance.`);
+                    }
+                });
+        },
+
+        addExpense() {
             const path = 'http://127.0.0.1:8083/add_expenses';
 
             axios
@@ -105,11 +136,6 @@ export default {
                     }
                 });
         },
-
-        clearSlectedDay () {
-            this.selectedDay = ''
-        }
-            
     },
     created() {
         this.fetchYearsAndMonths()

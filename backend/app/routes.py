@@ -39,17 +39,14 @@ def user_wallet():
             
             return jsonify(response_object), 400
 
-@appRoutes.route("/add_expenses", methods=["POST","GET"])
-def add_expenses():
+@appRoutes.route("/get_calendar", methods=["POST","GET"])
+def get_calendar():
     
-    # Replace this user id from by the one foumd in session['user_id']
-    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    current_year = datetime.now().year
     
-    # IF we GET this route, to we need to sent to frontend the months and days of the current year
+    # When user loads the page, it will populate the two <select> tags with calendar months of the current year, and calendar days of the current month
     if request.method == "GET":
         
-        current_year = datetime.now().year
-
         current_month_int = datetime.now().month
 
         # Get the abbreviated list of month names
@@ -67,13 +64,35 @@ def add_expenses():
         # day_name[] : First of all notice that day_name[] is not a function !, it is an attribute, It takes int day as an index, then outputs the string name of day, where monday is '0' and tuseday is '1' ..etc
         calender_days_in_month = [{'day_name': day_name[(first_day + i) % 7],  'day_num' : i + 1} for i in range(num_days)]
         
+        # THese are the expenses categories that will be sent to client, to choose one, so the expenses client made is added to that very categoty in db
         categories = ['Bills', 'Car', 'Clothes', 'Communication', 'Eating out', 'Entertainment', 'Food', 'Gifts', 'Health', 'House', 'Kids', 'Sports', 'Transport']
         
         response_object = {'status':'success', 'current_year_months': current_year_months_abbr, 'current_month':current_month_abbr, 'days':calender_days_in_month, 'current_day':current_day, 'categories':categories}
 
         return jsonify(response_object)
-
+    
     elif request.method == "POST":
+        
+        post_data = request.get_json()
+        selected_month_str   = post_data.get('selectedMonth')
+        selected_month_int = datetime.strptime(selected_month_str, '%b').month
+        
+        first_day, num_days = monthrange(current_year, selected_month_int)
+
+        calender_days_in_selected_month = [{'day_name': day_name[(first_day + i) % 7],  'day_num' : i + 1} for i in range(num_days)]
+
+        response_object = {'status':'success', 'days':calender_days_in_selected_month}
+         
+        return jsonify(response_object)
+    
+    
+@appRoutes.route("/add_expenses", methods=["POST","GET"])
+def add_expenses():
+    
+    # Replace this user id from by the one foumd in session['user_id']
+    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    
+    if request.method == "POST":
         
         current_year = datetime.now().year
         
