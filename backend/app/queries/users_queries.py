@@ -7,9 +7,12 @@ import app.helpers
 import app.queries.users_queries
 import app.queries.expenses_queries
 
-
 # This file holds all my CRUD queries that is related users account
 
+
+# THis selects a specific user_id from db, by username (it is name for now !)
+# def select_user_id_from_db(name):
+    
 
 # THis fetch the user's wallet info (like: balance, debt, credit)
 def get_user_wallet(user_id):

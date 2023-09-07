@@ -19,6 +19,7 @@ def insert_new_expense_into_db(user_id, year, month, day, amount, category):
     db.session.commit()
     
 def select_years_contains_expenses(user_id):
+    
     years = UsersSpendings.query.with_entities(
                 extract('year', UsersSpendings.date)
             ).filter(
@@ -28,6 +29,10 @@ def select_years_contains_expenses(user_id):
             ).order_by(
                 extract('year', UsersSpendings.date).desc()
             ).all()
+            
+    # years[0] this will access the first value/element in the tuple of 'year' in 'years' list
+    years = [year[0] for year in years]
+    
     return years
 
 def select_most_recent_month(user_id, year):
@@ -73,3 +78,4 @@ def extract_total_amount_of_month_expenses(user_id, year, month):
     total_amount_of_month_expenses = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == user_id).filter(extract('year', UsersSpendings.date) == year).filter(extract('month', UsersSpendings.date) == month).scalar()
     
     return total_amount_of_month_expenses
+

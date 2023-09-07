@@ -26,6 +26,7 @@
 - Change the date columns to be datetime().now() and not datetime.now().date() to be able to sort it later !
 - Consider adding a column called "Currency" "UsersDebts and UsersCredits" to enable users to store value of money indifferent currencires
 - Consider removing "wallet_id" from UsersWallets as serves the purpose as "user_id"
+- Change the UserSpendinds to UsersExpenses, annd also each coulmn with 'spending' title to 'expense' ..etc
 
 
 ## run.py
@@ -34,6 +35,7 @@
 - filter each currency to be viewed as currency like in finance problem from CS50 usd() function
 - Ask GPT if there a better names for the routing functions in routes.py
 - Handle affexpnse() error usererrors/amliciousUsers/...etc
+- change every "spending" to "expense"
 
 ## helpers.py
 - Write comments for calendar days functions 

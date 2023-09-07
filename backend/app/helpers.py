@@ -5,7 +5,6 @@ from sqlalchemy import extract, func
 from calendar import monthrange, day_name, month_abbr
 
 
-
 # It formats any number given to a Egypting currency format
 def egp(amount):
     """Format value as USD."""
@@ -43,7 +42,6 @@ def get_days_of_a_month_in_calendar_as_abbr(year, month_as_int):
 
     return calender_days_in_month_as_abbr
 
-
 def get_days_of_a_month_in_calendar_as_int(year, month_as_int):
     
     _, num_days = monthrange(year, month_as_int)
@@ -68,7 +66,6 @@ def get_calendar_days(year, month_as_int):
     calender_days_in_month = combine_int_days_and_abbr_days_in_one_list(calender_days_in_month_as_abbr, calender_days_in_month_as_int)
     
     return calender_days_in_month
-
 
 def convert_num_months_to_abbr_months(months_as_num):
     

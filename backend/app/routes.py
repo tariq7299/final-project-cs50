@@ -7,9 +7,8 @@ import app.helpers
 import app.queries.users_queries
 import app.queries.expenses_queries
 
+
 appRoutes = Blueprint("routes", __name__)
-
-
 
 @appRoutes.route("/user_wallet", methods=["POST","GET"])
 def user_wallet():
@@ -136,7 +135,6 @@ def load_recent_month_expenses():
     # Replace this user id from by the one foumd in session['user_id']
     salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
     
-    response_object = {'status':'success'}
     if request.method == "GET":
         
         # Definition of the most recent year
@@ -145,7 +143,7 @@ def load_recent_month_expenses():
         # with_entities() It gets specific columns only
         years = app.queries.expenses_queries.select_years_contains_expenses(salah_id)
 
-        most_recent_year = years[0][0]
+        most_recent_year = years[0]
         
         most_recent_month_of_expenses = app.queries.expenses_queries.select_most_recent_month(salah_id, most_recent_year)
         
@@ -157,32 +155,9 @@ def load_recent_month_expenses():
         
         total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, most_recent_year, most_recent_month_of_expenses)
                 
-        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
-        
-        # print(len(month_spendings_list))        
-        # print(len(total_daily_spendings_list))        
-        # for i in range(len(month_spendings_list)):
-        #     month_spendings_list[i].update(total_daily_spendings_list[i])
-        
-        
-        # [print(spending) for spending in month_spendings_list]
-        
-        # Add years data to response object
-        # years[0] this will access the first value/element in the tuple of 'year' in 'years' list
-        response_object['years'] = [year[0] for year in years]
-        # Add years data to response object
-        # years[0] this will access the first value/element in the tuple of 'year' in 'years' list
-        response_object['months'] = months_as_abbr
-        
-        # For tests
-        # [print('spending', spending) for spending in month_expenses]
-        
-        response_object['monthly_expenses'] = month_spendings_list
-        
-        response_object['total_amount_of_month_expenses'] = total_amount_of_month_expenses
-        
-        
-        # response_object['total_daily_spendings'] = total_daily_spendings_list
+        month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
+                
+        response_object = { 'status': 'success', 'years': years, 'months': months_as_abbr,'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
         
         # Return response object as JSON∆
         return jsonify(response_object)
@@ -194,7 +169,6 @@ def fetch_months_and_recent_month_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
     salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
-    response_object = {'status':'success'}
     
     if request.method == "POST":
             
@@ -202,62 +176,21 @@ def fetch_months_and_recent_month_expenses():
         
         selected_year   = post_data.get('selectedYear')
         
+        most_recent_month_of_expenses = app.queries.expenses_queries.select_most_recent_month(salah_id, selected_year)
         
+        months_as_num = app.queries.expenses_queries.select_all_months_contain_expenses_in_specific_year(salah_id, selected_year)
 
-        most_recent_month_list = UsersSpendings.query.with_entities(
-                extract('month', UsersSpendings.date)
-            ).filter(
-                UsersSpendings.user_id == salah_id
-            ).filter(
-                extract('year', UsersSpendings.date) == selected_year
-            ) .group_by(
-                extract('month', UsersSpendings.date)
-            ).order_by(
-                extract('month', UsersSpendings.date).desc()
-            ).first()
+        months_as_abbr = app.helpers.convert_num_months_to_abbr_months(months_as_num)
             
-        most_recent_month = most_recent_month_list[0]
+        month_expenses = app.queries.expenses_queries.select_expenses_in_month(salah_id, selected_year, most_recent_month_of_expenses)
         
-        months_as_num = UsersSpendings.query.with_entities(
-                    extract('month', UsersSpendings.date)
-                ).filter(
-                    UsersSpendings.user_id == salah_id
-                ).filter(
-                    extract('year', UsersSpendings.date) == selected_year
-                ) .group_by(
-                    extract('month', UsersSpendings.date)
-                ).order_by(
-                    extract('month', UsersSpendings.date).desc()
-                ).all()
-        months_as_abbr = []
-        
-        for num_month, in months_as_num:
-            str_month = datetime(1, num_month, 1).strftime('%b')
-            months_as_abbr.append(str_month)
             
-                    #  monthrange() outputs the total number of days in a specific month
-
-        month_expenses = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).order_by(UsersSpendings.date.desc()).all()
-    
-        month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
+        month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
         
-        total_amount_of_month_expenses = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).scalar()
-
-        # total_daily_spendings = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == most_recent_month).filter().group_by(extract('day', UsersSpendings.date)).order_by(extract('month', UsersSpendings.date).desc()).all()
-
-        # total_daily_spendings_list = [{'total_daily_spending': row[0]} for row in total_daily_spendings]
+        total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, selected_year, most_recent_month_of_expenses)
         
-        response_object['months'] = months_as_abbr
+        response_object = { 'status': 'success', 'months': months_as_abbr,'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
         
-        response_object['total_amount_of_month_expenses'] = total_amount_of_month_expenses
-        
-
-
-        
-        # response_object['total_daily_spendings'] = total_daily_spendings_list
-
-        response_object['monthly_expenses'] = month_spendings_list
-
         # Return response object as JSON
         return jsonify(response_object)
     
@@ -282,13 +215,13 @@ def fetch_selected_month_expenses():
             month_expenses = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).order_by(UsersSpendings.date.desc()).all()
             
         
-            month_spendings_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
+            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
             
             total_amount_of_month_expenses = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).scalar()
                     
             response_object['total_amount_of_month_expenses'] = total_amount_of_month_expenses
 
-            response_object['monthly_expenses'] = month_spendings_list
+            response_object['monthly_expenses'] = month_expenses_list
 
             # Return response object as JSON
             return jsonify(response_object)
