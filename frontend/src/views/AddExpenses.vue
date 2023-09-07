@@ -58,7 +58,7 @@ export default {
     methods: {
         async  fetchYearsAndMonths () {
             try {
-                    const path = 'http://127.0.0.1:8083/addExpenses'
+                    const path = 'http://127.0.0.1:8083/add_expenses'
 
                     const response = await axios.get(path);
 
@@ -73,7 +73,7 @@ export default {
                 }
             },
             addExpense() {
-            const path = 'http://127.0.0.1:8083/addExpenses';
+            const path = 'http://127.0.0.1:8083/add_expenses';
 
             axios
                 .post(path, {

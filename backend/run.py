@@ -12,6 +12,7 @@ backend/
         config.py 
         models.py  
         routes.py
+        helpers.py
     instance/
         mydatabase.db
     .env

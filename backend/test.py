@@ -300,7 +300,7 @@ def total_d_spend():
     daily_spendings = db.session.query(
         func.date(UsersSpendings.date).label("spending_date"),
         func.sum(UsersSpendings.amount_spent).label("total_spent")
-    ).filter(UsersSpendings.user_id == salah_id).\
+    ).filter(UsersSpendings.user_id == 2).\
         group_by("spending_date").\
         order_by("spending_date").all()
     
@@ -310,7 +310,7 @@ def total_d_spend():
     [print(spending) for spending in month_spendings]
     
 def show_days():
-    days = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).group_by(extract('month', UsersSpendings.date)).order_by(extract('day', UsersSpendings.date).desc()).all()
+    days = UsersSpendings.query.filter(UsersSpendings.user_id == 2).group_by(extract('month', UsersSpendings.date)).order_by(extract('day', UsersSpendings.date).desc()).all()
     
     # print(days)
     

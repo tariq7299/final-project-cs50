@@ -6,6 +6,9 @@
 
 # Backend 
 =========
+## GLOBAL
+- Create to main versions of your codebase ! one that is dependednt on functions (functional programming) and another one that is dependent on objects (OOP)
+- Make a function in helpers for "response_object", (That can create responses objects)
 
 ## models.py
 - Add indexes to databases to make querieas it faster

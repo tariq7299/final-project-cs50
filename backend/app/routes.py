@@ -3,43 +3,47 @@ from app.models import db, Users, UsersSpendings, UsersWallets
 from datetime import datetime
 from sqlalchemy import extract, func
 from calendar import monthrange, day_name, month_abbr
-
+import app.helpers
+import app.queries.users_queries
+import app.queries.expenses_queries
 
 appRoutes = Blueprint("routes", __name__)
 
 
-def egp(value):
-    """Format value as USD."""
-    return f"{value:,.2f} EGP"
 
-@appRoutes.route("/userWallet", methods=["POST","GET"])
-def userWallet():
+@appRoutes.route("/user_wallet", methods=["POST","GET"])
+def user_wallet():
+    
     # Replace this user id from by the one foumd in session['user_id']
     salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
     
     # IF we GET this route, to we need to sent to frontend the months and days of the current year
     if request.method == "GET":
+        try:
+            
+            # 'wallet' contains user wallet info (balance, debt, credit)
+            wallet = app.queries.users_queries.get_user_wallet(salah_id)
+            
+            # We have to put "wallet" into an abject to jsonify() it later, so we can send it to the client
+            response_object = { 'status': 'success', 'wallet': wallet }
+            
+            return jsonify(response_object)
         
-        wallet_object  = db.session.query(UsersWallets).filter(UsersWallets.user_id == 2).first()
-        
-        wallet_object.balance = egp(wallet_object.balance/100)
-        wallet_object.debt = egp(wallet_object.debt/100)
-        wallet_object.credit = egp(wallet_object.credit/100)
-        
-        wallet = {'balance': wallet_object.balance, 'debt': wallet_object.debt, 'credit': wallet_object.credit}
-        
-        response_object = {'status':'success', 'wallet': wallet}
-        
-        
-        return jsonify(response_object)
-        
-@appRoutes.route("/addExpenses", methods=["POST","GET"])
-def addExpenses():
+        # If any problem arises then return error message to the client
+        except Exception as e:
+            
+            # the Excepting hta has risen "str(e)" will included in the error message sent to user
+            error_message = 'An error occurred while fetching expenses! Error message: ' + str(e)
+            
+            response_object = {'error_message': error_message}
+            
+            return jsonify(response_object), 400
+
+@appRoutes.route("/add_expenses", methods=["POST","GET"])
+def add_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
     salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
-    
-    
     
     # IF we GET this route, to we need to sent to frontend the months and days of the current year
     if request.method == "GET":
@@ -297,7 +301,7 @@ def fetch_selected_month_expenses():
             return jsonify(response_object)
         
         except Exception as e:
-            error_message = 'An error occurred while adding the expense! Error message: ' + str(e)
+            error_message = 'An error occurred while fetching expenses! Error message: ' + str(e)
             return jsonify({'error_message': error_message}), 400
         
         

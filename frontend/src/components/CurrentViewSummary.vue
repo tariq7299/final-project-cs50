@@ -41,7 +41,7 @@
             async fetchUserWallet() {
                 try {
                     const apiUrl = process.env.VUE_APP_API_BASE_URL;
-                    const path = apiUrl + '/userWallet';
+                    const path = apiUrl + '/user_wallet';
 
                     const response = await axios.get(path);
 
