@@ -36,6 +36,7 @@
 - Ask GPT if there a better names for the routing functions in routes.py
 - Handle affexpnse() error usererrors/amliciousUsers/...etc
 - change every "spending" to "expense"
+- Write comments in routing functions
 
 ## helpers.py
 - Write comments for calendar days functions 
@@ -51,10 +52,14 @@
 - Use Caching or Memoization: If you frequently fetch the same data and it doesn't change often, you could consider implementing caching or memoization techniques to reduce unnecessary API requests.
 - Use Reusable Axios Instance: Depending on your project, you may want to create a reusable Axios instance with default configurations (e.g., base URL, headers) instead of configuring Axios in every component. This can help centralize your API configuration and simplify maintenance.
 - Code organization: It’s generally a good idea to keep your code organized and modular. In this case, you could consider moving the code for fetching the user’s wallet data into a separate module or service, and then importing that module into your component. This would make your component code cleaner and easier to read, and would also make it easier to reuse the code for fetching the user’s wallet data in other parts of your application.
+-       -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        Explaint the previous lines ??
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css
 - What is '/@/component'
+- link inide nav bar elements, and correct pages of app
 
 ## CurrentViewSummary
 - Enable the users to store a second currency in balance and debt and credit

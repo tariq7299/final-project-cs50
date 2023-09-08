@@ -77,12 +77,12 @@ def get_calendar():
         post_data = request.get_json()
         
         # The selected month sent from client as the string short name of month, so we have to covert it to the Integer value, in order to be used later in code.
-        selected_month_str   = post_data.get('selectedMonth')
-        selected_month_int = datetime.strptime(selected_month_str, '%b').month
+        selected_month_abbr   = post_data.get('selectedMonth')
+        selected_month_num = datetime.strptime(selected_month_abbr, '%b').month
         
         current_year = datetime.now().year
         
-        calender_days_in_selected_month = app.helpers.get_calendar_days(current_year, selected_month_int)
+        calender_days_in_selected_month = app.helpers.get_calendar_days(current_year, selected_month_num)
         
         response_object = {'status':'success', 'days':calender_days_in_selected_month}
          
@@ -100,15 +100,15 @@ def add_expenses():
         current_year = datetime.now().year
         
         post_data = request.get_json()
-        selected_month_str   = post_data.get('selectedMonth')
-        selected_month_int = datetime.strptime(selected_month_str, '%b').month
+        selected_month_abbr   = post_data.get('selectedMonth')
+        selected_month_num = datetime.strptime(selected_month_abbr, '%b').month
         selected_day  = post_data.get('selectedDay')
         submitted_amount_spent  = post_data.get('amountSpent')
         submitted_category  = post_data.get('category') 
        
         try:
             
-            app.queries.expenses_queries.insert_new_expense_into_db(salah_id, current_year, selected_month_int, selected_day, submitted_amount_spent, submitted_category)
+            app.queries.expenses_queries.insert_new_expense_into_db(salah_id, current_year, selected_month_num, selected_day, submitted_amount_spent, submitted_category)
             
             submitted_amount_spent_as_egp_currency = app.helpers.egp(submitted_amount_spent)
             
@@ -137,31 +137,42 @@ def load_recent_month_expenses():
     
     if request.method == "GET":
         
-        # Definition of the most recent year
-        
-        # extract() is used to get the years from date object !, of the column 'date' of type 'db.date'
-        # with_entities() It gets specific columns only
-        years = app.queries.expenses_queries.select_years_contains_expenses(salah_id)
-
-        most_recent_year = years[0]
-        
-        most_recent_month_of_expenses = app.queries.expenses_queries.select_most_recent_month(salah_id, most_recent_year)
-        
-        months_as_num = app.queries.expenses_queries.select_all_months_contain_expenses_in_specific_year(salah_id, most_recent_year)
-
-        months_as_abbr = app.helpers.convert_num_months_to_abbr_months(months_as_num)
+        try: 
+               
+            # Definition of the most recent year
             
-        month_expenses = app.queries.expenses_queries.select_expenses_in_month(salah_id, most_recent_year, most_recent_month_of_expenses)
-        
-        total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, most_recent_year, most_recent_month_of_expenses)
+            # extract() is used to get the years from date object !, of the column 'date' of type 'db.date'
+            # with_entities() It gets specific columns only
+            years = app.queries.expenses_queries.select_years_contains_expenses(salah_id)
+
+            most_recent_year = years[0]
+            
+            most_recent_month_of_expenses = app.queries.expenses_queries.select_most_recent_month(salah_id, most_recent_year)
+            
+            months_as_num = app.queries.expenses_queries.select_all_months_contain_expenses_in_specific_year(salah_id, most_recent_year)
+
+            months_as_abbr = app.helpers.convert_num_months_to_abbr_months(months_as_num)
                 
-        month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
-                
-        response_object = { 'status': 'success', 'years': years, 'months': months_as_abbr,'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
-        
-        # Return response object as JSON∆
-        return jsonify(response_object)
+            month_expenses = app.queries.expenses_queries.select_expenses_in_month(salah_id, most_recent_year, most_recent_month_of_expenses)
+            
+            total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, most_recent_year, most_recent_month_of_expenses)
     
+            # Formatig the total amount spent as a currency 
+            total_amount_of_month_expenses = app.helpers.egp(total_amount_of_month_expenses)
+    
+            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
+                    
+            response_object = { 'status': 'success', 'years': years, 'months': months_as_abbr,'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
+            
+            # Return response object as JSON∆
+            return jsonify(response_object)
+        
+        except Exception as e:
+
+            error_message = 'An error occurred while fetching expenses! Error message: ' + str(e)
+
+            return jsonify({'error_message': error_message}), 400
+
 # @<bluebrint name>.route()
 # USER CHOOSE YEAR IN SPENDING PAGE
 @appRoutes.route("/fetch_months_and_recent_month_expenses", methods=["POST","GET"])
@@ -171,28 +182,39 @@ def fetch_months_and_recent_month_expenses():
     salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
     
     if request.method == "POST":
+        
+        try:    
             
-        post_data = request.get_json()
-        
-        selected_year   = post_data.get('selectedYear')
-        
-        most_recent_month_of_expenses = app.queries.expenses_queries.select_most_recent_month(salah_id, selected_year)
-        
-        months_as_num = app.queries.expenses_queries.select_all_months_contain_expenses_in_specific_year(salah_id, selected_year)
+            post_data = request.get_json()
+            
+            selected_year   = post_data.get('selectedYear')
+            
+            most_recent_month_of_expenses = app.queries.expenses_queries.select_most_recent_month(salah_id, selected_year)
+            
+            months_as_num = app.queries.expenses_queries.select_all_months_contain_expenses_in_specific_year(salah_id, selected_year)
 
-        months_as_abbr = app.helpers.convert_num_months_to_abbr_months(months_as_num)
+            months_as_abbr = app.helpers.convert_num_months_to_abbr_months(months_as_num)
+                
+            month_expenses = app.queries.expenses_queries.select_expenses_in_month(salah_id, selected_year, most_recent_month_of_expenses)
             
-        month_expenses = app.queries.expenses_queries.select_expenses_in_month(salah_id, selected_year, most_recent_month_of_expenses)
-        
+            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
             
-        month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
-        
-        total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, selected_year, most_recent_month_of_expenses)
-        
-        response_object = { 'status': 'success', 'months': months_as_abbr,'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
-        
-        # Return response object as JSON
-        return jsonify(response_object)
+            total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, selected_year, most_recent_month_of_expenses)
+            
+            # Formatig the total amount spent as a currency 
+            total_amount_of_month_expenses = app.helpers.egp(total_amount_of_month_expenses)
+
+            
+            response_object = { 'status': 'success', 'months': months_as_abbr,'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
+            
+            # Return response object as JSON
+            return jsonify(response_object)
+
+        except Exception as e:
+
+            error_message = 'An error occurred while fetching expenses! Error message: ' + str(e)
+
+            return jsonify({'error_message': error_message}), 400
     
 # @<bluebrint name>.route()
 # USER CHOOSE MONTH IN SPENDING PAGE
@@ -201,24 +223,30 @@ def fetch_selected_month_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
     salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
-    response_object = {'status':'success'}
     
     if request.method == "POST":
         
         try:    
+            
             post_data = request.get_json()
             
             selected_year   = post_data.get('selectedYear')
-            selected_month_str   = post_data.get('selectedMonth')
-            selected_month_int = datetime.strptime(selected_month_str, '%b').month
+            selected_month_abbr   = post_data.get('selectedMonth')
+            selected_month_num = datetime.strptime(selected_month_abbr, '%b').month
             
-            month_expenses = UsersSpendings.query.filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).order_by(UsersSpendings.date.desc()).all()
+            month_expenses = app.queries.expenses_queries.select_expenses_in_month(salah_id, selected_year, selected_month_num)
             
-        
+            # TO-DO ---> need to change some names here.
             month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
             
-            total_amount_of_month_expenses = db.session.query(func.sum(UsersSpendings.amount_spent)).filter(UsersSpendings.user_id == salah_id).filter(extract('year', UsersSpendings.date) == selected_year).filter(extract('month', UsersSpendings.date) == selected_month_int).scalar()
-                    
+            total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, selected_year, selected_month_num)
+            
+            # Formatig the total amount spent as a currency 
+            total_amount_of_month_expenses = app.helpers.egp(total_amount_of_month_expenses)
+
+            
+            response_object = { 'status': 'success', 'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
+            
             response_object['total_amount_of_month_expenses'] = total_amount_of_month_expenses
 
             response_object['monthly_expenses'] = month_expenses_list
@@ -229,56 +257,3 @@ def fetch_selected_month_expenses():
         except Exception as e:
             error_message = 'An error occurred while fetching expenses! Error message: ' + str(e)
             return jsonify({'error_message': error_message}), 400
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-# @appRoutes.route("/fetchMonths", methods=["POST","GET"])
-# def fetchMonths():
-#     response_object = {'status':'success'}
-#     if request.method == "POST":
-        
-#         post_data = request.get_json()
-#         selected_year   = post_data.get('selectedYear')
-        
-#         # Replace this user id from by the one foumd in session['user_id']
-#         salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
-
-#         # extract() is used to get the years from date object !, of the column 'date' of type 'db.date'
-#         # with_entities() It gets specific columns only
-#         months = UsersSpendings.query.with_entities(
-#                 extract('month', UsersSpendings.date)
-#             ).filter(
-#                 UsersSpendings.user_id == salah_id
-#             ).filter(
-#                 extract('year', UsersSpendings.date) == selected_year
-#             ) .group_by(
-#                 extract('month', UsersSpendings.date)
-#             ).order_by(
-#                 extract('month', UsersSpendings.date).desc()
-#             ).all()
-
-#         months_as_abbr = []
-#         for month_as_num, in months:
-#             str_month = datetime(1, month_as_num, 1).strftime('%b')
-#             months_as_abbr.append(str_month)
-            
-#         # Add years data to response object
-#         # years[0] this will access the first value/element in the tuple of 'year' in 'years' list
-#         print(selected_year)
-#         response_object['months'] = months_as_abbr
-        
-#     # Return response object as JSON
-#     return jsonify(response_object)
-        

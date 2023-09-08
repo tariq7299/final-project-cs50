@@ -10,7 +10,7 @@ export default {
     name: "MonthTotal",
 
     props: {
-        totalMonthlyExpenses: Number,
+        totalMonthlyExpenses: String,
     }
 }
 </script>
