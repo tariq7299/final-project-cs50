@@ -61,6 +61,7 @@
                 <label class="radio-label" for="view-by-day">View by Day</label>
 
             </div>
+            
             <!-- This contains :
                 - input for year
                 - input for month
