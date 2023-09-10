@@ -9,14 +9,14 @@
             <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
             <CurrentViewSummary></CurrentViewSummary>
             
-            <div class="row view-by">
-                <div class="col-6">
-                    <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
-                    <label class="radio-label" for="view-by-month">View by Month</label>
-                </div>
-                <div class="col-6">
-                    <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
-                    <label class="radio-label" for="view-by-day">View by Day</label>
+            <div class="row">
+                <div class="col-12">
+                    <div class= "view-by">
+                        <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
+                        <label class="radio-label" for="view-by-month">View by Month</label>
+                        <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
+                        <label class="radio-label" for="view-by-day">View by Day</label>
+                    </div>
 
                 </div>    
             </div>
@@ -28,7 +28,6 @@
              -->
             <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame"></MonthTimeFrame>
             
-            <ChooseTimeFrame v-show="showChooseTimeFrame"> </ChooseTimeFrame>
 
             <!-- This holds the total Expenses of the choosen month -->
             <MonthTotal :totalMonthlyExpenses="totalMonthlyExpenses"></MonthTotal>
@@ -110,6 +109,7 @@
     .sticky-header {
     position: sticky;
     top: 4rem;
+    max-width: 60rem;
     }
 
     .sticky-bottom {
@@ -123,12 +123,11 @@
     }
 
     .view-by {
-        /* width: 80vw;
-        max-width: 600px; */
         display: inline-flex;
+        width: 100%;
         overflow: hidden;
-        /* border-radius: 15px; */
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+        
     }
 
     .radio-input {
