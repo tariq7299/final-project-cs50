@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="">
     <h4>{{ walletTitle }}</h4>
     <p>{{ amount }}</p>
   </div>

@@ -6,13 +6,13 @@
             </div>
         </div>
         <div class="row" v-else>
-            <div class="col-6">
+            <div class="col-6 d-flex justify-content-start">
                 <UserWallet walletTitle="Balance" :amount="wallet.balance"/>        
             </div>
-            <div class="col-6">
+            <div class="col-6 d-flex justify-content-end">
                 <UserWallet walletTitle="Debt" :amount="wallet.debt"/>
             </div>
-            <div class="col-12">
+            <div class="col-12 d-flex justify-content-center">
                 <UserWallet walletTitle="Credit" :amount="wallet.credit"/>
             </div>
         </div>
