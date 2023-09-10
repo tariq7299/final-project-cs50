@@ -9,7 +9,7 @@
 ## GLOBAL
 - Create to main versions of your codebase ! one that is dependednt on functions (functional programming) and another one that is dependent on objects (OOP)
 - Make a function in helpers for "response_object", (That can create responses objects)
-
+- USE 'PUT' and 'DELETE' instead of 'POST' in appropriate stiuations.
 ## models.py
 - Add indexes to databases to make querieas it faster
 - Make name in users table as first name and last name
@@ -55,11 +55,14 @@
 -       -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         Explaint the previous lines ??
-
+- Use Vuex to 'store' your app states and globalize it
+- Write parent container for your vue html and some rows and columns
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css
 - What is '/@/component'
 - link inide nav bar elements, and correct pages of app
+- Create a component for "view-by" div
+- Also create a compoenent for nav bar
 
 ## CurrentViewSummary
 - Enable the users to store a second currency in balance and debt and credit
@@ -75,8 +78,21 @@
 - Change the "MonthTimeFrame" to somthing good
 - Make the  most recent month and most_recent_year be calculated in backend
 - Create a total_daily_spendings
-- 
-
+- AFter I finish the app I want to chnage the how the user chooses a month, by implementing the following steps :
+        1- Restructure/Rebuild the MonthTimeFrame to be the same except for that it will lnow be resposible for just fetching expenses time frame and adate and just displaying the year and current month ina <button> tag
+        2- Whem user presses on the button the will direct him to a view via router-link, where he can select a year and a month (Acordion)
+        3- Then that view emmits the selectedYear and selectedMonth to parent of MonthTimeFrame
+        4- Finally monthTiime Frame will emit the seleced time and expenses to parent of Home (all of that in the old way)
+        - Note: Use Veux to make your life much easer !
+        - Note: This is a Hint, of what MonthTimeFrame might look like:
+                        // MonthTimeFrame.vue
+                        <template>
+                                <div>
+                                        <router-link to="/ChooseTimeFrame">
+                                                <button>2023 Sep</button>
+                                        </router-link>
+                                </div>
+                        </template>
 ## SpendingsDays
 - Enable Users to view there expenses/spendings in different currencies !
 

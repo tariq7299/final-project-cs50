@@ -1,65 +1,24 @@
 <template>
-    <div>
-
-        <nav class="navbar bg-body-tertiary fixed-top">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">GoldGardyn</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
-                            </a>
-                            <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li>
-                        </ul>
-                        <form class="d-flex mt-3" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                        </form>
-                    </div>
-                </div>
-                
-            </div>
-        </nav>
-
+    <div class="container-fluid">
         <!-- 'sticky-header' will make the the indented elemnts stick at the top-->
-        <div class="sticky-header">
+        <div class="container-fluid sticky-header">
             
             <!-- This contains the page title only -->
             <Header pageTitle="Expenses"/>
 
             <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
             <CurrentViewSummary></CurrentViewSummary>
-            <div class="view-by">
+            
+            <div class="row view-by">
+                <div class="col-6">
+                    <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
+                    <label class="radio-label" for="view-by-month">View by Month</label>
+                </div>
+                <div class="col-6">
+                    <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
+                    <label class="radio-label" for="view-by-day">View by Day</label>
 
-                <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
-                <label class="radio-label" for="view-by-month">View by Month</label>
-
-                <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
-                <label class="radio-label" for="view-by-day">View by Day</label>
-
+                </div>    
             </div>
             
             <!-- This contains :
@@ -67,10 +26,13 @@
                 - input for month
                 - Also it is resposible for fetching monthly expenses from server that belonged to the iputted time frame by the cirrent user
              -->
-            <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses"></MonthTimeFrame>
+            <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame"></MonthTimeFrame>
             
+            <ChooseTimeFrame v-show="showChooseTimeFrame"> </ChooseTimeFrame>
+
             <!-- This holds the total Expenses of the choosen month -->
             <MonthTotal :totalMonthlyExpenses="totalMonthlyExpenses"></MonthTotal>
+
         </div>
         
         <!-- THis contains a child components called 'Day' which each one of them contains the daily expenses details -->
@@ -90,6 +52,7 @@
     import Days from '@/components/Days.vue';
     import MonthTotal from '@/components/MonthTotal.vue';
     import AddExpenses from './AddExpenses.vue';
+    import ChooseTimeFrame from '@/components/ChooseTimeFrame.vue';
 
     export default {
         name: "Home",
@@ -100,6 +63,7 @@
             Days,
             MonthTotal,
             AddExpenses,
+            ChooseTimeFrame,
         },
         data() {
             return {
@@ -107,6 +71,7 @@
                 totalMonthlyExpenses: '0',
                 // This is emmited from <MonthTimeFrame> component, it represents the monthly expenses details of current user
                 monthlyExpenses: [],
+                showChooseTimeFrame: false,
             }
         },
         methods: {
@@ -114,6 +79,9 @@
             extractMonthlyExpenses(monthlyExpenses) {
                 this.monthlyExpenses = monthlyExpenses.monthlyExpenses
                 this.totalMonthlyExpenses = monthlyExpenses.totalMonthlyExpenses
+            },
+            toggelChooseTimeFrame () {
+                this.showChooseTimeFrame = !this.showChooseTimeFrame
             }
         },
         computed: {
@@ -155,8 +123,8 @@
     }
 
     .view-by {
-        width: 80vw;
-        max-width: 600px;
+        /* width: 80vw;
+        max-width: 600px; */
         display: inline-flex;
         overflow: hidden;
         /* border-radius: 15px; */
@@ -176,7 +144,7 @@
         background: var(--secondary);
         cursor: pointer;
         transition: background 0.1s;
-        width: 50%;
+        width: 100%;
     }
 
     .radio-label:not(:last-of-type) {
