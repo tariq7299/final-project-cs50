@@ -160,7 +160,7 @@ def load_recent_month_expenses():
             # Formatig the total amount spent as a currency 
             total_amount_of_month_expenses = app.helpers.egp(total_amount_of_month_expenses)
     
-            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
+            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
                     
             response_object = { 'status': 'success', 'years': years, 'months': months_as_abbr,'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
             
@@ -197,7 +197,7 @@ def fetch_months_and_recent_month_expenses():
                 
             month_expenses = app.queries.expenses_queries.select_expenses_in_month(salah_id, selected_year, most_recent_month_of_expenses)
             
-            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
+            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
             
             total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, selected_year, most_recent_month_of_expenses)
             
@@ -237,7 +237,7 @@ def fetch_selected_month_expenses():
             month_expenses = app.queries.expenses_queries.select_expenses_in_month(salah_id, selected_year, selected_month_num)
             
             # TO-DO ---> need to change some names here.
-            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime('%b %d, %Y'), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
+            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': spending.amount_spent, 'category': spending.category} for spending in month_expenses]
             
             total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, selected_year, selected_month_num)
             

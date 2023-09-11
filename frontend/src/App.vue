@@ -1,6 +1,6 @@
 <template>
   <div class="">
-      <nav class="navbar bg-body-tertiary sticky-top mb-2" >
+      <nav class="navbar sticky-top mb-2" >
         <div class="container-fluid">
             <a class="navbar-brand" href="#">GoldGardyn</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -8,7 +8,7 @@
             </button>
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">GoldGardyn</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
@@ -81,6 +81,21 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     /* color: #2c3e50; */
+  }
+
+  .navbar {
+    background-color: var(--secondary);
+    border-bottom: 5px solid;
+    z-index: 1020;  /* This is the default value of bootstrap nav-bar */
+  }
+
+  .offcanvas-header {
+    background-color: var(--secondary);
+
+  }
+  .offcanvas-body {
+    background-color: var(--background);
+
   }
 
   /* I have added that class to each section of Home view, so specifing this style here makes sense becasue I want to apply that stying to every section  */

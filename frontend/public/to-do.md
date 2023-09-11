@@ -57,6 +57,8 @@
         Explaint the previous lines ??
 - Use Vuex to 'store' your app states and globalize it
 - Write parent container for your vue html and some rows and columns
+- Style the nav bar
+
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css
 - What is '/@/component'

@@ -129,6 +129,7 @@
         font-family: 'Roboto Slab', serif;
         font-weight: 400;
         font-size: 23px;
+        
     }
 
     .secondary-header2 {
@@ -139,9 +140,10 @@
     }
     .sticky-header {
         position: sticky;
-        top: 3rem;
+        top: 3.8rem;
         background: var(--background);
         padding-top: 1rem;
+        z-index: 1019;
     }
     .sticky-bottom {
     position: fixed;

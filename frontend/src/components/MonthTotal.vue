@@ -16,24 +16,15 @@ export default {
 </script>
 
 <style scoped>
-.total-expenses-container {
-    border-top: 1px solid;
-    border-bottom: 1px solid;
-}
-p {
-   
-    margin: 0;
-}
-
-
-    h4 {
-        font-size: large;
+    .total-expenses-container {
+        border-top: 1px solid;
+        border-bottom: 1px solid;
     }
-
     p {
-        font-style: italic;
-    }
     
+        margin: 0;
+    }
+
     .row {
         position: relative;
         top: 5rem;
