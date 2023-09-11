@@ -1,6 +1,6 @@
 <template>
   <div class="">
-      <nav class="navbar bg-body-tertiary sticky-top" >
+      <nav class="navbar bg-body-tertiary sticky-top mb-2" >
         <div class="container-fluid">
             <a class="navbar-brand" href="#">GoldGardyn</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -83,13 +83,12 @@
     /* color: #2c3e50; */
   }
 
+  /* I have added that class to each section of Home view, so specifing this style here makes sense becasue I want to apply that stying to every section  */
+  .sector  {
+    margin-bottom: 1rem;
+  }
+
   
-  /* .navbar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #2c3e50;
-    color: white !important;
-    height: 60px;
-    } */
+
+
 </style>

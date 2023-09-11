@@ -1,5 +1,5 @@
 <template>
-    <div class="page-title row">
+    <div class="main-header row">
         <h1>{{ pageTitle }}</h1>        
     </div>
 </template>
@@ -20,9 +20,7 @@
 
         position: relative;
         font-family: 'Roboto Slab', serif;
-        font-weight: 400;
-        /* margin: 3rem 0; */
-        top: 2rem;
+        font-weight: 300;
         letter-spacing: 0.35rem;
-    }
+    } 
 </style>

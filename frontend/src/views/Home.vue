@@ -1,24 +1,24 @@
 <template>
-    <div class="container-fluid text-center  "  >
+    <div class="container-fluid text-center home-view">
+        
+        <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
+        <CurrentViewSummary></CurrentViewSummary>
+        
+        <!-- This contains the page title only -->
+        <Header class="title" pageTitle="Expenses"/>
+        
+        <!-- This contains :
+            - input for year
+            - input for month
+            - Also it is resposible for fetching monthly expenses from server that belonged to the iputted time frame by the cirrent user
+        -->
+
         <!-- 'sticky-header' will make the the indented elemnts stick at the top-->
+        <div class="sticky-header">
 
-
-            <div class="container-fluid sticky-header ">
-                
-            <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
-            <CurrentViewSummary></CurrentViewSummary>
-            <!-- This contains the page title only -->
-            
-            <Header class="title" pageTitle="Expenses"/>
-            
-            <!-- This contains :
-                - input for year
-                - input for month
-                - Also it is resposible for fetching monthly expenses from server that belonged to the iputted time frame by the cirrent user
-            -->
-            <div class="row view-by-container">
+            <div class="row sector">
                 <div class="col-12">
-                    <div class= "view-by">
+                    <div class= "view-by ">
                         <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
                         <label class="radio-label" for="view-by-month">View by Month</label>
                         <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
@@ -27,7 +27,7 @@
 
                 </div>    
             </div>
-            
+
             <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame" ></MonthTimeFrame>
             
 
@@ -109,26 +109,40 @@
 </script>
 
 <style>
-    .test{
-        position: -webkit-sticky; /* Safari */
-        position: sticky;
-        /* top: 4rem; */
-        /* margin-top: 30rem; */
-        /* background-color: var(--background); */
+.home-view {
+    width: 80vw;
+    max-width: 800px;
+}
+    .main-header {
+        font-family: 'Roboto Slab', serif;
+        font-weight: 300;
+        letter-spacing: 0.35rem;
     }
-    
 
-   
+    .money-header {
+        font-family: 'Roboto Slab', serif;
+        font-weight: 500;
+        font-size: 20px;
+    }
+
+    .secondary-header {
+        font-family: 'Roboto Slab', serif;
+        font-weight: 400;
+        font-size: 23px;
+    }
+
+    .secondary-header2 {
+        font-family: 'Roboto Slab', serif;
+        font-weight: 400;
+        font-size: 16px;
+        font-style: italic;
+    }
     .sticky-header {
-    position: -webkit-sticky; /* Safari */
-    position: sticky;
-    top: 3.5rem;
-    /* margin-top: 30rem; */
-    background-color: var(--background);
+        position: sticky;
+        top: 3rem;
+        background: var(--background);
+        padding-top: 1rem;
     }
-
- 
-
     .sticky-bottom {
     position: fixed;
     bottom: 0;

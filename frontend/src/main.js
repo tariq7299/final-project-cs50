@@ -4,11 +4,9 @@ import './registerServiceWorker'
 import router from './router/routes.js'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
-import VueStickyElement from "vue-sticky-element";
 
 createApp(App)
     .use(router)
-    .use(VueStickyElement)
     .mount('#app')
 
     

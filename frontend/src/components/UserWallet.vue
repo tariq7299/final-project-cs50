@@ -1,7 +1,7 @@
 <template>
-  <div class="">
-    <p >{{ walletTitle }}</p>
-    <p>{{ amount }}</p>
+  <div class="sector">
+    <p class="money-header">{{ amount }}</p>
+    <p class="secondary-header2">{{ walletTitle }}</p>
   </div>
 </template>
 
@@ -20,7 +20,9 @@
 </script>
 
 <style scoped>
-p {
-  margin: 0;
-}
+
+  p {
+    margin: 0;
+  }
+
 </style>

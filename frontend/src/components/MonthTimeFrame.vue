@@ -1,5 +1,5 @@
 <template>
-    <div class="time-frame">
+    <div class="sector time-frame">
         <div v-if="loading" class="row loading-indicator">
            <div class="col-12">
                <h3>Loading...</h3>        
@@ -8,7 +8,7 @@
         <div class="" v-else>
             <div class="row">
                 <div class="col text-start">
-                    <h4><span class="year-month">{{ selectedYear }} - {{ selectedMonth }}</span></h4>
+                    <p><span class="secondary-header">{{ selectedYear }} - {{ selectedMonth }}</span></p>
                 </div>
                 <div class="col text-end">
                     <Button @btnClicked="toggelChooseTimeFrame"></Button>
@@ -58,17 +58,10 @@ import ChooseTimeFrame from '@/components/ChooseTimeFrame.vue';
    }
 </script>
 
-<style>
+<style scoped>
     .time-frame {
-        /* padding: 2rem 0; */
-        /* margin: 2rem 0; */
-        position:relative;
-        top: 4rem;
-    }
-
-    .year-month {
-        font-family: 'Roboto Slab', serif;
-        font-weight: 400;
+        padding-top: 1rem;
+        border-top: 1px solid;
     }
     
 

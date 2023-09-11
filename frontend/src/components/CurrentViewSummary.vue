@@ -61,11 +61,8 @@
     }
 </script>
 
-<style>
-
-    .test {
-        position: relative;
-        top: 5rem;
-        /* margin-top: 20rem; */
-    }
+<style scoped>
+    .row {
+        margin-bottom: 1rem;
+}
 </style>

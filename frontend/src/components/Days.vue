@@ -22,9 +22,7 @@
  }
  </script>
  
- <style scoped>
-    .row {
-        /* position: relative; */
-        margin-top: 30rem;
-    }
+ <style>
+ 
  </style>
+ 
