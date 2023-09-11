@@ -61,8 +61,12 @@ import ChooseTimeFrame from '@/components/ChooseTimeFrame.vue';
 <style scoped>
     .time-frame {
         padding-top: 1rem;
-        border-top: 1px solid;
     }
     
 
+    .year-month {
+        font-family: 'Roboto Slab', serif;
+        font-weight: 400;
+    }
+    
 </style>
