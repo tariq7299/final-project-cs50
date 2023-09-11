@@ -61,7 +61,9 @@ import ChooseTimeFrame from '@/components/ChooseTimeFrame.vue';
 <style>
     .time-frame {
         /* padding: 2rem 0; */
-        margin: 2rem 0;
+        /* margin: 2rem 0; */
+        position:relative;
+        top: 4rem;
     }
 
     .year-month {
@@ -69,4 +71,5 @@ import ChooseTimeFrame from '@/components/ChooseTimeFrame.vue';
         font-weight: 400;
     }
     
+
 </style>

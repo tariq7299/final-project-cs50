@@ -1,11 +1,11 @@
-<template>
+<template >
         <!-- This will make a loading indicator appears until 'v-if="loading"' becomes 'false' (it will become false in two cases the FIRST when the app successfully fetches the data, the SECOND is when app encounters an error when fetching data! )  -->
         <div v-if="loading" class="row loading-indicator">
             <div class="col-12">
                 <h3>Loading...</h3>        
             </div>
         </div>
-        <div class="row" v-else>
+        <div class="row test" v-else>
             <div class="col-6 d-flex justify-content-start">
                 <UserWallet walletTitle="Balance" :amount="wallet.balance"/>        
             </div>
@@ -63,4 +63,9 @@
 
 <style>
 
+    .test {
+        position: relative;
+        top: 5rem;
+        /* margin-top: 20rem; */
+    }
 </style>

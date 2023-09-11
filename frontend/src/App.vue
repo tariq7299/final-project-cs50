@@ -1,6 +1,6 @@
 <template>
   <div class="">
-      <nav class="navbar bg-body-tertiary" >
+      <nav class="navbar bg-body-tertiary sticky-top" >
         <div class="container-fluid">
             <a class="navbar-brand" href="#">GoldGardyn</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">

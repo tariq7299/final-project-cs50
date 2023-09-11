@@ -1,41 +1,39 @@
 <template>
-    <div class="container-fluid text-center ">
+    <div class="container-fluid text-center  "  >
         <!-- 'sticky-header' will make the the indented elemnts stick at the top-->
-        <div class="container-fluid sticky-header ">
-            
-            <!-- This contains the page title only -->
-            <Header class="title" pageTitle="Expenses"/>
-            
 
+
+            <div class="container-fluid sticky-header ">
+                
             <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
             <CurrentViewSummary></CurrentViewSummary>
+            <!-- This contains the page title only -->
             
-            
+            <Header class="title" pageTitle="Expenses"/>
             
             <!-- This contains :
                 - input for year
                 - input for month
                 - Also it is resposible for fetching monthly expenses from server that belonged to the iputted time frame by the cirrent user
-             -->
-             <vue-sticky-element>
-                <div class="row">
-                    <div class="col-12">
-                        <div class= "view-by">
-                            <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
-                            <label class="radio-label" for="view-by-month">View by Month</label>
-                            <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
-                            <label class="radio-label" for="view-by-day">View by Day</label>
-                        </div>
+            -->
+            <div class="row view-by-container">
+                <div class="col-12">
+                    <div class= "view-by">
+                        <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
+                        <label class="radio-label" for="view-by-month">View by Month</label>
+                        <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
+                        <label class="radio-label" for="view-by-day">View by Day</label>
+                    </div>
 
-                    </div>    
-                </div>
-            </vue-sticky-element>
-                <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame" ></MonthTimeFrame>
-                
+                </div>    
+            </div>
+            
+            <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame" ></MonthTimeFrame>
+            
 
-                <!-- This holds the total Expenses of the choosen month -->
+            <!-- This holds the total Expenses of the choosen month -->
 
-                <MonthTotal :totalMonthlyExpenses="totalMonthlyExpenses"></MonthTotal>
+            <MonthTotal :totalMonthlyExpenses="totalMonthlyExpenses"></MonthTotal>
 
         </div>
         
@@ -111,30 +109,25 @@
 </script>
 
 <style>
-
+    .test{
+        position: -webkit-sticky; /* Safari */
+        position: sticky;
+        /* top: 4rem; */
+        /* margin-top: 30rem; */
+        /* background-color: var(--background); */
+    }
     
 
    
     .sticky-header {
-    /* position: sticky;
-    top: 0rem;
-    background-color: var(--background); */
-    
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 3.5rem;
+    /* margin-top: 30rem; */
+    background-color: var(--background);
     }
 
-    /* .sticky-nav {
-    position: sticky;
-    top: 0rem;
-
-  } */
-
-  .stickydsd {
-  position: -webkit-sticky; /* Safari */
-  position: sticky;
-  top: 0;
-  background-color: green;
-  border: 2px solid #4CAF50;
-}
+ 
 
     .sticky-bottom {
     position: fixed;
@@ -146,6 +139,10 @@
         font-weight: 600;
     }
 
+    .view-by-container {
+        position: relative;
+        top: 3rem;
+    }
     .view-by {
         display: inline-flex;
         width: 100%;

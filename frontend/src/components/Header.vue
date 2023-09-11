@@ -18,9 +18,11 @@
 <style>
     .page-title {
 
+        position: relative;
         font-family: 'Roboto Slab', serif;
         font-weight: 400;
-        margin: 3rem 0;
+        /* margin: 3rem 0; */
+        top: 2rem;
         letter-spacing: 0.35rem;
     }
 </style>

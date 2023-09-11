@@ -63,6 +63,7 @@
 - link inide nav bar elements, and correct pages of app
 - Create a component for "view-by" div
 - Also create a compoenent for nav bar
+- Make nav-bar and and 'view-by' and 'TimeFrame' and 'ChooseTimeFrame' as sticky (Use import VueStickyElement from "vue-sticky-element";) and use (Vuex, as you will relly not able to achive a sticky elements in view without global state of Veux) 
 
 ## CurrentViewSummary
 - Enable the users to store a second currency in balance and debt and credit

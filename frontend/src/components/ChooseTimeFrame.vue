@@ -5,7 +5,7 @@
        </div>
     </div>
     <div class="row" v-else>
-        <div class="col-6">
+        <div class="col">
             <!-- When user loads the page the app will GET the spendings years from the server and populate <select> of the years with it, and inside the fetchYearsAndEmitTimeFrame() function, there is actully a call to fetchMonthsAndEmitTimeFrame() function, that will also populate <select> of months -->
             <!-- Wheu user choose a year (@change=fetchMonthsAndEmitTimeFrame), app will GET spendings months from server, and populate <select> input of the months with it -->
             <!--Also whether the user loads the page, or he chooses a certain year and month manually, in both cases the app will 'emit' the timeFrame (selectedYear & selectedMonth) to parent component (Home.vue)   -->
@@ -18,7 +18,7 @@
                 <option v-for="(year, index) in years" :value="year" :key="index">{{ year }}</option>
             </select>
         </div>
-        <div class="col-6">
+        <div class="col">
             <!-- Wheu user choose a month (@change=emitTimeFrame), app will 'emit' TimeFrame (selectedYear & selectedMonth) to parent component (Home.vue) -->
             <select v-model="selectedMonth" @change="fetchAndEmitSelectedMonthlExpenses">
                 <!-- <option disabled value="">Select month</option> -->
