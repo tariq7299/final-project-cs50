@@ -1,41 +1,39 @@
 <template>
-    <div class="container-fluid text-center ">
+    <div class="container-fluid text-center home-view">
+        
+        <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
+        <CurrentViewSummary></CurrentViewSummary>
+        
+        <!-- This contains the page title only -->
+        <Header class="title" pageTitle="Expenses"/>
+        
+        <!-- This contains :
+            - input for year
+            - input for month
+            - Also it is resposible for fetching monthly expenses from server that belonged to the iputted time frame by the cirrent user
+        -->
+
         <!-- 'sticky-header' will make the the indented elemnts stick at the top-->
-        <div class="container-fluid sticky-header ">
-            
-            <!-- This contains the page title only -->
-            <Header class="title" pageTitle="Expenses"/>
+        <div class="sticky-header">
+
+            <div class="row sector">
+                <div class="col-12">
+                    <div class= "view-by ">
+                        <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
+                        <label class="radio-label" for="view-by-month">View by Month</label>
+                        <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
+                        <label class="radio-label" for="view-by-day">View by Day</label>
+                    </div>
+
+                </div>    
+            </div>
+
+            <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame" ></MonthTimeFrame>
             
 
-            <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
-            <CurrentViewSummary></CurrentViewSummary>
-            
-            
-            
-            <!-- This contains :
-                - input for year
-                - input for month
-                - Also it is resposible for fetching monthly expenses from server that belonged to the iputted time frame by the cirrent user
-             -->
-             <vue-sticky-element>
-                <div class="row">
-                    <div class="col-12">
-                        <div class= "view-by">
-                            <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
-                            <label class="radio-label" for="view-by-month">View by Month</label>
-                            <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
-                            <label class="radio-label" for="view-by-day">View by Day</label>
-                        </div>
+            <!-- This holds the total Expenses of the choosen month -->
 
-                    </div>    
-                </div>
-            </vue-sticky-element>
-                <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame" ></MonthTimeFrame>
-                
-
-                <!-- This holds the total Expenses of the choosen month -->
-
-                <MonthTotal :totalMonthlyExpenses="totalMonthlyExpenses"></MonthTotal>
+            <MonthTotal :totalMonthlyExpenses="totalMonthlyExpenses"></MonthTotal>
 
         </div>
         
@@ -111,31 +109,40 @@
 </script>
 
 <style>
-
-    
-
-   
-    .sticky-header {
-    /* position: sticky;
-    top: 0rem;
-    background-color: var(--background); */
-    
+.home-view {
+    width: 80vw;
+    max-width: 800px;
+}
+    .main-header {
+        font-family: 'Roboto Slab', serif;
+        font-weight: 300;
+        letter-spacing: 0.35rem;
     }
 
-    /* .sticky-nav {
-    position: sticky;
-    top: 0rem;
+    .money-header {
+        font-family: 'Roboto Slab', serif;
+        font-weight: 500;
+        font-size: 20px;
+    }
 
-  } */
+    .secondary-header {
+        font-family: 'Roboto Slab', serif;
+        font-weight: 400;
+        font-size: 23px;
+    }
 
-  .stickydsd {
-  position: -webkit-sticky; /* Safari */
-  position: sticky;
-  top: 0;
-  background-color: green;
-  border: 2px solid #4CAF50;
-}
-
+    .secondary-header2 {
+        font-family: 'Roboto Slab', serif;
+        font-weight: 400;
+        font-size: 16px;
+        font-style: italic;
+    }
+    .sticky-header {
+        position: sticky;
+        top: 3rem;
+        background: var(--background);
+        padding-top: 1rem;
+    }
     .sticky-bottom {
     position: fixed;
     bottom: 0;

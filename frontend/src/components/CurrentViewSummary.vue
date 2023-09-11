@@ -61,6 +61,8 @@
     }
 </script>
 
-<style>
-
+<style scoped>
+    .row {
+        margin-bottom: 1rem;
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <h4>{{ totalMonthlyExpenses }}</h4>
-        <p>Total Monthly Spendings</p>
+    <div class="sector total-expenses-container">
+        <p class="money-header">{{ totalMonthlyExpenses }}</p>
+        <p class="secondary-header2">Total Monthly Spendings</p>
     </div>
 </template>
 
@@ -15,6 +15,15 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.total-expenses-container {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+}
+p {
+   
+    margin: 0;
+}
+
 
 </style>
