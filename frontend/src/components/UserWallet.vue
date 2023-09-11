@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <h4>{{ walletTitle }}</h4>
+    <p >{{ walletTitle }}</p>
     <p>{{ amount }}</p>
   </div>
 </template>
@@ -19,6 +19,8 @@
     }
 </script>
 
-<style>
-
+<style scoped>
+p {
+  margin: 0;
+}
 </style>

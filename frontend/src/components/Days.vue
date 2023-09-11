@@ -1,5 +1,5 @@
 <template>
-   <div class="col-6">
+   <div class="row">
         <!-- Wheu user choose a month (@change=emitTimeFrame), app will 'emit' TimeFrame (selectedYear & selectedMonth) to parent component (Home.vue) -->
         
         <Day v-for="(expensesObj, date) in groupedExpensesByDay" :key="date" :dayDate="date" :expenses="expensesObj.expenses" :totalAmount="expensesObj.totalAmount"/>

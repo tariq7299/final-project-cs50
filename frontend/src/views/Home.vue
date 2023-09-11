@@ -1,36 +1,41 @@
 <template>
-    <div class="container-fluid">
+    <div class="container-fluid text-center ">
         <!-- 'sticky-header' will make the the indented elemnts stick at the top-->
-        <div class="container-fluid sticky-header">
+        <div class="container-fluid sticky-header ">
             
             <!-- This contains the page title only -->
-            <Header pageTitle="Expenses"/>
+            <Header class="title" pageTitle="Expenses"/>
+            
 
             <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
             <CurrentViewSummary></CurrentViewSummary>
             
-            <div class="row">
-                <div class="col-12">
-                    <div class= "view-by">
-                        <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
-                        <label class="radio-label" for="view-by-month">View by Month</label>
-                        <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
-                        <label class="radio-label" for="view-by-day">View by Day</label>
-                    </div>
-
-                </div>    
-            </div>
+            
             
             <!-- This contains :
                 - input for year
                 - input for month
                 - Also it is resposible for fetching monthly expenses from server that belonged to the iputted time frame by the cirrent user
              -->
-            <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame"></MonthTimeFrame>
-            
+             <vue-sticky-element>
+                <div class="row">
+                    <div class="col-12">
+                        <div class= "view-by">
+                            <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
+                            <label class="radio-label" for="view-by-month">View by Month</label>
+                            <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
+                            <label class="radio-label" for="view-by-day">View by Day</label>
+                        </div>
 
-            <!-- This holds the total Expenses of the choosen month -->
-            <MonthTotal :totalMonthlyExpenses="totalMonthlyExpenses"></MonthTotal>
+                    </div>    
+                </div>
+            </vue-sticky-element>
+                <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame" ></MonthTimeFrame>
+                
+
+                <!-- This holds the total Expenses of the choosen month -->
+
+                <MonthTotal :totalMonthlyExpenses="totalMonthlyExpenses"></MonthTotal>
 
         </div>
         
@@ -52,6 +57,7 @@
     import MonthTotal from '@/components/MonthTotal.vue';
     import AddExpenses from './AddExpenses.vue';
     import ChooseTimeFrame from '@/components/ChooseTimeFrame.vue';
+
 
     export default {
         name: "Home",
@@ -106,11 +112,29 @@
 
 <style>
 
+    
+
+   
     .sticky-header {
-    position: sticky;
-    top: 4rem;
-    max-width: 60rem;
+    /* position: sticky;
+    top: 0rem;
+    background-color: var(--background); */
+    
     }
+
+    /* .sticky-nav {
+    position: sticky;
+    top: 0rem;
+
+  } */
+
+  .stickydsd {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  background-color: green;
+  border: 2px solid #4CAF50;
+}
 
     .sticky-bottom {
     position: fixed;

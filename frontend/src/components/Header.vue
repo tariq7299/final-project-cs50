@@ -1,6 +1,6 @@
 <template>
-    <div class="page-title row">
-        <h1>{{ pageTitle }}</h1>        
+    <div class="row">
+        <h1 class="page-title">{{ pageTitle }}</h1>        
     </div>
 </template>
 
@@ -15,12 +15,14 @@
     }
 </script>
 
-<style>
+<style scoped>
     .page-title {
 
         font-family: 'Roboto Slab', serif;
         font-weight: 400;
-        margin: 3rem 0;
+        /* margin: 20rem 0 3rem 0; */
+        /* margin-top: 30rem; */
         letter-spacing: 0.35rem;
     }
+
 </style>
