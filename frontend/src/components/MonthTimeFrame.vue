@@ -7,9 +7,8 @@
         </div>
         <div class="" v-else>
             <div class="row">
-    
                 <div class="col text-start">
-                    <h4><span></span>{{ selectedYear }} - {{ selectedMonth }}</h4>
+                    <h4><span class="year-month">{{ selectedYear }} - {{ selectedMonth }}</span></h4>
                 </div>
                 <div class="col text-end">
                     <Button @btnClicked="toggelChooseTimeFrame"></Button>
@@ -55,8 +54,7 @@ import ChooseTimeFrame from '@/components/ChooseTimeFrame.vue';
                 this.showChooseTimeFrame = !this.showChooseTimeFrame
             }
        },
-       mounted() {
-       }
+       emits: ['userChoseMonthTimeFrame'],
    }
 </script>
 
@@ -66,4 +64,9 @@ import ChooseTimeFrame from '@/components/ChooseTimeFrame.vue';
         margin: 2rem 0;
     }
 
+    .year-month {
+        font-family: 'Roboto Slab', serif;
+        font-weight: 400;
+    }
+    
 </style>
