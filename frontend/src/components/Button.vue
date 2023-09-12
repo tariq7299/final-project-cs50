@@ -26,14 +26,14 @@ export default {
     }
 
     button {
-        background-color: var(--accent); /* Green */
+        background-color: var(--accent); 
         border: none;   
         color: white;
         padding-top: 6px;
         text-align: center;
         text-decoration: none;
     }
-    .button:hover {
-        background-color: #3e8e41; /* Darker green */
+    button:hover {
+        background-color: var(--primary);
     }
 </style>

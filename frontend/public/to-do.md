@@ -58,6 +58,7 @@
 - Use Vuex to 'store' your app states and globalize it
 - Write parent container for your vue html and some rows and columns
 - Style the nav bar
+- Main font `Avenir, Helvetica, Arial, sans-serif;` not imported correctly !, ANd I think the reason becasue of the google font <link>, that I messed Up !!
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css

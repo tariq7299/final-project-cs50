@@ -43,7 +43,7 @@
         <!-- This will route the user to 'AddExpenses' view enable users to add new expenses  -->
         <div class="router-link">
 
-            <router-link class="bottom-fixed" to="addExpenses" >Add Expenses</router-link>
+            <router-link class="bottom-fixed" to="addExpenses" >Add Expenses<span class="material-symbols-outlined">add_box</span></router-link>
         </div>
     </div>
 
@@ -111,7 +111,7 @@
     }
 </script>
 
-<style>
+<style >
 
     .home-view {
         width: 80vw;
@@ -152,20 +152,42 @@
         z-index: 1019;
     }
 
+    /* There is **TWO** methods to make '<router-link>Add Expenses</router-link>' become in the center of both containers, 'home-view', and 'body' (As it is 'position: fixed', so its margins will not be subjected to any parent except 'body', And you want it also to be in the center of 'home-view' too and not only 'body' to make it look good !)
+    
+        1- Create a parent div (.router-link in our case) to  '<router-link>Add Expenses</router-link>', and then apply 'display: flex' and 'align-items: center' and 'justify-content: center' (I choose this method)
+
+        2- Don't create ab additional parent div, and instead make 'home-view' as 'position: relative' and then give '<router-link>Add Expenses</router-link>' --> 
+
+            "left: 50%;
+            transform: translate(-50%, -50%);"
+        
+    */
+    /* That to make 'add-expense' */
     .router-link {
         display: flex;
         align-items: center;
         justify-content: center;
-        /* height: 10px; */
-        /* width: 100%;
-        max-width: 800px;
-        margin: auto; */
     }
     
     .bottom-fixed {
         margin: auto;
         position: fixed;
-        bottom: 0;
+        bottom: 10px;
+        padding: 10px 20px;
+        background-color: var(--accent);
+        color: white;
+        text-align: center;
+        /* This removes the default underline below links */
+        text-decoration: none;
+        border-radius: 100px;
+        transition: background-color 0.3s ease;
+        display: inline-flex;
+        justify-content: space-around;
+        width: 200px;
+        }
+
+    .bottom-fixed:hover {
+        background-color: green;
     }
 
     /*  */
@@ -175,10 +197,8 @@
         font-weight: 600;
     }
 
-    .view-by-container {
-        position: relative;
-        top: 3rem;
-    }
+    
+
     .view-by {
         display: inline-flex;
         width: 100%;
