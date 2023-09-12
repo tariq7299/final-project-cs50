@@ -35,9 +35,17 @@
       --accent: hsl(50, 79%, 47%);
     }
 
+    /* To ensure that body takes the whole page/view port, as it wasn't taking the whole page !, (The source that <html> tag wasn't takimng the whole page and I do't know why)   */
+    html, body {
+      
+      margin: 0;
+      padding: 0;
+    }
+    
     body {
       background-color: var(--background);
     }
+    
   </style>
 
 <!-- 

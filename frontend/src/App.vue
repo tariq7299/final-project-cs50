@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="parent-container">
       <nav class="navbar sticky-top mb-2" >
         <div class="container-fluid">
             <a class="navbar-brand" href="#">GoldGardyn</a>
@@ -42,8 +42,8 @@
             
         </div>
       </nav>
-  <router-view></router-view>
-</div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
@@ -80,7 +80,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    /* color: #2c3e50; */
+    
+  }
+
+  .parent-container {
+    
+    /* height: 100%; */
   }
 
   .navbar {

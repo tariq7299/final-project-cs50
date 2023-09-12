@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid text-center home-view">
+    <div class=" text-center home-view">
         
         <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
         <CurrentViewSummary></CurrentViewSummary>
@@ -41,9 +41,12 @@
         <Days :groupedExpensesByDay="groupedExpensesByDay" ></Days>
 
         <!-- This will route the user to 'AddExpenses' view enable users to add new expenses  -->
-        <router-link class="sticky-bottom" to="addExpenses" >Add Expenses</router-link>
+        <div class="router-link">
 
+            <router-link class="bottom-fixed" to="addExpenses" >Add Expenses</router-link>
+        </div>
     </div>
+
 </template>
 
 <script>
@@ -109,10 +112,13 @@
 </script>
 
 <style>
-.home-view {
-    width: 80vw;
-    max-width: 800px;
-}
+
+    .home-view {
+        width: 80vw;
+        max-width: 800px;
+        margin: auto;
+    }
+
     .main-header {
         font-family: 'Roboto Slab', serif;
         font-weight: 300;
@@ -145,10 +151,24 @@
         padding-top: 1rem;
         z-index: 1019;
     }
-    .sticky-bottom {
-    position: fixed;
-    bottom: 0;
+
+    .router-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* height: 10px; */
+        /* width: 100%;
+        max-width: 800px;
+        margin: auto; */
     }
+    
+    .bottom-fixed {
+        margin: auto;
+        position: fixed;
+        bottom: 0;
+    }
+
+    /*  */
 
     .navbar-brand {
         font-family: 'Playfair Display', serif;
