@@ -4,27 +4,22 @@
            <h3>Loading...</h3>        
        </div>
     </div>
-    <div class="row" v-else>
-        <div class="col">
-            <!-- When user loads the page the app will GET the spendings years from the server and populate <select> of the years with it, and inside the fetchYearsAndEmitTimeFrame() function, there is actully a call to fetchMonthsAndEmitTimeFrame() function, that will also populate <select> of months -->
-            <!-- Wheu user choose a year (@change=fetchMonthsAndEmitTimeFrame), app will GET spendings months from server, and populate <select> input of the months with it -->
-            <!--Also whether the user loads the page, or he chooses a certain year and month manually, in both cases the app will 'emit' the timeFrame (selectedYear & selectedMonth) to parent component (Home.vue)   -->
-            <select v-model="selectedYear" @change="fetchAndEmitRecentMonthExpenses">
-                <!-- You can this disabled option if you want -->
-                <!-- <option disabled value="">Select year</option> -->
+    <div class="" v-else>
+        <div class="container-flex">
+        <div class="accordion" v-for="(year, index) in years" :key="index">
+
+                <input class="year-input" type="radio" v-model="selectedYear" name="radio-test" :id='"radio-1" + index' :value="year" :key="index" @change="fetchAndEmitRecentMonthExpenses">
+               <label class="year-label"  :for='"radio-1" + index'>{{ year }}<span class="material-symbols-outlined">
+expand_less
+</span></label>
                 
-                <!--  We wrote v-bind:value because it takes its value from data() down there-->
-                <!--  'v-bind:key=index' is necessary for the loop to work, it should have like a index/id...etc for each 'year' value found in the list 'years'-->
-                <option v-for="(year, index) in years" :value="year" :key="index">{{ year }}</option>
-            </select>
+
+            <div class="content" v-for="(month, index) in months" :key="index">
+                <input class="month-input" type="radio" v-model="selectedMonth" name="radio-test2" :id='"radio-3" + index' :value="month" @change="fetchAndEmitSelectedMonthlExpenses">
+                <label class="month-label" :for='"radio-3" + index'>{{ month }}<span class="material-symbols-outlined">check</span></label>
+            </div>
         </div>
-        <div class="col">
-            <!-- Wheu user choose a month (@change=emitTimeFrame), app will 'emit' TimeFrame (selectedYear & selectedMonth) to parent component (Home.vue) -->
-            <select v-model="selectedMonth" @change="fetchAndEmitSelectedMonthlExpenses">
-                <!-- <option disabled value="">Select month</option> -->
-                <option v-for="(month, index) in months" :value="month" :key="index">{{ month }}</option>
-            </select>
-        </div>
+    </div>
     </div>
     
 </template>
@@ -226,6 +221,97 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
+
+
+    .container-flex {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .accordion {
+        border-top: 1px solid #dee2e6;
+        border-right: 1px solid #dee2e6;
+        border-left: 1px solid #dee2e6;
+        /* border-bottom: 1px solid #dee2e6; */
+        border-radius: 7px;
+        /* padding: 10px 0; */
+        width: 80vw;
+        max-width: 800px;
+        display: inline-flex;
+        flex-direction: column;
+    }
+
+    .year-label {
+        height: 52px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #dee2e6;
+        width: 100%;
+        padding: 0 20px;
+        
+    }
+
+    .content {
+        height: 0px;
+        overflow: hidden;
+        transition: height 0.5s;
+        border: none;
+    }
+    
+    .month-label {
+        height: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        /* height: 25px; */
+        width: 100%;
+        padding: 0 20px;
+    }
+    
+    input[type="radio"] {
+        display: none;
+    }
+
+    
+    span{
+        width: 30px;
+        /* content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E"); */
+        transition: transform 0.5s;
+    }    
+    
+    
+    .year-input[type="radio"]:checked ~ .content {
+        border-bottom: 1px solid #dee2e6;
+        height: 35px; /* Auto height to reveal content */
+        /* overflow: auto; */
+        
+    }
+    .year-input[type="radio"]:checked[type="radio"]:checked + .year-label span {
+        /* content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z'/%3E%3C/svg%3E"); */
+        transform: rotate(180deg);
+    }
+    .year-input[type="radio"]:checked[type="radio"]:checked + .year-label {
+        /* content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z'/%3E%3C/svg%3E"); */
+        background: var(--primary);
+    }
+
+    .month-input[type="radio"]:checked + .month-label {
+        /* content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z'/%3E%3C/svg%3E"); */
+        background: var(--secondary);
+    }
+    .month-label span {
+        /* content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z'/%3E%3C/svg%3E"); */
+        display: none;
+    }
+    .month-input[type="radio"]:checked + .month-label span {
+        /* content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z'/%3E%3C/svg%3E"); */
+        display: inline;
+    }
+   
+
+
+    
 
 </style>

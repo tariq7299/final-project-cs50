@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6">
+                <div class="col-12">
                     <ChooseTimeFrame @userChoseMonthTimeFrame="extractYearAndMonth" v-show="showChooseTimeFrame"> </ChooseTimeFrame>
                 </div>
             </div>
