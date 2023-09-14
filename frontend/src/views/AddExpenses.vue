@@ -1,7 +1,18 @@
 
 <template>
-
-  <div class="row">
+    <div class="row">
+    <!-- <FunctionalCalendar  
+       
+      
+        v-on:changedMonth="changedMonth"
+        v-on:changedYear="changedYear"
+      
+        :sundayStart="true"
+        :date-format="'dd/mm/yyyy'"
+        :is-date-range="true"
+        :is-date-picker="true"      
+            >
+        </FunctionalCalendar> -->
     <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
     <form @submit.prevent="addExpense">
         <div class="col">
@@ -41,6 +52,7 @@
 
 <script>
 import axios from 'axios'
+// import { FunctionalCalendar } from 'vue-functional-calendar';
 
 export default {
     name: 'AddExpense',
@@ -52,8 +64,12 @@ export default {
             selectedDay: '',
             amountSpent:'',
             categories: '',
-            selectedCategory: ''
+            selectedCategory: '',
+            calendarData: {},
         }
+    },
+    components: {
+        // FunctionalCalendar
     },
     methods: {
 
