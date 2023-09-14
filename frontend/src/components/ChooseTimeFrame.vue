@@ -6,20 +6,16 @@
     </div>
     <div class="" v-else>
         <div class="container-flex">
-        <div class="accordion" v-for="(year, index) in years" :key="index">
 
-                <input class="year-input" type="radio" v-model="selectedYear" name="radio-test" :id='"radio-1" + index' :value="year" :key="index" @change="fetchAndEmitRecentMonthExpenses">
-               <label class="year-label"  :for='"radio-1" + index'>{{ year }}<span class="material-symbols-outlined">
-expand_less
-</span></label>
-                
-
-            <div class="content" v-for="(month, index) in months" :key="index">
-                <input class="month-input" type="radio" v-model="selectedMonth" name="radio-test2" :id='"radio-3" + index' :value="month" @change="fetchAndEmitSelectedMonthlExpenses">
-                <label class="month-label" :for='"radio-3" + index'>{{ month }}<span class="material-symbols-outlined">check</span></label>
+            <div class='accordion0 ' :class="accordionClasses">
+                <div class="accordion-header" @click="toggleAccordion" >
+                    <strong>2023</strong>
+                </div>
+                <div class="accordion-body">
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesettitypeok a galley of typeok a gype</p>
+                </div>
             </div>
         </div>
-    </div>
     </div>
     
 </template>
@@ -39,10 +35,10 @@ export default {
                selectedMonth: '',
                calenderDays: [],
                loading: true, // Add a loading indicator state
+               opened: true
            }
     },
     methods: {
-
         // USER LOADS THE PAGE
         // This function will : 1- GET years and months from server which belongs to the current user, 2- Choose/Select most recent year and month to view its espenses 3- Emits "monthlyExpenses" and "totalMonthlyExpenses" out to parent (Home.vue)
         // This gets called only when user reloads the page only !!
@@ -202,6 +198,7 @@ export default {
                         this.loading = false; // Set loading to false in case of an error
                     }
                 });
+                
         },
 
         // THis gets called when user loads the page, or chooses a year or use chooses a month 
@@ -211,12 +208,19 @@ export default {
 
             this.$emit('userChoseMonthTimeFrame', monthlyExpenses)
         },
-       
+        toggleAccordion () {
+            this.opened = !this.opened
+        },
         },
         mounted() {
             // Call loadAndEmitRecentMonthExpenses() function when user loads the page !, this will get the expenses of the most recent month.
             this.loadAndEmitRecentMonthExpenses()
-    }
+        },
+        computed: {
+            accordionClasses () {
+                return {'closed': !this.opened}
+            }
+        }
 }
 
 </script>
@@ -228,6 +232,32 @@ export default {
         display: flex;
         flex-direction: column;
         gap: 10px;
+    }
+
+    .accordion0 {
+    max-width: 500px;
+    margin: auto;
+    border: 1px solid;
+    }
+
+    .accordion-header {
+        padding: 10px;
+        
+    }
+
+    .accordion-body {
+        padding: 0;
+        max-height: 10em;
+        overflow: hidden;
+        transition: 0.5s ease;
+    }
+
+    .closed .accordion-body {
+        max-height: 0;
+    }
+
+    .accordion-body p {
+        padding: 20px;
     }
     .accordion {
         border-top: 1px solid #dee2e6;
@@ -242,76 +272,5 @@ export default {
         flex-direction: column;
     }
 
-    .year-label {
-        height: 52px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid #dee2e6;
-        width: 100%;
-        padding: 0 20px;
-        
-    }
-
-    .content {
-        height: 0px;
-        overflow: hidden;
-        transition: height 0.5s;
-        border: none;
-    }
-    
-    .month-label {
-        height: 100%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: space-between;
-        /* height: 25px; */
-        width: 100%;
-        padding: 0 20px;
-    }
-    
-    input[type="radio"] {
-        display: none;
-    }
-
-    
-    span{
-        width: 30px;
-        /* content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E"); */
-        transition: transform 0.5s;
-    }    
-    
-    
-    .year-input[type="radio"]:checked ~ .content {
-        border-bottom: 1px solid #dee2e6;
-        height: 35px; /* Auto height to reveal content */
-        /* overflow: auto; */
-        
-    }
-    .year-input[type="radio"]:checked[type="radio"]:checked + .year-label span {
-        /* content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z'/%3E%3C/svg%3E"); */
-        transform: rotate(180deg);
-    }
-    .year-input[type="radio"]:checked[type="radio"]:checked + .year-label {
-        /* content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z'/%3E%3C/svg%3E"); */
-        background: var(--primary);
-    }
-
-    .month-input[type="radio"]:checked + .month-label {
-        /* content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z'/%3E%3C/svg%3E"); */
-        background: var(--secondary);
-    }
-    .month-label span {
-        /* content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z'/%3E%3C/svg%3E"); */
-        display: none;
-    }
-    .month-input[type="radio"]:checked + .month-label span {
-        /* content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z'/%3E%3C/svg%3E"); */
-        display: inline;
-    }
-   
-
-
-    
 
 </style>

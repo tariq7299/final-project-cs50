@@ -2,7 +2,7 @@
 - Remove to-do.md from remote
 - Connect to api that gets the value of current dollar **OR** make the user write the doller currency when he opens the app !
 - Enable users to view any money as Egp or $
--  
+-  Cretaet a branch from commit 64c090ceaab857dc7ab86a17fad62da4644a3e4a and call it 'accordion v-1.0, double click  bug'
 
 # Backend 
 =========
