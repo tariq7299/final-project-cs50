@@ -99,6 +99,7 @@
                         </template>
 
 - animate show years and months select
+- Also animate the changing of Month on "2023-Nov", whenever user chooses a month, also maybe change the background color of '2023-Nov'
 ## SpendingsDays
 - Enable Users to view there expenses/spendings in different currencies !
 
@@ -107,8 +108,10 @@
 - Clear days <sleelct> after user changes month 
 - Add an alert after user adds/submits an expenses
 - 
-
-
+## ChooseTimeFrame
+- Add the total expense beside each month name
+- Animate the arrow when user clicks on the already opened accordion !
+- CLean chooseTimeFraem in fronend and also all its functions from server
 
                                 # TOMMOROOE
                                 -----------

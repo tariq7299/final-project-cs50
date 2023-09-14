@@ -8,13 +8,15 @@
         <div class="container-flex">
 
             <div class='accordion ' v-for="(yearAndMonths, index) in yearsAndMonths" :key="index">
-                <div class="accordion-header" @click="selectYearAndShowMonths(yearAndMonths)" >
-                    <strong>{{ yearAndMonths.year }}</strong>
+
+                <div class="accordion-header" @click="selectYearAndShowMonths(yearAndMonths)" :style="styleSelectedYear(yearAndMonths.year)">
+                    <strong>{{ yearAndMonths.year }}</strong><span class="material-symbols-outlined expand" :style="animateExpandArrow(yearAndMonths.year)">expand_more</span>
                 </div>
+
                 <!-- 'TransitionGroup' is a veu js built in componenet, that can animate v-show  -->
-                <TransitionGroup>
-                    <div class="accordion-body" v-for="(month, index) in yearAndMonths.months" :key="index" v-show="yearAndMonths.opened" @click="fetchAndEmitSelectedMonthlExpenses(month)">
-                        <p>{{ month }}</p>
+                <TransitionGroup name="monthsList">
+                    <div class="accordion-body" v-for="(month, index) in yearAndMonths.months" :key="index" v-show="yearAndMonths.opened" @click="fetchAndEmitSelectedMonthlExpenses(month)" :style="StyleSelectedMonth(month)">
+                        {{ month }}<span class="material-symbols-outlined checkSymbol" :style="AddCheckSymbol(month)">check</span>
                     </div>
                 </TransitionGroup>
 
@@ -55,6 +57,9 @@ export default {
                 // GET years and months 
                 this.yearsAndMonths = response.data.years_and_months
 
+                // Make t
+                this.yearsAndMonths[0].opened = true
+
                 // Choose/select the most recent year, by assinging it to "selectedYear"
                 this.selectedYear = this.yearsAndMonths[0].year;
 
@@ -66,7 +71,7 @@ export default {
                 
                 // GET the total monthly expenses amount which belongs to "selectedMonth" (the most recent month) 
                 this.totalMonthlyExpenses = response.data.total_amount_of_month_expenses
-
+                
                 // Finaly Emit "monthlyExpenses" and "totalMonthlyExpenses" out to parent component of Home.vue, so it will be used in another sibiling component 
                 this.emitMonthlyExpenses();
 
@@ -139,22 +144,49 @@ export default {
                         this.loading = false; // Set loading to false in case of an error
                     }
                 });
-        },
+            },
 
-        // THis gets called when user loads the page, or chooses a year or use chooses a month 
-        // Emits "monthlyExpenses" and "totalMonthlyExpenses" out to parent component of Home.vue, so it will be used in another sibiling component 
-        emitMonthlyExpenses () {
-            const monthlyExpenses = {monthlyExpenses : this.monthlyExpenses, totalMonthlyExpenses : this.totalMonthlyExpenses, selectedYear: this.selectedYear, selectedMonth: this.selectedMonth}
+            // THis gets called when user loads the page, or chooses a year or use chooses a month 
+            // Emits "monthlyExpenses" and "totalMonthlyExpenses" out to parent component of Home.vue, so it will be used in another sibiling component 
+            emitMonthlyExpenses () {
+                const monthlyExpenses = {monthlyExpenses : this.monthlyExpenses, totalMonthlyExpenses : this.totalMonthlyExpenses, selectedYear: this.selectedYear, selectedMonth: this.selectedMonth}
 
-            this.$emit('userChoseMonthTimeFrame', monthlyExpenses)
-        },
-        selectYearAndShowMonths (yearAndMonths) {
-            this.yearsAndMonths.forEach(function (element) {
-                element.opened = false
-            });
-            yearAndMonths.opened = !yearAndMonths.opened
-            this.selectedYear = yearAndMonths.year
-        },
+                this.$emit('userChoseMonthTimeFrame', monthlyExpenses)
+            },
+            selectYearAndShowMonths (yearAndMonths) {
+                if (yearAndMonths.opened == true) {
+                    yearAndMonths.opened = false
+                }
+                else {
+
+                    this.yearsAndMonths.forEach(function (element) {
+                        element.opened = false
+                    });
+                    yearAndMonths.opened = !yearAndMonths.opened
+                }
+                this.selectedYear = yearAndMonths.year
+            },
+            // I couldn't use "styleSelectedYear" as a computed prop, becasue 'styleSelectedYear' takes input, and I can't take input as acomputed prop
+            styleSelectedYear(headerYear) {
+                if (headerYear === this.selectedYear) {
+                    return {'background-color': 'var(--primary)'}
+                } 
+            },
+            animateExpandArrow (headerYear) {
+                if (headerYear === this.selectedYear) {
+                    return {'transform': 'rotate(180deg)'}
+                } 
+            },
+            StyleSelectedMonth (month) {
+                if (month === this.selectedMonth) {
+                    return {'background-color': 'var(--accent)'}
+                } 
+            },
+            AddCheckSymbol (month) {
+                if (month === this.selectedMonth) {
+                    return {'display': 'inline'}
+                } 
+            }
         },
         mounted() {
             // Call loadAndEmitRecentMonthExpenses() function when user loads the page !, this will get the expenses of the most recent month.
@@ -163,7 +195,7 @@ export default {
         computed: {
             accordionClasses () {
                 return {'closed': !this.opened}
-            }
+            },
         }
 }
 
@@ -173,43 +205,70 @@ export default {
     .container-flex {
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: 10px;
+        padding: 10px;
     }
 
     .accordion {
-    max-width: 500px;
-    margin: auto;
-    border: 1px solid;
+        width: 80vw;
+        max-width: 600px;
+        border:1px solid #dee2e6;
+        border-radius: 7px;
     }
 
     .accordion-header {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
         padding: 10px;
+        border-bottom: 1px solid #dee2e6;
+        cursor: pointer;
+        background-color: var(--secondary)
         
     }
 
     .accordion-body {
-        padding: 0;
-        max-height: 10em;
+        width: 100%;
+        max-height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         overflow: hidden;
-        transition: 0.5s ease;
-    }
-
-    .closed .accordion-body {
-        max-height: 0;
+        cursor: pointer;
+        background-color: var(--secondary)
+        /* transition: 0.5s ease; */
     }
 
     .accordion-body p {
-        padding: 20px;
+        height: 10px;
+        /* margin-top: auto;
+        margin-bottom: auto; */
     }
 
-    .v-enter-active,
-    .v-leave-active {
-    transition: max-height 0.7s ease;
+    
+    .monthsList-enter-active, .monthsList-leave-active {
+    transition: all 0.4s ease;
     }
-
-    .v-enter-from,
-    .v-leave-to {
+    .monthsList-enter-from {
         max-height: 0;
+        padding: 0px;
+        opacity: 0;
+    } 
+    
+    .monthsList-leave-to {
+        max-height: 0;
+        padding: 0px;
+        opacity: 0;
+    }
+
+    .checkSymbol {
+        display: none;
+    }
+
+    .expand {
+        transition: transform 0.3s;
     }
 
 </style>

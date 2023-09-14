@@ -183,8 +183,6 @@ def load_recent_month_expenses():
                     
             response_object = { 'status': 'success', 'years_and_months': years_and_months, 'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
             
-            print('years_and_months', years_and_months)
-            
             # Return response object as JSON∆
             return jsonify(response_object)
         

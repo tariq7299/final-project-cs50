@@ -1,7 +1,7 @@
 <template>
     <div class="sector total-expenses-container">
         <p class="money-header">{{ totalMonthlyExpenses }}</p>
-        <p class="secondary-header2">Total Monthly Spendings</p>
+        <p class="secondary-header2">Total Monthly Expenses</p>
     </div>
 </template>
 

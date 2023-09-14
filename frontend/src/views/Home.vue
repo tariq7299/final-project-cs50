@@ -135,7 +135,6 @@
         font-family: 'Roboto Slab', serif;
         font-weight: 400;
         font-size: 23px;
-        
     }
 
     .secondary-header2 {
@@ -184,6 +183,7 @@
         display: inline-flex;
         justify-content: space-around;
         width: 200px;
+        z-index: 9999;
         }
 
     .bottom-fixed:hover {
