@@ -97,6 +97,8 @@
                                         </router-link>
                                 </div>
                         </template>
+
+- animate show years and months select
 ## SpendingsDays
 - Enable Users to view there expenses/spendings in different currencies !
 

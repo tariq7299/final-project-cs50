@@ -322,3 +322,67 @@ def show_days():
     # [print(f"day.date: {test.date}") for test in tests]
     
     
+
+def test ():
+    years = UsersSpendings.query.with_entities(
+                extract('year', UsersSpendings.date)
+            ).filter(
+                UsersSpendings.user_id == 2
+            ).group_by(
+                extract('year', UsersSpendings.date)
+            ).order_by(
+                extract('year', UsersSpendings.date).desc()
+            ).all()
+            
+    # years[0] this will access the first value/element in the tuple of 'year' in 'years' list
+    years = [year[0] for year in years]
+    
+    print(years)
+    
+    years_and_months = []
+    for year in years:
+        
+        print('year', year)
+        months = UsersSpendings.query.with_entities(
+            extract('month', UsersSpendings.date)
+        ).filter(
+            UsersSpendings.user_id == 2
+        ).filter(
+            extract('year', UsersSpendings.date) == year
+        ) .group_by(
+            extract('month', UsersSpendings.date)
+        ).order_by(
+            extract('month', UsersSpendings.date).desc()
+        ).all()
+        
+        months_list = []
+        
+        [ months_list.append(datetime(1, month, 1).strftime('%b')) for month, in months ]
+                
+        years_and_months.append({'year': year, 'months': months_list})
+        
+    print(years_and_months)
+    
+    # [print("year:", year) for (year) in years_and_months]
+    
+    
+    # for year in years_and_months:
+    #     for month in years_and_months[year]:
+    #         str_month = datetime(1, month, 1).strftime('%b')
+    #         months_as_abbr.append(str_month)
+    # return months_as_abbr
+    
+def test2 ():
+    months = UsersSpendings.query.with_entities(
+            extract('month', UsersSpendings.date)
+        ).filter(
+            UsersSpendings.user_id == 2
+        ).filter(
+            extract('year', UsersSpendings.date) == 2022
+        ) .group_by(
+            extract('month', UsersSpendings.date)
+        ).order_by(
+            extract('month', UsersSpendings.date).desc()
+        ).all()
+    
+    print('months:', months)

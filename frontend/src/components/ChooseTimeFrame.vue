@@ -7,13 +7,17 @@
     <div class="" v-else>
         <div class="container-flex">
 
-            <div class='accordion0 ' :class="accordionClasses">
-                <div class="accordion-header" @click="toggleAccordion" >
-                    <strong>2023</strong>
+            <div class='accordion ' v-for="(yearAndMonths, index) in yearsAndMonths" :key="index">
+                <div class="accordion-header" @click="selectYearAndShowMonths(yearAndMonths)" >
+                    <strong>{{ yearAndMonths.year }}</strong>
                 </div>
-                <div class="accordion-body">
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesettitypeok a galley of typeok a gype</p>
-                </div>
+                <!-- 'TransitionGroup' is a veu js built in componenet, that can animate v-show  -->
+                <TransitionGroup>
+                    <div class="accordion-body" v-for="(month, index) in yearAndMonths.months" :key="index" v-show="yearAndMonths.opened" @click="fetchAndEmitSelectedMonthlExpenses(month)">
+                        <p>{{ month }}</p>
+                    </div>
+                </TransitionGroup>
+
             </div>
         </div>
     </div>
@@ -29,13 +33,11 @@ export default {
            return {
                monthlyExpenses: [],
                total_amount_of_month_expenses: '',
-               years: [],
                selectedYear:'',
-               months: [],
                selectedMonth: '',
-               calenderDays: [],
                loading: true, // Add a loading indicator state
-               opened: true
+            //    opened: true,
+               yearsAndMonths: {},
            }
     },
     methods: {
@@ -50,17 +52,14 @@ export default {
 
                 const response = await axios.get(path);
 
-                // GET past years which contain expenses
-                this.years = response.data.years;
+                // GET years and months 
+                this.yearsAndMonths = response.data.years_and_months
 
                 // Choose/select the most recent year, by assinging it to "selectedYear"
-                this.selectedYear = this.years[0];
-
-                // GET past months in most recent year
-                this.months = response.data.months
+                this.selectedYear = this.yearsAndMonths[0].year;
 
                 // Choose/select the most recent month, by assinging it to "selectedMonth"
-                this.selectedMonth = this.months[0]
+                this.selectedMonth = this.yearsAndMonths[0].months[0];
 
                 // GET the monthly expenses in the "selectedMonth" (the most recent month)
                 this.monthlyExpenses = response.data.monthly_expenses
@@ -81,69 +80,11 @@ export default {
             }
         },
 
-        // USER HAVE CHOOSEN A YEAR
-        // This function will: 1- FETCH months which belongs to the 'selectedYear', 2- Choose/Select most recent month to view its expenses 3- Emits "monthlyExpenses" and "totalMonthlyExpenses" out to parent (Home.vue)
-        // This gets called only when user choose a "year" from <select> input of years
-        async fetchAndEmitRecentMonthExpenses() {
-
-            const apiUrl = process.env.VUE_APP_API_BASE_URL;
-            const path = apiUrl + '/fetch_months_and_recent_month_expenses';
-
-            const requestData = {
-                // Send to server the choosen/selected year by user "selectedYear", to get its expenses months.
-                selectedYear:this.selectedYear
-            };
-
-            // Perform asynchronous operation
-            axios
-                .post(path, requestData)
-
-                .then((response) => {
-                // GET past months which belongs to the "selectedYear" (the year the user have choosen)
-                this.months = response.data.months
-
-                // Choose/select the most recent month, by assinging it to "selectedMonth" which belongs to the "selectedYear" (the year the user have choosen) 
-                this.selectedMonth = this.months[0]
-
-                // GET the monthly expenses in the "selectedMonth" (the most recent month) which belongs to the "selectedYear" (the year the user have choosen)
-                this.monthlyExpenses = response.data.monthly_expenses
-
-                // GET the total monthly expenses amount which belongs to "selectedMonth" (the most recent month) which belongs to the "selectedYear" (the year the user have choosen)
-                this.totalMonthlyExpenses = response.data.total_amount_of_month_expenses
-
-                // Finaly Emit "monthlyExpenses" and "totalMonthlyExpenses" out to parent component of Home.vue, so it will be used in another sibiling component 
-                this.emitMonthlyExpenses()
-
-                // After all the above is done, remove the loading indicator
-                this.loading = false;
-
-            })
-            .catch((error) => {
-                if (error.response) {
-                    console.error(error);
-                    // The request was made, and the server responded with a non-2xx status code
-                    // Handle the error based on the HTTP status code and error message
-                    const status = error.response.status;
-                    const message = error.response.data.error_message;
-                    alert(`Error! Status: ${status}, Message: ${message}`);
-                    this.loading = false; // Set loading to false in case of an error
-                } else if (error.request) {
-                    console.error(error);
-                    // The request was made, but no response was received
-                    alert('Error! No response received from the server. Please try again or contact support for assistance.');
-                    this.loading = false; // Set loading to false in case of an error
-                } else {
-                    console.error(error);
-                    // Something else happened while setting up the request
-                    alert(`Oops! Something went wrong while fetch your expenses. Please try again or contact support for assistance.`);
-                    this.loading = false; // Set loading to false in case of an error
-                }
-            });
-        },
-    
         // USER HAVE CHOOSEN A MONTH
         // This function will:  1- FETCH the monthly spendings for the selected month 
-        async fetchAndEmitSelectedMonthlExpenses() {
+        async fetchAndEmitSelectedMonthlExpenses(month) {
+
+            this.selectedMonth = month
 
             const apiUrl = process.env.VUE_APP_API_BASE_URL;
             const path = apiUrl + '/fetch_selected_month_expenses';
@@ -198,7 +139,6 @@ export default {
                         this.loading = false; // Set loading to false in case of an error
                     }
                 });
-                
         },
 
         // THis gets called when user loads the page, or chooses a year or use chooses a month 
@@ -208,8 +148,12 @@ export default {
 
             this.$emit('userChoseMonthTimeFrame', monthlyExpenses)
         },
-        toggleAccordion () {
-            this.opened = !this.opened
+        selectYearAndShowMonths (yearAndMonths) {
+            this.yearsAndMonths.forEach(function (element) {
+                element.opened = false
+            });
+            yearAndMonths.opened = !yearAndMonths.opened
+            this.selectedYear = yearAndMonths.year
         },
         },
         mounted() {
@@ -226,15 +170,13 @@ export default {
 </script>
 
 <style scoped>
-
-
     .container-flex {
         display: flex;
         flex-direction: column;
         gap: 10px;
     }
 
-    .accordion0 {
+    .accordion {
     max-width: 500px;
     margin: auto;
     border: 1px solid;
@@ -259,18 +201,15 @@ export default {
     .accordion-body p {
         padding: 20px;
     }
-    .accordion {
-        border-top: 1px solid #dee2e6;
-        border-right: 1px solid #dee2e6;
-        border-left: 1px solid #dee2e6;
-        /* border-bottom: 1px solid #dee2e6; */
-        border-radius: 7px;
-        /* padding: 10px 0; */
-        width: 80vw;
-        max-width: 800px;
-        display: inline-flex;
-        flex-direction: column;
+
+    .v-enter-active,
+    .v-leave-active {
+    transition: max-height 0.7s ease;
     }
 
+    .v-enter-from,
+    .v-leave-to {
+        max-height: 0;
+    }
 
 </style>

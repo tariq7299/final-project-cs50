@@ -70,6 +70,7 @@ def get_calendar_days(year, month_as_int):
 def convert_num_months_to_abbr_months(months_as_num):
     
     months_as_abbr = []
+    # Notice that we used 'month_as_num,' and not 'month_as_num' so there is ',' added !, and that to select the first element in the list of tuples ->"months_as_num [(11,), (9,), (8,), (6,)]"
     for month_as_num, in months_as_num:
         str_month = datetime(1, month_as_num, 1).strftime('%b')
         months_as_abbr.append(str_month)
