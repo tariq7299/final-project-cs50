@@ -1,68 +1,46 @@
 
 <template>
-    <div class="row">
+  <div class="add-expenses">
 
-      <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
-      <v-form @submit.prevent="addExpense" v-model="valid">
-
+    <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
+      <v-form @submit.prevent="addExpense" v-model="valid" class="formTest">
+  
         <!-- 
             "@click:clear" : This becasue the clear symbol of the v-text-field doesn't clear the input of user, so i had to manually clear it by @click event 
             I couldn't set "label:'Date'", and I had to use v-binf on it :label="formattedDate", because if I used the latter method "label" will block ':value="formattedDate"' from appearing in the input field !
         -->
-        <v-text-field class="date-input"  :value="formattedDate" clearable prepend-icon="mdi-calendar" placeholder="For example : 2023-02-07" @click:clear="selectedDate = null" @keydown.delete="handleDelete" :label="formattedDate"> 
-
+        <v-text-field class="expense-input"  :value="formattedDate" clearable prepend-icon="mdi-calendar" placeholder="For example : 2023-02-07" @click:clear="selectedDate = null" @keydown.delete="handleDelete" :label="formattedDate"> 
+  
           <!-- 
             I have used v-model="menu" and :close-on-content-click="false" in order to prevent the datePicker from disappearing after I click on a date, as this is the default behavior of 'v-menu' nested elements. However, this default behavior is interfering with the functionality of the datepicker.
            -->
           <v-menu activator="parent" v-model="menu" :close-on-content-click="false" height="550" class="veutify-menu">
-
+  
             <!--@click:save="menu = false" @click:cancel="menu = false" : Are used to a make v-menu closes only when I press 'OK' or 'CANCEL'   -->
             <v-date-picker v-model="selectedDate" @click:save="menu = false" @click:cancel="menu = false"></v-date-picker>
-
+  
           </v-menu>
-
-        </v-text-field>
-
-        <div class="col">
+  
+        </v-text-field >
+  
             <v-text-field v-model="amountSpent" name="amount-spent" id="amount_spent" placeholder="Enter Amount"
-            autofocus label="Amount Spended" required prepend-icon="mdi-calendar">
+            autofocus label="Amount Spended" required prepend-icon="mdi-cash" class="expense-input">
             </v-text-field>
             
-          </div>
-          <div class="col">
-            <v-select v-model="selectedCategory" name="category" id="category" label="Category" prepend-icon="mdi-calendar" :items="categories">
+            <v-select v-model="selectedCategory" name="category" id="category" label="Category" prepend-icon="mdi-notification-clear-all" :items="categories" class="expense-input" required>
               <!-- <option v-for="(category, index) in categories" :value="category" :key="index">{{ category }}</option> -->
             </v-select>
-          </div>
-
-          <div class="col">
+  
             <v-text-field v-model="expenseNote" name="expense-note" id="expense-note" placeholder="Type a note"
-            label="Note" required prepend-icon="mdi-calendar">
+            label="Note" required prepend-icon="mdi-note" class="expense-input">
             </v-text-field>
-          </div>
-
-          <div class="col">
-            <v-btn class="" type="submit" id="button">Add</v-btn>
-          </div>
+  
+            <v-btn class="" type="submit" id="button">Add Expense</v-btn>
           
     </v-form>
-    <div class="col">
-            <label for="day">Month</label>
-            <select v-model="selectedMonth" name="month" id="month" @change="fetchDaysForSelectedMonth">
-                <!-- We have to JSON.parse(calenderDays) because we have JSON.strigify() it in HOME.vue-->
-                <option v-for="(month, index) in months" :value="month" :key="index">{{ month }}</option>
-            </select>
-        </div>
-        <div class="col">
-            <!-- <h1>{{ calenderDays }}</h1> -->
-            <label for="day">Day</label>
-            <select v-model="selectedDay" name="day" id="day">
-                <!-- We have to JSON.parse(calenderDays) because we have JSON.strigify() it in HOME.vue-->
-                <option v-for="day in days" :value="day.day_num" :key="day.day_num">{{ day.day_name }}, {{ day.day_num }}</option>
-            </select>
-        </div>
-
+          
   </div>
+
 
 </template>
 
@@ -204,15 +182,27 @@ export default {
 
 <style>
 
-.date-input {
-  /* max-height: 10px;  */
-  /* width: 100%;
-  height: 200px;
-  background-color: white;
-  border: 2px solid; */
+.add-expenses {
+  height: 100vh;
+  width: 80vw;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  display: flex;
+  align-items: start;
+  justify-content: center;
 }
 
-.veutify-menu{
-  /* height: 20px; */
+.formTest{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.expense-input {
+  width: 100%;
 }
 </style>

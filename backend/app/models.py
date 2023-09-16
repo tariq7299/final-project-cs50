@@ -42,22 +42,34 @@ class UsersWallets(db.Model):
         return f'UsersWallets(wallet_id={self.wallet_id}, user_id={self.user_id}, balance={self.balance/100}, debt={self.debt/100}, credit={self.credit/100})'
 class UsersSpendings(db.Model):
     
-    
     spending_id = db.Column(db.Integer, primary_key=True)
     # Define the foreign key column
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     date = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     amount_spent = db.Column(db.Integer, nullable=False)
-    category = db.Column(db.String(64), unique=False)
+    category = db.Column(db.String(64), unique=False, nullable=False)
     # Define the relationship between UserSpending and User
     user = db.relationship('Users', backref=db.backref('spendings', lazy=True))
     
     def __repr__(self):
         return '<Spending ID: {}, User ID: {}, Date: {}, Amount Spent: {}, Category: {}>'.format(self.spending_id, self.user_id, self.date, self.amount_spent, self.category)
     
+class Contacts(db.Model):
     
-    """
-    # Some commands that I will execute in flask shell:
-    - 
-    """
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(64), unique=True, nullable=False)
+        
+class Transactions(db.Model):
+    
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    contact_id = db.Column(db.Integer, db.ForeignKey('contacts.id'), nullable=False)
+    
+    # By definning a relationship you can now access the user info from 'Users' model, by typing 'Transactions.user'
+    # And Vice versa, so  "backref=db.backref('user_transactions')" enables you to access user transactions from 'Users'db model, by typing "Users.user_transactions"
+    user = db.relationship('Users', backref=db.backref('user_transactions'), lazy=True)
+    contact = db.relationship('Contacts', backref=db.backref('contact_transactions'), lazy=True)
     

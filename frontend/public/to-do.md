@@ -27,7 +27,8 @@
 - Consider adding a column called "Currency" "UsersDebts and UsersCredits" to enable users to store value of money indifferent currencires
 - Consider removing "wallet_id" from UsersWallets as serves the purpose as "user_id"
 - Change the UserSpendinds to UsersExpenses, annd also each coulmn with 'spending' title to 'expense' ..etc
-
+- Create a notes column for User Expenses, and connect it to frontend
+- Add Email column to USers db model
 
 ## run.py
 - How to find a way to the server url dynamic in the frontend ??, like every time I want to make a axios request I won't have to type the exactly localhost...:5000, because sometimes the port number changes !
@@ -110,6 +111,8 @@
 - Clear days <sleelct> after user changes month 
 - Add an alert after user adds/submits an expenses
 - Rebuild AddExpense frontend from groundup using Plain CHAD CSS
+- Handle form vaidation via HTML in frontend
+- Style the frontend --- COLORS  NICEER-ICONS BETTER-BUTTON
 ## ChooseTimeFrame
 - Add the total expense beside each month name
 - Animate the arrow when user clicks on the already opened accordion !
