@@ -25,6 +25,10 @@ npm run build
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
+
+## Notes on vuetify in this project
+
+- After adding vuetify, it actually overrides all the default styles of HTML elements !. so lets say for example there is a default `padding` in `<button>` tags, However after adding vuetify, it removes this `padding`, so you have to specify a custom `padding` by you in `<style>`, all of that apply to every element in the whole app.
 ## Some notes on branches
 - First of all !, all of those branches is not fully working but rather it is some different versions of implementing some components and parts of the code   
 
@@ -83,3 +87,5 @@ So when you click VEU js takes control and actually do his job, but fails in add
 
 *How to see the changes*
 - Visit Home page, and look at years and months accordion and try chooseing different year or a month, you will aslo notice that you have to double click the month in order to change its color.
+
+

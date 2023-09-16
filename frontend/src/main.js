@@ -6,7 +6,10 @@ import './registerServiceWorker'
 import router from './router/routes.js'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
+
+
 loadFonts()
+
 
 createApp(App)
   .use(vuetify)

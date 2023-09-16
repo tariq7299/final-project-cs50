@@ -37,6 +37,7 @@
 - Handle affexpnse() error usererrors/amliciousUsers/...etc
 - change every "spending" to "expense"
 - Write comments in routing functions
+- Handle valdition form errors in server side from 'AddExpenses'
 
 ## helpers.py
 - Write comments for calendar days functions 
@@ -108,7 +109,7 @@
 - Create a num pad instead of phone num pad
 - Clear days <sleelct> after user changes month 
 - Add an alert after user adds/submits an expenses
-- 
+- Rebuild AddExpense frontend from groundup using Plain CHAD CSS
 ## ChooseTimeFrame
 - Add the total expense beside each month name
 - Animate the arrow when user clicks on the already opened accordion !

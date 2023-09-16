@@ -29,7 +29,7 @@ export default {
         background-color: var(--accent); 
         border: none;   
         color: white;
-        padding-top: 6px;
+        padding: 6px 6px 3px 6px;
         text-align: center;
         text-decoration: none;
     }
