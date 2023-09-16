@@ -1,9 +1,13 @@
 # finale-project
 
 ## Project setup
+
 ```
+vue create app # THis CLI command will init the project, and create all the necessary folders
+vue add vutify # THis will add vutify library, as i used some of its componenets
 npm install
 npm install --save-dev dotenv-webpack # To be able to use env variables in vue
+
 ```
 
 

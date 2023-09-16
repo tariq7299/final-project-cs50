@@ -1,18 +1,11 @@
 
 <template>
     <div class="row">
-    <!-- <FunctionalCalendar  
-       
-      
-        v-on:changedMonth="changedMonth"
-        v-on:changedYear="changedYear"
-      
-        :sundayStart="true"
-        :date-format="'dd/mm/yyyy'"
-        :is-date-range="true"
-        :is-date-picker="true"      
-            >
-        </FunctionalCalendar> -->
+      <v-text-field color="success" :value="formattedDate" clearable prepend-icon="mdi-calendar" placeholder="For example : 2023-02-07" @click:clear="selectedDate = null" @keydown.delete="handleDelete" class="my-text-field">
+        <v-menu activator="parent" v-model="menu" :close-on-content-click="false" height="550">
+          <v-date-picker v-model="selectedDate" @click:save="menu = false" @click:cancel="menu = false"></v-date-picker>
+        </v-menu>
+      </v-text-field>
     <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
     <form @submit.prevent="addExpense">
         <div class="col">
@@ -53,6 +46,8 @@
 <script>
 import axios from 'axios'
 // import { FunctionalCalendar } from 'vue-functional-calendar';
+import { VDatePicker } from 'vuetify/labs/VDatePicker'
+import format from 'date-fns/format'
 
 export default {
     name: 'AddExpense',
@@ -66,10 +61,16 @@ export default {
             categories: '',
             selectedCategory: '',
             calendarData: {},
+            selectedDate: null,
+    menu: false,
         }
     },
+  //   data: () => ({
+  //   selectedDate: null,
+  //   menu: false,
+  // }),
     components: {
-        // FunctionalCalendar
+      VDatePicker,
     },
     methods: {
 
@@ -152,10 +153,21 @@ export default {
                     }
                 });
         },
+        handleDelete() {
+    this.selectedDate = null;
+    
+  },
     },
+    computed: {
+  formattedDate () {
+    const formattedDate0 = this.selectedDate ? format(this.selectedDate , 'MMM EEEE, yyyy') : '' 
+    return formattedDate0
+  }
+},
     created() {
         this.fetchYearsAndMonths()
-    }
+    },
+
 }
 </script>
 
