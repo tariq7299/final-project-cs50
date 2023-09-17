@@ -2,6 +2,9 @@
 <template>
   <div class="add-expenses">
 
+    <!-- '.sector' class just applies a 'margin-bottom', and it is defined globally in 'App.vue', to make consistent spacing between sectors/sections -->
+    <Header class="sector" pageTitle="Add Expenses"></Header>
+
     <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
       <v-form @submit.prevent="addExpense" v-model="valid" class="formTest">
   
@@ -46,6 +49,7 @@
 
 <script>
 import axios from 'axios'
+import Header from './../components/Header'
 
 // Some important notes about that JS file found inside !
 import './../../public/passive-event-notoriousBug.js';
@@ -78,6 +82,7 @@ export default {
   // }),
     components: {
       VDatePicker,
+      Header,
     },
     methods: {
 
@@ -184,13 +189,14 @@ export default {
 
 .add-expenses {
   height: 100vh;
-  width: 80vw;
+  width: 90vw;
   max-width: 800px;
   margin: auto;
   padding: 20px;
   display: flex;
-  align-items: start;
-  justify-content: center;
+  align-items: center;
+  justify-content: start;
+  flex-direction: column;
 }
 
 .formTest{

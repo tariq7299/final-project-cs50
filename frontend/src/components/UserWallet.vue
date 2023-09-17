@@ -1,5 +1,5 @@
 <template>
-  <div class="sector">
+  <div class="">
     <p class="money-header">{{ amount }}</p>
     <p class="secondary-header2">{{ walletTitle }}</p>
   </div>
@@ -23,6 +23,7 @@
 
   p {
     margin: 0;
+    padding: 0.25rem;
   }
 
 </style>

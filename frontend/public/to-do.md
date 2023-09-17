@@ -61,6 +61,7 @@
 - Write parent container for your vue html and some rows and columns
 - Style the nav bar
 - Main font `Avenir, Helvetica, Arial, sans-serif;` not imported correctly !, ANd I think the reason becasue of the google font <link>, that I messed Up !!
+- Create a layout.vue/base.vue component that will be used glabally across all of your views and components
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css

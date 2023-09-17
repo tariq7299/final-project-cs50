@@ -5,16 +5,24 @@
                 <h3>Loading...</h3>        
             </div>
         </div>
-        <div class="row test" v-else>
-            <div class="col-6 d-flex justify-content-start">
-                <UserWallet walletTitle="Balance" :amount="wallet.balance"/>        
+        <div class="" v-else>
+
+            <div class="row sector" v-show="homePage">
+                <div class="col-6 d-flex justify-content-start">
+                    <UserWallet walletTitle="Balance" :amount="wallet.balance"/>        
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <UserWallet walletTitle="Debt" :amount="wallet.debt"/>
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <UserWallet walletTitle="Credit" :amount="wallet.credit"/>
+                </div>
             </div>
-            <div class="col-6 d-flex justify-content-end">
-                <UserWallet walletTitle="Debt" :amount="wallet.debt"/>
+
+            <div class="row sector" v-show="peoplePage">
+                <UserWallet walletTitle="Net Balance" amount="0"></UserWallet>
             </div>
-            <div class="col-12 d-flex justify-content-center">
-                <UserWallet walletTitle="Credit" :amount="wallet.credit"/>
-            </div>
+
         </div>
 </template>
 
@@ -57,12 +65,25 @@
         // Here we can actually remove async and await keywords !, because there is no lines od code after "await this.fetchUserWallet()" !!
         async created() {
             await this.fetchUserWallet() 
+        },
+        computed: {
+            homePage () {
+                if(this.$route.path === '/') {
+                    return true
+                } else {
+                    return false
+                }
+            },
+            peoplePage () {
+                if(this.$route.path === '/people') {
+                    return true
+                } else {
+                    return false
+                }
+            }
         }
     }
 </script>
 
 <style scoped>
-    .row {
-        margin-bottom: 1rem;
-}
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div class="parent-container">
+
       <nav class="navbar sticky-top mb-2" >
         <div class="container-fluid">
             <a class="navbar-brand" href="#">GoldGardyn</a>
@@ -15,6 +16,12 @@
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="http://localhost:8080/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost:8080/addExpenses">Add Expense</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost:8080/people">People</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="http://localhost:8080/addExpenses">Add Expense</a>
@@ -42,7 +49,9 @@
             
         </div>
       </nav>
+
     <router-view></router-view>
+
   </div>
 </template>
 
@@ -84,7 +93,7 @@
   }
 
   .parent-container {
-    
+    margin: auto;
     /* height: 100%; */
   }
 

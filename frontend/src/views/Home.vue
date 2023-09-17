@@ -5,7 +5,7 @@
         <CurrentViewSummary></CurrentViewSummary>
         
         <!-- This contains the page title only -->
-        <Header class="title" pageTitle="Expenses"/>
+        <Header pageTitle="Expenses"/>
         
         <!-- This contains :
             - input for year
@@ -88,7 +88,7 @@
             },
             toggelChooseTimeFrame () {
                 this.showChooseTimeFrame = !this.showChooseTimeFrame
-            }
+            },
         },
         computed: {
             // This is computed property, which actully groups thr monthly expenses by day (So each day date will be an object that holds inside it a list [] of monthly expenses details and total amount spend in the month as object {})
@@ -107,14 +107,14 @@
                 return acc;
                 }, {});
             }
-        } 
-    }
+        },
+}
 </script>
 
-<style >
+<style>
 
     .home-view {
-        width: 80vw;
+        width: 90vw;
         max-width: 800px;
         margin: auto;
     }
@@ -202,6 +202,7 @@
     .view-by {
         display: inline-flex;
         width: 100%;
+        max-width: 500px;
         overflow: hidden;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
         
