@@ -1,18 +1,18 @@
 <template>
     <div class="contact-history-container">
 
-        <Header class="sector" pageTitle="Dealings History"></Header>
+        <Header class="sector" pageTitle="Contact Dealings History"></Header>
   
         <div class="contact-info">
             <div class="info-row">
-                <p>Name:</p>
-                <p>{{ contactName }}</p>
+                <p class="label">Name</p>
+                <p class="name">{{ contactName }}</p>
             </div>
             <div class="info-row">
-                <p>Phone:</p>
-                <p>{{ contactPhone }}</p>
+                <p class="label">Phone</p>
+                <p class="phone">{{ contactPhone }}</p>
             </div>
-            <div class="info-row">
+            <div class="sector">
                 <UserWallet walletTitle="Contact Net Balance" :amount="contactNetBalance"></UserWallet>
             </div>
         </div>
@@ -108,6 +108,41 @@ import Days from '@/components/Days.vue';
     }   
 </script>
 
-<style>
+<style scoped>
+
+.contact-history-container {
+    width: 90vw;
+    max-width: 800px;
+    margin: auto;
+}
+
+.contact-info {
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+}
+
+.info-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.label{
+    letter-spacing: 0.1rem;
+    padding: 10px;
+    background: var(--primary);
+}
+
+.name, .phone {
+    font-size: 1.2em;
+    font-style: italic;
+    font-weight: 500;
+}
 
 </style>

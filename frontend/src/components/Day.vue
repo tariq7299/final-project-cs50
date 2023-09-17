@@ -1,10 +1,10 @@
 <template>
-    <div class="center">
+    <div class="days-contaiter">
         
         <!-- I have used vue binding directives "" :data-bs-target='"#" + uniqueId' "", in 'accordion' boostrap compoennet, becasue in order for each accordion to collapse and expand when you click on it, Each 'data-bs-target' property in <button> of accordion should point to a unique 'id' down in accordion body, so I have made some adjustments and apllied the v-for loop of vue to uniqlyt assing variables to each accordion !-->
             <div v-show="homePage">
 
-                <div class="accordion mb-2 px-2" id="accordionExample">
+                <div class="accordion" id="accordionExample">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target='"#" + uniqueId' aria-expanded="true" aria-controls="collapseOne">
@@ -26,7 +26,7 @@
 
             <div v-show="contactHistoryPage">
 
-                <div class="accordion mb-2 px-2" id="accordionExample">
+                <div class="accordion" id="accordionExample">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target='"#" + uniqueId' aria-expanded="true" aria-controls="collapseOne">
@@ -79,8 +79,9 @@
 </script>
 
 <style scoped>
-    .center {
+    .days-contaiter {
         margin: auto;
+        padding: 5px;
     }
     .accordion-button, .accordion-body {
         background-color: var(--secondary)

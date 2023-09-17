@@ -3,6 +3,15 @@
 - Connect to api that gets the value of current dollar **OR** make the user write the doller currency when he opens the app !
 - Enable users to view any money as Egp or $
 -  Cretaet a branch from commit 64c090ceaab857dc7ab86a17fad62da4644a3e4a and call it 'accordion v-1.0, double click  bug'
+- Add a SYSTEMATIC APPROACH TO : 
+        1- fixed margins acrros sectors
+        2- Components driven engineering
+        3- In styling (like for example: there is global styles, and styles under each component, and scoped styles under each view, adn there is a place in every view for @media for differet screen sizes)
+        4- Orgnized folders and files in both front and back (like for example, search online on how to orgnize vue files like I did with flask files)
+        5- How are the versions (Branches) of my web app depend on (like I want to make a shitt ton of versions each with major structrue changes, like for ex using Nuxt.js, maybe using CSS only, maybe another with OOP only, mayb another with functional programming only, mayb another with a design pattern implemented.......etc), and do'nt forget the notes and comments on every branch in README
+        6- Alos maybe there are side branches that emmites from the main branhches (like diffreent implementation of parts in the main branch)
+        7- 
+
 
 # Backend 
 =========
@@ -66,6 +75,7 @@
 - Main font `Avenir, Helvetica, Arial, sans-serif;` not imported correctly !, ANd I think the reason becasue of the google font <link>, that I messed Up !!
 - Create a layout.vue/base.vue component that will be used glabally across all of your views and components
 - Create Make every part of the web app as a compoennet that can be ssinged and custmized through props and data, to fit in every view ! 
+- Add responsive to every page
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css
@@ -74,6 +84,7 @@
 - Create a component for "view-by" div
 - Also create a compoenent for nav bar
 - Make nav-bar and and 'view-by' and 'TimeFrame' and 'ChooseTimeFrame' as sticky (Use import VueStickyElement from "vue-sticky-element";) and use (Vuex, as you will relly not able to achive a sticky elements in view without global state of Veux) 
+- Make "Debit" and 'Credit' clickbale and each direct me to custom view by debt or custom view by credit
 
 ## CurrentViewSummary
 - Enable the users to store a second currency in balance and debt and credit
@@ -122,6 +133,9 @@
 - Add the total expense beside each month name
 - Animate the arrow when user clicks on the already opened accordion !
 - CLean chooseTimeFraem in fronend and also all its functions from server
+
+## Contacts
+- Make the "Custom View" radio button as dropdown list 'Debtors, Creditors'
 
                                 # TOMMOROOE
                                 -----------

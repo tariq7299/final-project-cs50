@@ -5,42 +5,51 @@
     <Header class="sector" pageTitle="Dealings History"></Header>
 
     <CurrentViewSummary></CurrentViewSummary>
+    
+    <div class="sticky-header">
 
-    <div class=" sector view-by-container">
 
-                    <div class= "view-by sector">
-                        <input type="radio" class="radio-input" value="option3" name="view-by" id="view-by-default" checked>
-                        <label class="radio-label" for="view-by-default">Default View</label>
-                        <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
-                        <label class="radio-label" for="view-by-month">Month View</label>
-                        <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" >
-                        <label class="radio-label" for="view-by-day">Day View</label>
-                        <input type="radio" class="radio-input" value="option4" name="view-by" id="view-by-custom" >
-                        <label class="radio-label" for="view-by-custom">Custom View</label>
-                    </div>
+        <div class=" sector view-by-container">
 
-                    
-                </div>
-                
-                <div class="transactions">
-                    
-                <label for="search-for-people"></label>
-                <input name="search-for-people" id="search-for-people" placeholder="Search for a person..." type="text" v-model="searchedContact">
+            <div class= "view-by sector">
 
-                <ul class="transaction" v-for="(contact, index) in filteredList" :key="index">
-                    <li class="contact-info" >
-                        <p>{{ contact.contact_name }}</p>
-                        <p>{{contact.contact_phone}}</p>
-                    </li>
-                    
-                    <router-link :to="{ name: 'contactHistory', params: {contactName: contact.contact_name, contactPhone: contact.contact_phone, contactNetBalance: contact.transations_net_balance}}"><v-btn>{{contact.transations_net_balance}}</v-btn></router-link> 
-                </ul>
+                <input type="radio" class="radio-input" value="option3" name="view-by" id="view-by-default" checked>
+                <label class="radio-label" for="view-by-default"><span>Default </span>View<span></span></label>
+
+                <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
+                <label class="radio-label" for="view-by-month"><span>Month </span>View<span></span></label>
+
+                <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" >
+                <label class="radio-label" for="view-by-day"><span>Day </span>View<span></span></label>
+
+                <input type="radio" class="radio-input" value="option4" name="view-by" id="view-by-custom" >
+                <label class="radio-label" for="view-by-custom"><span>Custom </span>View<span></span></label>
 
             </div>
+            
+        </div>
+        
+        <div class="search-bar sector">
+            <input name="search-for-people" id="search-for-people" placeholder="Search for a person..." type="text" v-model="searchedContact">
+        </div>        
+    </div>
 
-            <div class="router-link">
-                <router-link class="bottom-fixed" to="AddTransactions" >Add Transactions<span class="material-symbols-outlined">add_box</span></router-link>
+    <div class="transactions">
+        
+        <div class="transaction" v-for="(contact, index) in filteredList" :key="index">
+            <div class="contact-info" >
+                <p class="name">{{ contact.contact_name }}</p>
+                <p class="phone">{{contact.contact_phone}}</p>
             </div>
+            
+            <router-link :to="{ name: 'contactHistory', params: {contactName: contact.contact_name, contactPhone: contact.contact_phone, contactNetBalance: contact.transations_net_balance}}"><v-btn class="contact-net-btn"><span class="contact-net-balance">{{contact.transations_net_balance}}</span></v-btn></router-link> 
+        </div>
+
+    </div>
+
+    <div class="router-link">
+        <router-link class="bottom-fixed" to="AddTransactions" >Add Transactions<span class="material-symbols-outlined">add_box</span></router-link>
+    </div>
 
   </div>
 </template>
@@ -50,6 +59,7 @@ import axios from 'axios'
 
 import CurrentViewSummary from '../components/CurrentViewSummary.vue';
 import Header from './../components/Header';
+
 
 
 export default {
@@ -114,7 +124,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 
  .contacts-view-container {
     width: 90vw;
@@ -122,12 +132,6 @@ export default {
     margin: auto;
 }
 
-#search-for-people {
-    width: 100%;
-    max-width: 400px;
-    border: 2px solid black;
-    border-radius: 10px;
-}
 
 .transaction {
     display: flex;
@@ -138,19 +142,59 @@ export default {
 
 .contact-info P {
     margin: 0;
+    text-align: left;
+}
+.contact-info .name {
+    font-weight: 600; 
+}
+.contact-info .phone {
+    font-size: 0.75em;
 }
 
 .transactions {
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
-    /* align-items: center; */
     gap: 30px;
-    /* overflow: scroll; */
+    padding: 1rem;
 }
 
-/* .view-by-container {
-    width: 100%;
-} */
+.search-bar {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: #fff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#search-for-people {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.contact-net-btn {
+    border-radius: 18px;
+    background-color: var(--secondary);
+}
+
+.contact-net-balance::after {
+    content: ' >';
+    font-weight: 900;
+    font-size: 1.2em;
+    color: black;
+}
+
+@media (max-width: 450px) and (orientation: portrait) {
+
+    .radio-label {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
 
 </style>

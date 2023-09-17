@@ -101,7 +101,20 @@
   */
 
   /* family=Montserrat&family=Playfair+Display:wght@600&family=Roboto+Slab:wght@300&family=Tajawal&display=swap */
+  /* 
+  MEDIA QUERIES
+
+    Phones in protrait : @media (max-width: 450px) and (orientation: portrait)
+
+    Phones in landscape and Tablets in portrait: @media (max-width: 1023px) and (orientation: landscape) 
+
+    Tablets in landscape: @media screen and (min-width: 1023px) and (max-width: 1200px)
+
+    Computers: @media screen and (min-width: 1200px)
+
+
   
+  */
 
   #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;

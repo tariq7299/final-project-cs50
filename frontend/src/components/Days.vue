@@ -30,7 +30,6 @@
      computed: {
             homePage () {
                 if(this.$route.path === '/') {
-                    console.log(this.$route.path)
                     return true
                 } else {
                     return false
@@ -49,6 +48,4 @@
  <style>
  
  </style>
- 
- :data-bs-target="'#collapse' + dayDate" 
- 
+  
