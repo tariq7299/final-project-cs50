@@ -465,16 +465,16 @@ def test4 ():
      
     #   1-  With using join(), without 'lazy' and 'relationship' defined in the Class
     
-    # transactions__join = db.session.query(Contacts.name, Contacts.phone, func.sum(Transactions.amount)).join(Contacts).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
+    transactions__join = db.session.query(Contacts.name, Contacts.phone, func.sum(Transactions.amount)).join(Contacts).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
     
     # transactions = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).join('Contacts').filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
     
     #   2- With utlizing the lazy=joined technique/feature (this defined in the model itself), then you access the 'contact name' and 'contact phone'
     
-    # transactions__lazy = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
+    transactions__lazy = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
     
-    # for transaction in transactions__lazy:
-    #     print('transaction.contact_name__2', transaction[0].contact.name)
+    for transaction in transactions__lazy:
+        print('transaction.contact_name__2', transaction[0].contact.name)
     #     print('transaction.contact_phone', transaction[0].contact.phone)
     #     print('transaction_amount', transaction.contact_net_balance)
     
@@ -483,15 +483,11 @@ def test4 ():
     
     
     
-    # print('transactions', transactions)
     
-    # [print('transaction $-->', transaction) for transaction in transactions]
     
-    transactions__lazy = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
+    # transactions_list = [{'contact_name': transaction[0].contact.name, 'contact_phone': transaction[0].contact.phone, 'transations_net_balance': transaction.contact_net_balance} for transaction in transactions__lazy] 
     
-    transactions_list = [{'contact_name': transaction[0].contact.name, 'contact_phone': transaction[0].contact.phone, 'transations_net_balance': transaction.contact_net_balance} for transaction in transactions__lazy] 
-    
-    print('transactions_list', transactions_list)
+    # print('transactions_list', transactions_list)
     
     # THis way you can access 'Users'db table, from 'transaction', as it is 'Transactions' instence, this beacuse that line --> user = db.relationship('Users', backref=db.backref('user_transactions'), lazy=True)
     
@@ -507,4 +503,14 @@ def test4 ():
     #     print("-----")
     #     print()
     
+def CH():
     
+    contact_phone = '01084682636'
+
+    transactions__lazy = db.session.query(Transactions).filter(and_(Transactions.user_id==2), (Contacts.phone==contact_phone)).order_by(Transactions.date.desc()).join(Contacts)
+
+    print('transactions', transactions__lazy)
+
+    transactions_list = [{'date': transaction.date.strftime("%a %d/%m/%Y"), 'amount': transaction.amount} for transaction in transactions__lazy]
+
+    [print('transaction $-->', transaction) for transaction in transactions_list]

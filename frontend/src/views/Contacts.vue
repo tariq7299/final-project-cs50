@@ -1,6 +1,7 @@
 <template>
 
-  <div class="people-view-container">
+  <div class="contacts-view-container">
+
     <Header class="sector" pageTitle="Dealings History"></Header>
 
     <CurrentViewSummary></CurrentViewSummary>
@@ -18,56 +19,22 @@
                         <label class="radio-label" for="view-by-custom">Custom View</label>
                     </div>
 
-                    <!-- 
-                    <div>
-                        <label for="search-for-people"></label>
-                        <input name="search-for-people" id="search-for-people" placeholder="Search for a person..." type="text" v-model="searchedPerson">
-                        
-                        <ul>
-                            <li v-for="item in filteredList" :key="item">{{ item }}</li>
-                        </ul>
-                    </div> -->
-                    
-                    <v-btn color=primary>SORT</v-btn>
                     
                 </div>
                 
                 <div class="transactions">
                     
                 <label for="search-for-people"></label>
-                <input name="search-for-people" id="search-for-people" placeholder="Search for a person..." type="text" v-model="searchedPerson">
+                <input name="search-for-people" id="search-for-people" placeholder="Search for a person..." type="text" v-model="searchedContact">
 
-                <ul class="transaction" v-for="(person, index) in filteredList" :key="index">
-                    <li class="person-info" >
-                        <p>{{ person.contact_name }}</p>
-                        <p>{{person.contact_phone}}</p>
+                <ul class="transaction" v-for="(contact, index) in filteredList" :key="index">
+                    <li class="contact-info" >
+                        <p>{{ contact.contact_name }}</p>
+                        <p>{{contact.contact_phone}}</p>
                     </li>
-                    <p>{{person.transations_net_balance}}</p>
+                    
+                    <router-link :to="{ name: 'contactHistory', params: {contactName: contact.contact_name, contactPhone: contact.contact_phone, contactNetBalance: contact.transations_net_balance}}"><v-btn>{{contact.transations_net_balance}}</v-btn></router-link> 
                 </ul>
-
-                <!-- <div class="transaction">
-                    <div class="person-info">
-                        <p>Ahmed Kamal</p>
-                        <p>0109033042</p>
-                    </div>
-                    <p>230</p>
-                </div>
-
-                <div class="transaction">
-                    <div class="person-info">
-                        <p>Ahmed Kamal</p>
-                        <p>0109033042</p>
-                    </div>
-                    <p>230</p>
-                </div>
-
-                <div class="transaction">
-                    <div class="person-info">
-                        <p>Ahmed Kamal</p>
-                        <p>0109033042</p>
-                    </div>
-                    <p>230</p>
-                </div> -->
 
             </div>
 
@@ -81,7 +48,6 @@
 <script>
 import axios from 'axios'
 
-import Button from '../components/Button.vue';
 import CurrentViewSummary from '../components/CurrentViewSummary.vue';
 import Header from './../components/Header';
 
@@ -93,9 +59,9 @@ export default {
 
     data () {
         return {
-            searchedPerson: '',
-            items: ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig', 'Grape'],
+            searchedContact: '',
             transactions: [],
+            contactName: '',
 
         }
     },
@@ -103,15 +69,14 @@ export default {
     components: {
         Header,
         CurrentViewSummary,
-        Button,
     },
     computed: {
         filteredList () {
 
-                return this.transactions.filter((personInfoObj) => {
+                return this.transactions.filter((contactObj) => {
 
-                    const nameMatch = personInfoObj.contact_name.toLowerCase().includes(this.searchedPerson.toLowerCase());
-                    const phoneMatch = personInfoObj.contact_phone.toLowerCase().includes(this.searchedPerson.toLowerCase());
+                    const nameMatch = contactObj.contact_name.toLowerCase().includes(this.searchedContact.toLowerCase());
+                    const phoneMatch = contactObj.contact_phone.toLowerCase().includes(this.searchedContact.toLowerCase());
                     
                     // Return true if either name or phone matches the search query
                     return nameMatch || phoneMatch;
@@ -151,7 +116,7 @@ export default {
 
 <style>
 
- .people-view-container {
+ .contacts-view-container {
     width: 90vw;
     max-width: 800px;
     margin: auto;
@@ -171,7 +136,7 @@ export default {
     align-items: center;
 }
 
-.person-info P {
+.contact-info P {
     margin: 0;
 }
 

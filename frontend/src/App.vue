@@ -15,17 +15,18 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="http://localhost:8080/">Home</a>
+                        <a class="nav-link active" aria-current="page" :href="homeUrl">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="http://localhost:8080/addExpenses">Add Expense</a>
+                        <a class="nav-link" :href="addExpensesUrl">Add Expense</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="http://localhost:8080/people">People</a>
+                        <a class="nav-link" :href="contactsUrl">People</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="http://localhost:8080/addExpenses">Add Expense</a>
+                        <a class="nav-link" :href="addTransaction">Add Transactions</a>
                     </li>
+                   
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Dropdown
@@ -59,8 +60,26 @@
 
   export default {
     name: 'App',
-   
-};
+    computed: {
+      homeUrl() {
+        const frontendUrl = process.env.FORNTEND_BASE_URL;
+        const path =  frontendUrl + '/';
+        return path
+      },
+      addExpensesUrl(){
+        const frontendUrl = process.env.FORNTEND_BASE_URL;
+        return frontendUrl + '/addExpenses';
+      },
+      contactsUrl(){
+        const frontendUrl = process.env.FORNTEND_BASE_URL;
+        return frontendUrl + '/contacts';
+      },
+      addTransaction(){
+        const frontendUrl = process.env.FORNTEND_BASE_URL;
+        return frontendUrl + '/AddTransactions';
+      }
+    }
+}
 </script>
 
 <style>

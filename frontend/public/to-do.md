@@ -40,9 +40,11 @@
 - Write comments in routing functions
 - Handle valdition form errors in server side from 'AddExpenses'
 - Create a diffrent file for each group of routes related to each other, and make each a BlueBrint
+- Add egp() and amount/100 and amount*100 to '/contacts'
 
 ## helpers.py
 - Write comments for calendar days functions 
+
 # Frontend
 ==========
 
@@ -63,6 +65,7 @@
 - Style the nav bar
 - Main font `Avenir, Helvetica, Arial, sans-serif;` not imported correctly !, ANd I think the reason becasue of the google font <link>, that I messed Up !!
 - Create a layout.vue/base.vue component that will be used glabally across all of your views and components
+- Create Make every part of the web app as a compoennet that can be ssinged and custmized through props and data, to fit in every view ! 
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css

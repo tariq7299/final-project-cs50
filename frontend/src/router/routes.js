@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home'
 import AddExpenses from '../views/AddExpenses.vue'
-import People from '../views/People.vue'
+import Contacts from '../views/Contacts.vue'
 import AddTransactions from '../views/AddTransactions.vue'
+import ContactHistory from '../views/ContactHistory.vue'
 
 const routes = [
   {
@@ -23,14 +24,20 @@ const routes = [
     // props: true
   },
 {
-  path: '/people',
-  name: 'people',
-  component: People
+  path: '/contacts',
+  name: 'contacts',
+  component: Contacts
   },
   {
   path: '/AddTransactions',
   name: 'transactions',
   component: AddTransactions
+  },
+  {
+  path: '/contact-history/:contactName/:contactPhone/:contactNetBalance',
+  name: 'contactHistory',
+  component: ContactHistory,
+  props: true
   },
 ]
 

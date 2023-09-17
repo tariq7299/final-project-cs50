@@ -1,7 +1,7 @@
 from flask import request, jsonify, Blueprint
 from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Transactions
 from datetime import datetime
-from sqlalchemy import extract, func
+from sqlalchemy import extract, func, and_
 from calendar import month_abbr
 import app.helpers
 import app.queries.users_queries
@@ -224,9 +224,9 @@ def fetch_selected_month_expenses():
             
             response_object = { 'status': 'success', 'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
             
-            response_object['total_amount_of_month_expenses'] = total_amount_of_month_expenses
+            # response_object['total_amount_of_month_expenses'] = total_amount_of_month_expenses
 
-            response_object['monthly_expenses'] = month_expenses_list
+            # response_object['monthly_expenses'] = month_expenses_list
 
             # Return response object as JSON
             return jsonify(response_object)
@@ -296,3 +296,25 @@ def load_people():
             response_object = {'error_message': error_message}
             
             return jsonify(response_object), 400
+        
+    if request.method == "POST":
+        try:    
+            
+            post_data = request.get_json()
+            
+            contact_phone   = post_data.get('contactPhone')
+            
+            transactions = db.session.query(Transactions).filter(and_(Transactions.user_id==2), (Contacts.phone==contact_phone)).order_by(Transactions.date.desc()).join(Contacts)
+    
+            transactions_list = [{'id': transaction.id, 'date': transaction.date.strftime("%a %d/%m/%Y"), 'amount': transaction.amount} for transaction in transactions]
+            
+            print('transactions_list', transactions_list)
+            
+            response_object = { 'status': 'success', 'transactions': transactions_list}
+            
+            # Return response object as JSON
+            return jsonify(response_object)
+        
+        except Exception as e:
+            error_message = 'An error occurred while fetching expenses! Error message: ' + str(e)
+            return jsonify({'error_message': error_message}), 400

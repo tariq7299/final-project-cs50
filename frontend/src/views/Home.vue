@@ -1,4 +1,5 @@
 <template>
+
     <div class=" text-center home-view">
         
         <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
@@ -26,7 +27,7 @@
                     </div>
 
                 </div>    
-            </div>
+        </div>
 
             <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame" ></MonthTimeFrame>
             
@@ -38,7 +39,7 @@
         </div>
         
         <!-- THis contains a child components called 'Day' which each one of them contains the daily expenses details -->
-        <Days :groupedExpensesByDay="groupedExpensesByDay" ></Days>
+        <Days :groupedByDay="groupedExpensesByDay" ></Days>
 
         <!-- This will route the user to 'AddExpenses' view enable users to add new expenses  -->
         <div class="router-link">

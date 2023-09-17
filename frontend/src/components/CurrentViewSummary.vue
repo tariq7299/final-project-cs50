@@ -83,7 +83,7 @@
             // To activate it only if the user navigates to home page
             if(this.$route.path === '/') {    
                 await this.fetchUserWallet()
-            } else if (this.$route.path === '/people') {
+            } else if (this.$route.path === '/contacts') {
                 await this.fetchUserNetBalance()
             }
         },
@@ -96,7 +96,7 @@
                 }
             },
             peoplePage () {
-                if(this.$route.path === '/people') {
+                if(this.$route.path === '/contacts') {
                     return true
                 } else {
                     return false
