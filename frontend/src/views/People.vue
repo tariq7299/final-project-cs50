@@ -1,4 +1,5 @@
 <template>
+
   <div class="people-view-container">
     <Header class="sector" pageTitle="Dealings History"></Header>
 
@@ -17,17 +18,34 @@
                         <label class="radio-label" for="view-by-custom">Custom View</label>
                     </div>
 
+                    <!-- 
                     <div>
-                        <v-text-field placeholder="type name"></v-text-field>
+                        <label for="search-for-people"></label>
+                        <input name="search-for-people" id="search-for-people" placeholder="Search for a person..." type="text" v-model="searchedPerson">
                         
-                    </div>
+                        <ul>
+                            <li v-for="item in filteredList" :key="item">{{ item }}</li>
+                        </ul>
+                    </div> -->
+                    
                     <v-btn color=primary>SORT</v-btn>
-               
-            </div>
+                    
+                </div>
+                
+                <div class="transactions">
+                    
+                <label for="search-for-people"></label>
+                <input name="search-for-people" id="search-for-people" placeholder="Search for a person..." type="text" v-model="searchedPerson">
 
-            <div class="transactions">
+                <ul class="transaction" v-for="(person, index) in filteredList" :key="index">
+                    <li class="person-info" >
+                        <p>{{ person.contact_name }}</p>
+                        <p>{{person.contact_phone}}</p>
+                    </li>
+                    <p>{{person.transations_net_balance}}</p>
+                </ul>
 
-                <div class="transaction">
+                <!-- <div class="transaction">
                     <div class="person-info">
                         <p>Ahmed Kamal</p>
                         <p>0109033042</p>
@@ -49,15 +67,7 @@
                         <p>0109033042</p>
                     </div>
                     <p>230</p>
-                </div>
-
-                <div class="transaction">
-                    <div class="person-info">
-                        <p>Ahmed Kamal</p>
-                        <p>0109033042</p>
-                    </div>
-                    <p>230</p>
-                </div>
+                </div> -->
 
             </div>
 
@@ -69,18 +79,72 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 import Button from '../components/Button.vue';
 import CurrentViewSummary from '../components/CurrentViewSummary.vue';
 import Header from './../components/Header';
 
 
 export default {
+    
+
     name: 'People',
+
+    data () {
+        return {
+            searchedPerson: '',
+            items: ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig', 'Grape'],
+            transactions: [],
+
+        }
+    },
+
     components: {
         Header,
         CurrentViewSummary,
         Button,
+    },
+    computed: {
+        filteredList () {
+
+                return this.transactions.filter((personInfoObj) => {
+
+                    const nameMatch = personInfoObj.contact_name.toLowerCase().includes(this.searchedPerson.toLowerCase());
+                    const phoneMatch = personInfoObj.contact_phone.toLowerCase().includes(this.searchedPerson.toLowerCase());
+                    
+                    // Return true if either name or phone matches the search query
+                    return nameMatch || phoneMatch;
+
+                })
+            }
+        },
+    methods: {
+        async fetchTransactions() {
+            try {
+                const apiUrl = process.env.VUE_APP_API_BASE_URL;
+
+                const path = apiUrl + '/people';
+
+                const response = await axios.get(path);
+
+                // GET years and months 
+                this.transactions = response.data.transactions
+                
+                // After all the above is done, remove the loading indicator
+                this.loading = false;
+
+            }   catch (error) {
+                console.error(error);
+                alert(`Oops! Something went wrong. Please try again or contact support for assistance. Error message: ${error}`);
+                this.loading = false; // Set loading to false in case of an error
+            }
+        }
+    },
+    created() {
+        this.fetchTransactions()
     }
+
 }
 
 </script>
@@ -91,7 +155,13 @@ export default {
     width: 90vw;
     max-width: 800px;
     margin: auto;
+}
 
+#search-for-people {
+    width: 100%;
+    max-width: 400px;
+    border: 2px solid black;
+    border-radius: 10px;
 }
 
 .transaction {

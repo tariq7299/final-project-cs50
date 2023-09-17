@@ -23,7 +23,7 @@
 
   p {
     margin: 0;
-    padding: 0.25rem;
+    padding: 0.1rem;
   }
 
 </style>

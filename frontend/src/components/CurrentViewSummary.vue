@@ -20,7 +20,7 @@
             </div>
 
             <div class="row sector" v-show="peoplePage">
-                <UserWallet walletTitle="Net Balance" amount="0"></UserWallet>
+                <UserWallet walletTitle="Net Balance" :amount="netBalance"></UserWallet>
             </div>
 
         </div>
@@ -39,6 +39,7 @@
             return {
                 // Initialize as an empty object
                 wallet: {},
+                netBalance: '',
                 loading: true, // Add a loading indicator state
             }
         },
@@ -61,10 +62,30 @@
                     this.loading = false; // Set loading to false in case of an error
                 }
             },
+            async fetchUserNetBalance() {
+                try {
+                    const apiUrl = process.env.VUE_APP_API_BASE_URL;
+                    const path = apiUrl + '/net_balance';
+
+                    const response = await axios.get(path);
+
+                    this.netBalance = response.data.net_balance;
+                    this.loading = false; // Set loading to false when data is fetched
+                }   catch (error) {
+                    console.error('Error fetching data:', error);
+                    alert(`Oops! Something went wrong. Please try again or contact support for assistance. Error message: ${error}`);
+                    this.loading = false; // Set loading to false in case of an error
+                }
+            },
         },
         // Here we can actually remove async and await keywords !, because there is no lines od code after "await this.fetchUserWallet()" !!
         async created() {
-            await this.fetchUserWallet() 
+            // To activate it only if the user navigates to home page
+            if(this.$route.path === '/') {    
+                await this.fetchUserWallet()
+            } else if (this.$route.path === '/people') {
+                await this.fetchUserNetBalance()
+            }
         },
         computed: {
             homePage () {

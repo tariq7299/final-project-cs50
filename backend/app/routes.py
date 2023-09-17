@@ -1,8 +1,8 @@
 from flask import request, jsonify, Blueprint
-from app.models import db, Users, UsersSpendings, UsersWallets
+from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Transactions
 from datetime import datetime
 from sqlalchemy import extract, func
-from calendar import monthrange, day_name, month_abbr
+from calendar import month_abbr
 import app.helpers
 import app.queries.users_queries
 import app.queries.expenses_queries
@@ -234,3 +234,65 @@ def fetch_selected_month_expenses():
         except Exception as e:
             error_message = 'An error occurred while fetching expenses! Error message: ' + str(e)
             return jsonify({'error_message': error_message}), 400
+        
+@appRoutes.route("/net_balance", methods=["POST","GET"])
+def load_net_balance():
+    
+    # Replace this user id from by the one foumd in session['user_id']
+    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    
+    if request.method == "GET":
+        try:
+            
+            net_balance = db.session.query(func.sum(Transactions.amount)).filter(Transactions.user_id==salah_id).scalar()
+            
+            net_balance = app.helpers.egp(net_balance)
+            
+            # We have to put "wallet" into an abject to jsonify() it later, so we can send it to the client
+            response_object = { 'status': 'success', 'net_balance': net_balance }
+            
+            return jsonify(response_object)
+        
+        # If any problem arises then return error message to the client
+        except Exception as e:
+            
+            # the Excepting hta has risen "str(e)" will included in the error message sent to user
+            error_message = 'An error occurred while fetching net balance! Error message: ' + str(e)
+            
+            response_object = {'error_message': error_message}
+            
+            return jsonify(response_object), 400
+            
+
+@appRoutes.route("/people", methods=["POST","GET"])
+def load_people():
+    
+    if request.method == "GET":
+        try:
+                         
+            #   With utlizing the 'lazy' and 'realatioship' technique/feature (this defined in the db model itself)
+            transactions = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
+            
+            for transaction in transactions:
+                print('transaction.contact_name__2', transaction[0].contact.name)
+                print('transaction.contact_phone', transaction[0].user.name)
+                print('transaction_amount', transaction.contact_net_balance)
+            
+            transactions_list = [{'contact_name': transaction[0].contact.name, 'contact_phone': transaction[0].contact.phone, 'transations_net_balance': transaction.contact_net_balance} for transaction in transactions] 
+            
+            # We have to put "wallet" into an abject to jsonify() it later, so we can send it to the client
+            response_object = { 'status': 'success', 'transactions': transactions_list }
+            
+            print('transactions_list', transactions_list)
+            
+            return jsonify(response_object)
+        
+     # If any problem arises then return error message to the client
+        except Exception as e:
+            
+            # the Excepting hta has risen "str(e)" will included in the error message sent to user
+            error_message = 'An error occurred while fetching expenses! Error message: ' + str(e)
+            
+            response_object = {'error_message': error_message}
+            
+            return jsonify(response_object), 400

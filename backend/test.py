@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from app.models import db, Users, UsersSpendings, UsersWallets
+from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Transactions
 from sqlalchemy import extract, func, and_
 
 def egp(value):
@@ -386,3 +386,125 @@ def test2 ():
         ).all()
     
     print('months:', months)
+        
+def pop_contacts():
+    
+    db.create_all()
+    
+    contact_shawn = Contacts(name="Koftes Shawn", phone="01086767536")
+    contact_sobhy = Contacts(name="Khaled Sobhy", phone="01084682636")
+    contact_ElShabah = Contacts(name="Abdelrahman ElShabah", phone="01083222336")
+    
+    contacts = []
+    contacts.append(contact_shawn)
+    contacts.append(contact_sobhy)
+    contacts.append(contact_ElShabah)
+    
+    db.session.add(contact_shawn)
+    db.session.add(contact_sobhy)
+    db.session.add(contact_ElShabah)
+
+    db.session.commit()
+    
+    [print(contact) for contact in contacts] 
+    
+
+def pop_transactions():
+    
+    # Assuming 'db' is your SQLAlchemy instance
+    date_to_insert = datetime(2023, 9, 17)
+
+    # Generate 10 different times on the same date
+    time_intervals = [timedelta(hours=i) for i in range(8)]
+
+    transactions_time_list = []
+
+    for time_interval in time_intervals:
+        transaction_time = date_to_insert + time_interval
+        transactions_time_list.append(transaction_time)
+        
+    amounts = [-103, 140, -420, 543, -349, 234, -473, 233]
+
+    for amount, transaction_time in zip(amounts, transactions_time_list):
+        
+        salah_transactions = Transactions(
+            
+            amount=amount,
+            date=transaction_time,
+            user_id=2,
+            contact_id=3,
+        )
+        
+        db.session.add(salah_transactions)
+
+
+    db.session.commit()
+
+    user_transactions = db.session.query(Transactions).filter(Transactions.user_id == 2)
+
+    [print(transaction) for transaction in user_transactions]
+    
+def test3():
+    
+    net_balances_all = db.session.query(func.sum(Transactions.amount)).filter(Transactions.user_id==2).all()
+    net_balances_scalar = db.session.query(func.sum(Transactions.amount)).filter(Transactions.user_id==2).scalar()
+    
+    # [print(net_balance) for net_balance in net_balances]
+    
+    print(net_balances_all)
+    print(net_balances_scalar)
+    
+def test4 ():
+    
+    
+                        # The two are the same
+                
+                #   1- but the first tusing join() in the query iteself.
+                #   2- An the second utilizing lazy=joined or lazy=True from defined in the 'Class Transactions' found in models.py
+     
+     
+    #   1-  With using join(), without 'lazy' and 'relationship' defined in the Class
+    
+    # transactions__join = db.session.query(Contacts.name, Contacts.phone, func.sum(Transactions.amount)).join(Contacts).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
+    
+    # transactions = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).join('Contacts').filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
+    
+    #   2- With utlizing the lazy=joined technique/feature (this defined in the model itself), then you access the 'contact name' and 'contact phone'
+    
+    # transactions__lazy = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
+    
+    # for transaction in transactions__lazy:
+    #     print('transaction.contact_name__2', transaction[0].contact.name)
+    #     print('transaction.contact_phone', transaction[0].contact.phone)
+    #     print('transaction_amount', transaction.contact_net_balance)
+    
+                #%#$%#$%#$#%$#%$#%#$#%$#%#$%#$%#$#%$#%$#%#$%#$#%$#%
+    
+    
+    
+    
+    # print('transactions', transactions)
+    
+    # [print('transaction $-->', transaction) for transaction in transactions]
+    
+    transactions__lazy = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
+    
+    transactions_list = [{'contact_name': transaction[0].contact.name, 'contact_phone': transaction[0].contact.phone, 'transations_net_balance': transaction.contact_net_balance} for transaction in transactions__lazy] 
+    
+    print('transactions_list', transactions_list)
+    
+    # THis way you can access 'Users'db table, from 'transaction', as it is 'Transactions' instence, this beacuse that line --> user = db.relationship('Users', backref=db.backref('user_transactions'), lazy=True)
+    
+    # transactions0 = db.session.query(Transactions).filter(Transactions.user_id==2).all()
+    
+    # for transaction in transactions0:
+    #     print('transaction.user', transaction.user)
+    #     print('transaction.contact', transaction.contact)
+    #     print("###$$###")
+    #     print('transaction.contact.name', transaction.contact.name)
+    #     print('transaction.contact.phone', transaction.contact.phone)
+    #     print()
+    #     print("-----")
+    #     print()
+    
+    

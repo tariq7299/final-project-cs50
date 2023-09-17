@@ -39,6 +39,7 @@
 - change every "spending" to "expense"
 - Write comments in routing functions
 - Handle valdition form errors in server side from 'AddExpenses'
+- Create a diffrent file for each group of routes related to each other, and make each a BlueBrint
 
 ## helpers.py
 - Write comments for calendar days functions 

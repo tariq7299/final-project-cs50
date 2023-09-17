@@ -59,6 +59,10 @@ class Contacts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(64), unique=True, nullable=False)
+    
+    def __repr__(self):
+        return '<Contact ID: {}, Contact_Name: {}, Contact_phone: {}>'.format(self.id, self.name, self.phone)
+        
         
 class Transactions(db.Model):
     
@@ -70,6 +74,12 @@ class Transactions(db.Model):
     
     # By definning a relationship you can now access the user info from 'Users' model, by typing 'Transactions.user'
     # And Vice versa, so  "backref=db.backref('user_transactions')" enables you to access user transactions from 'Users'db model, by typing "Users.user_transactions"
-    user = db.relationship('Users', backref=db.backref('user_transactions'), lazy=True)
-    contact = db.relationship('Contacts', backref=db.backref('contact_transactions'), lazy=True)
+    # lazy=joined and lazy=True are the same (They supposed to not be the same, but I still can't understand the difference )
+    # lazy enables you to access all columns of 'Users' and 'Transactions', without using join() in the query
     
+    user = db.relationship('Users', backref=db.backref('user_transactions'), lazy=True)
+    
+    contact = db.relationship('Contacts', backref=db.backref('contact_transactions'), lazy='joined')
+    
+    def __repr__(self):
+        return '<Transaction ID: {}, Amount: {}, Date: {}, User ID: {}, User Name: {}, Contact ID: {}, Contact Name: {}>'.format(self.id, self.amount, self.date, self.user_id, self.user.name, self.contact_id, self.contact.name)
