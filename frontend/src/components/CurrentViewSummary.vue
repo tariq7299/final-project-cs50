@@ -20,7 +20,7 @@
             </div>
 
             <div class="row sector" v-show="peoplePage">
-                <UserWallet walletTitle="Net Balance" :amount="netBalance"></UserWallet>
+                <UserWallet walletTitle="Net Balance" :amount="netBalance" ></UserWallet>
             </div>
 
         </div>
@@ -101,6 +101,9 @@
                 } else {
                     return false
                 }
+            },
+            colorNetBalance () {
+                return this.netBalance > 0 ? {'color': 'GREEN'} : {'color': 'RED'}
             }
         }
     }

@@ -42,7 +42,7 @@
                 <p class="phone">{{contact.contact_phone}}</p>
             </div>
             
-            <router-link :to="{ name: 'contactHistory', params: {contactName: contact.contact_name, contactPhone: contact.contact_phone, contactNetBalance: contact.transations_net_balance}}"><v-btn class="contact-net-btn"><span class="contact-net-balance">{{contact.transations_net_balance}}</span></v-btn></router-link> 
+            <router-link :to="{ name: 'contactHistory', params: {contactName: contact.contact_name, contactPhone: contact.contact_phone, contactNetBalance: contact.transations_net_balance}}"><v-btn class="contact-net-btn"><span class="contact-net-balance" :style="colorNetBalance(contact.transations_net_balance)">{{ Math.abs(contact.transations_net_balance)}}</span></v-btn></router-link> 
         </div>
 
     </div>
@@ -114,7 +114,11 @@ export default {
                 alert(`Oops! Something went wrong. Please try again or contact support for assistance. Error message: ${error}`);
                 this.loading = false; // Set loading to false in case of an error
             }
+        },
+        colorNetBalance (amount) {
+            return  amount > 0 ? {'color': 'GREEN'} : {'color': 'RED'};
         }
+
     },
     created() {
         this.fetchTransactions()
@@ -177,6 +181,7 @@ export default {
 
 .contact-net-btn {
     border-radius: 18px;
+    font-weight: 600;
     background-color: var(--secondary);
 }
 

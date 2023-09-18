@@ -50,6 +50,7 @@
 - Handle valdition form errors in server side from 'AddExpenses'
 - Create a diffrent file for each group of routes related to each other, and make each a BlueBrint
 - Add egp() and amount/100 and amount*100 to '/contacts'
+- Order expeneses by ID not by date, when you send them to server
 
 ## helpers.py
 - Write comments for calendar days functions 
@@ -129,6 +130,8 @@
 - Rebuild AddExpense frontend from groundup using Plain CHAD CSS
 - Handle form vaidation via HTML in frontend
 - Style the frontend --- COLORS  NICEER-ICONS BETTER-BUTTON
+- Enable user to add new category
+-  Make the add expense button not floating but instead a part of the pview, to not obstruct any expenses
 ## ChooseTimeFrame
 - Add the total expense beside each month name
 - Animate the arrow when user clicks on the already opened accordion !

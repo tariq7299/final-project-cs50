@@ -226,7 +226,7 @@
     }
 
     .radio-label:not(:last-of-type) {
-        border-right: 1px solid var(--background);
+        border-right: 1px solid #fff;
     }
 
     .radio-input:checked + .radio-label {

@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <p class="money-header">{{ amount }}</p>
+    <p class="money-header" :style="colorNetBalance">{{ amount }}</p>
     <p class="secondary-header2">{{ walletTitle }}</p>
   </div>
 </template>
@@ -14,7 +14,11 @@
                 type: String,
                 default: "0"
             }
-            
+        },
+        computed: {
+          colorNetBalance () {
+            return this.amount.includes('-') ? {'color': 'RED'} : {'color': 'GREEN'}
+          }
         }
     }
 </script>

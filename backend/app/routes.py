@@ -97,19 +97,21 @@ def add_expenses():
     
     if request.method == "POST":
         
-        current_year = datetime.now().year
         
         post_data = request.get_json()
-        selected_month_abbr   = post_data.get('selectedMonth')
-        selected_month_num = datetime.strptime(selected_month_abbr, '%b').month
+        selected_year   = post_data.get('selectedYear')
+        selected_month_num   = post_data.get('selectedMonth')
         selected_day  = post_data.get('selectedDay')
         submitted_amount_spent  = post_data.get('amountSpent')
         # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
         submitted_category  = post_data.get('category').strip()
+        print('selectedYear', selected_year)
+        print('selected_month_num', selected_month_num)
+        print('selected_day', selected_day)
        
         try:
             
-            app.queries.expenses_queries.insert_new_expense_into_db(salah_id, current_year, selected_month_num, selected_day, submitted_amount_spent, submitted_category)
+            app.queries.expenses_queries.insert_new_expense_into_db(salah_id, selected_year, selected_month_num, selected_day, submitted_amount_spent, submitted_category)
             
             submitted_amount_spent_as_egp_currency = app.helpers.egp(submitted_amount_spent)
             
