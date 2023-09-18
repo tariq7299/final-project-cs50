@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint
-from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Transactions
+from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Relationships, Transactions
 from datetime import datetime
 from sqlalchemy import extract, func, and_
 from calendar import month_abbr
@@ -44,49 +44,14 @@ def get_calendar():
     # When user loads the page, it will populate the two <select> tags with calendar months of the current year, and calendar days of the current month
     if request.method == "GET":
 
-        """
-        I will actually view the months of current year only, because I didn't yet add the ability to enable users to choose a differnet year than the current one, to add expenses.
-        So currently users can only choose a month and day from the current year.
-        """
-        current_year = datetime.now().year
-        
-        # I fetched current month, and selected it for user automtically, Because this route gets requested when user loads the page only
-        current_month_int = datetime.now().month
-        
-        # Defines the months short names (abbreviations) in a list
-        current_year_months_abbr = month_abbr[1:]
-        
-        # The current month name abbreviated (short name of month)
-        current_month_abbr = month_abbr[current_month_int]
-
-        current_day = datetime.now().day
-
-        # This is a list of dicts, where each elemn¥ent cosists of two dictioneries the first contains day short name as "value", and the second dict contains the day as integer to be a "vale"  ---> [{'day_name': 'Thursday', 'day_num': 1}, {'day_name': 'Friday', 'day_num': 2}, ..... ] 
-        calender_days_in_month = app.helpers.get_calendar_days(current_year, current_month_int)
         
         # THese are the expenses categories that will be sent to client, to choose one, so the expenses client made is added to that very categoty in db
         categories = ['Bills', 'Car', 'Clothes', 'Communication', 'Eating out', 'Entertainment', 'Food', 'Gifts', 'Health', 'House', 'Kids', 'Sports', 'Transport']
         
-        response_object = {'status':'success', 'current_year_months': current_year_months_abbr, 'current_month':current_month_abbr, 'days':calender_days_in_month, 'current_day':current_day, 'categories':categories}
+        response_object = {'status':'success', 'categories':categories}
 
         return jsonify(response_object)
     
-    # Now this gets requested whenever user chooses a month, so then it will populate the <select> tag of days, calendar days of that selected Month.
-    elif request.method == "POST":
-        
-        post_data = request.get_json()
-        
-        # The selected month sent from client as the string short name of month, so we have to covert it to the Integer value, in order to be used later in code.
-        selected_month_abbr   = post_data.get('selectedMonth')
-        selected_month_num = datetime.strptime(selected_month_abbr, '%b').month
-        
-        current_year = datetime.now().year
-        
-        calender_days_in_selected_month = app.helpers.get_calendar_days(current_year, selected_month_num)
-        
-        response_object = {'status':'success', 'days':calender_days_in_selected_month}
-         
-        return jsonify(response_object)
     
 # This route will get requested when user tries to submit his new expense
 @appRoutes.route("/add_expenses", methods=["POST","GET"])
@@ -105,9 +70,6 @@ def add_expenses():
         submitted_amount_spent  = post_data.get('amountSpent')
         # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
         submitted_category  = post_data.get('category').strip()
-        print('selectedYear', selected_year)
-        print('selected_month_num', selected_month_num)
-        print('selected_day', selected_day)
        
         try:
             
@@ -154,7 +116,6 @@ def load_recent_month_expenses():
             years_and_months = []
             for year in years:
                 
-                print('year', year)
                 months = UsersSpendings.query.with_entities(
                     extract('month', UsersSpendings.date)
                 ).filter(
@@ -275,17 +236,17 @@ def load_people():
             #   With utlizing the 'lazy' and 'realatioship' technique/feature (this defined in the db model itself)
             transactions = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
             
-            for transaction in transactions:
-                print('transaction.contact_name__2', transaction[0].contact.name)
-                print('transaction.contact_phone', transaction[0].user.name)
-                print('transaction_amount', transaction.contact_net_balance)
+            # for transaction in transactions:
+            #     print('transaction.contact_name__2', transaction[0].contact.name)
+            #     print('transaction.contact_phone', transaction[0].user.name)
+            #     print('transaction_amount', transaction.contact_net_balance)
             
             transactions_list = [{'contact_name': transaction[0].contact.name, 'contact_phone': transaction[0].contact.phone, 'transations_net_balance': transaction.contact_net_balance} for transaction in transactions] 
             
             # We have to put "wallet" into an abject to jsonify() it later, so we can send it to the client
             response_object = { 'status': 'success', 'transactions': transactions_list }
             
-            print('transactions_list', transactions_list)
+            # print('transactions_list', transactions_list)
             
             return jsonify(response_object)
         
@@ -310,7 +271,7 @@ def load_people():
     
             transactions_list = [{'id': transaction.id, 'date': transaction.date.strftime("%a %d/%m/%Y"), 'amount': transaction.amount} for transaction in transactions]
             
-            print('transactions_list', transactions_list)
+            # print('transactions_list', transactions_list)
             
             response_object = { 'status': 'success', 'transactions': transactions_list}
             
@@ -320,3 +281,99 @@ def load_people():
         except Exception as e:
             error_message = 'An error occurred while fetching expenses! Error message: ' + str(e)
             return jsonify({'error_message': error_message}), 400
+        
+
+@appRoutes.route("/new-contact", methods=["POST","GET"])
+def add_new_contact():
+    
+    if request. method == 'POST':
+        try:
+            post_data = request.get_json()  
+            
+            new_contact_name = post_data.get('contactName')   
+            
+            new_contact_phone = post_data.get('contactPhone')   
+            
+            new_contact = Contacts(name=new_contact_name, phone=new_contact_phone)
+            db.session.add(new_contact)
+            db.session.commit()
+            
+            # Try a new way to get the 'user_id', like by joininng the two tables toghether then extracting the user_id where name is 'Mohamed' --for example
+            new_relationship = Relationships(user_id=2, contact_id=new_contact.id)
+            db.session.add(new_relationship)
+            db.session.commit()
+            
+            response_object = {'status': 'success', 'newContactName': new_contact_name, 'newContactPhone':new_contact_phone}
+            
+            return jsonify(response_object)
+        
+        except Exception as e:
+            
+            db.session.rollback()
+                
+            error_message = 'An error occurred while adding the expense! Error message: ' + str(e)
+            return jsonify({'error_message': error_message}), 400
+        
+        finally:
+            db.session.close()
+            
+@appRoutes.route("/new-transactions", methods=["POST","GET"])
+def new_transactions():
+     
+    if request.method == "GET":
+
+        contacts = db.session.query(Contacts).filter(Relationships.user_id==2).join(Relationships, Relationships.contact_id == Contacts.id).all()
+        
+        contacts_list = [{'contact_id': contact.id, 'contact_name': contact.name, 'contact_name': contact.name, 'contact_name': contact.name, 'contact_phone': contact.phone} for contact in contacts]
+        
+        contacts_names = []
+        
+        [contacts_names.append(contact.name) for contact in contacts]
+        
+        # print('contacts_names', contacts_names)
+        
+        response_object = {'status':'success', 'contacts': contacts_names}
+
+        return jsonify(response_object)
+    
+    elif request.method == "POST":
+        
+            
+        post_data = request.get_json()
+        selected_year   = post_data.get('selectedYear')
+        selected_month_num   = post_data.get('selectedMonth')
+        selected_day  = post_data.get('selectedDay')
+        submitted_amount_spent  = post_data.get('amountSpent')
+        # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
+        submitted_category  = post_data.get('category').strip()
+        # print('selectedYear', selected_year)
+        # print('selected_month_num', selected_month_num)
+        # print('selected_day', selected_day)
+    
+        try:
+            
+            amount = app.helpers.convert_float_to_int(amount)
+
+            new_expense = Transactions(user_id=2, date=datetime(selected_year, selected_month_num, selected_day), amount_spent=amount, category=category)
+            new_expense = UsersSpendings(user_id=2, date=datetime(selected_year, selected_month_num, selected_day), amount_spent=amount, category=category)
+            
+            db.session.add(new_expense)
+            
+            db.session.commit()
+            
+            submitted_amount_spent_as_egp_currency = app.helpers.egp(submitted_amount_spent)
+            
+            response_object = {'submitedAmountSpent': submitted_amount_spent_as_egp_currency, 'submitedCategory':submitted_category}
+            
+            return jsonify(response_object)
+        
+        except Exception as e:
+            
+            db.session.rollback()
+            
+            error_message = 'An error occurred while adding the expense! Error message: ' + str(e)
+            return jsonify({'error_message': error_message}), 400
+        
+        finally:
+            
+            db.session.close()

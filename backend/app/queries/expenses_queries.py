@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint
-from app.models import db, Users, UsersSpendings, UsersWallets
+from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Transactions, Relationships
 from datetime import datetime
 from sqlalchemy import extract, func
 from calendar import monthrange, day_name, month_abbr

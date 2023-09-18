@@ -27,15 +27,15 @@
         </v-text-field >
   
             <v-text-field v-model="amountSpent" name="amount-spent" id="amount_spent" placeholder="Enter Amount"
-            autofocus label="Amount Spended" required prepend-icon="mdi-cash" class="expense-input">
+            autofocus label="Amount Spended" clearable prepend-icon="mdi-cash" class="expense-input">
             </v-text-field>
             
-            <v-select v-model="selectedCategory" name="category" id="category" label="Category" prepend-icon="mdi-notification-clear-all" :items="categories" class="expense-input" required>
+            <v-select v-model="selectedCategory" name="category" id="category" label="Category" prepend-icon="mdi-notification-clear-all" :items="categories" class="expense-input" clearable>
               <!-- <option v-for="(category, index) in categories" :value="category" :key="index">{{ category }}</option> -->
             </v-select>
   
             <v-text-field v-model="expenseNote" name="expense-note" id="expense-note" placeholder="Type a note"
-            label="Note" required prepend-icon="mdi-note" class="expense-input">
+            label="Note" clearable prepend-icon="mdi-note" class="expense-input">
             </v-text-field>
             
             <v-btn class="" type="submit" id="button">Add Expense</v-btn>
@@ -64,7 +64,7 @@
           return {
               amountSpent:'',
               categories: [],
-              selectedCategory: '',
+              selectedCategory: null,
               calendarData: {},
               expenseNote: '',
               selectedDate: new Date(),
@@ -83,7 +83,9 @@
 
           async  fetchYearsAndMonths () {
               try {
-                      const path = 'http://127.0.0.1:8083/get_calendar'
+                      const apiUrl = process.env.VUE_APP_API_BASE_URL;
+
+                      const path = apiUrl + '/get_calendar';
 
                       const response = await axios.get(path);
 
@@ -96,7 +98,10 @@
 
          
           addExpense() {
-              const path = 'http://127.0.0.1:8083/add_expenses';
+
+                const apiUrl = process.env.VUE_APP_API_BASE_URL;
+
+                const path = apiUrl + '/add_expenses';
 
               axios
                   .post(path, {
@@ -139,18 +144,18 @@
       computed: {
 
         formattedDate () {
-          const formattedDate = format(this.selectedDate, 'EEEE, dd MMM, yyyy')
+          const formattedDate = this.selectedDate ? format(this.selectedDate, 'EEEE, dd MMM, yyyy') : format(new Date(), 'EEEE, dd MMM, yyyy')
           return formattedDate
         },
 
         selectedYear () {
-          return this.selectedDate.getFullYear()
+          return this.selectedDate ? this.selectedDate.getFullYear() : ''
         },
         selectedMonth () {
-          return this.selectedDate.getMonth() + 1
+          return this.selectedDate ? this.selectedDate.getMonth() : ''
         },
         selectedDay () {
-          return this.selectedDate.getDate()
+          return this.selectedDate ? this.selectedDate.getDate() : ''
         }
 
   },
@@ -160,8 +165,7 @@
   }
 </script>
 
-<style>
-
+<style scoped>
 .add-expenses {
   height: 100vh;
   width: 90vw;

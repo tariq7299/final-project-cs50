@@ -4,6 +4,7 @@ import AddExpenses from '../views/AddExpenses.vue'
 import Contacts from '../views/Contacts.vue'
 import AddTransactions from '../views/AddTransactions.vue'
 import ContactHistory from '../views/ContactHistory.vue'
+import AddNewContact from '../views/AddNewContact.vue'
 
 const routes = [
   {
@@ -27,6 +28,11 @@ const routes = [
   path: '/contacts',
   name: 'contacts',
   component: Contacts
+  },
+  {
+  path: '/add-new-contact',
+  name: 'addNewContact',
+  component: AddNewContact
   },
   {
   path: '/AddTransactions',

@@ -3,6 +3,10 @@
 - Connect to api that gets the value of current dollar **OR** make the user write the doller currency when he opens the app !
 - Enable users to view any money as Egp or $
 -  Cretaet a branch from commit 64c090ceaab857dc7ab86a17fad62da4644a3e4a and call it 'accordion v-1.0, double click  bug'
+- Replace alerts() with more user friendly notification !
+- Access mobiles kits (like, NOTIFICATIONS, STORAGE, CAMERA....etc)
+- Rebuild and populate all dbs
+
 - Add a SYSTEMATIC APPROACH TO : 
         1- fixed margins acrros sectors
         2- Components driven engineering
@@ -38,6 +42,7 @@
 - Change the UserSpendinds to UsersExpenses, annd also each coulmn with 'spending' title to 'expense' ..etc
 - Create a notes column for User Expenses, and connect it to frontend
 - Add Email column to USers db model
+- Add CheckContstraint to all tables that don't have one
 
 ## run.py
 - How to find a way to the server url dynamic in the frontend ??, like every time I want to make a axios request I won't have to type the exactly localhost...:5000, because sometimes the port number changes !
@@ -51,6 +56,11 @@
 - Create a diffrent file for each group of routes related to each other, and make each a BlueBrint
 - Add egp() and amount/100 and amount*100 to '/contacts'
 - Order expeneses by ID not by date, when you send them to server
+- Change the get_calendar function and route name
+- Chnage all the functions and routes names that are not appropriate
+
+## Add Expenses route
+- Give the default categories of the app and add to them the created ones user created
 
 ## helpers.py
 - Write comments for calendar days functions 
@@ -132,6 +142,8 @@
 - Style the frontend --- COLORS  NICEER-ICONS BETTER-BUTTON
 - Enable user to add new category
 -  Make the add expense button not floating but instead a part of the pview, to not obstruct any expenses
+- Prevent default after submitting and clear all inputs, after user submits as it doesn't get cleared automatically
+- Get the value of date in add expense as a whole date object thatincludes actual time, and store it in db  in server side
 ## ChooseTimeFrame
 - Add the total expense beside each month name
 - Animate the arrow when user clicks on the already opened accordion !
@@ -139,6 +151,13 @@
 
 ## Contacts
 - Make the "Custom View" radio button as dropdown list 'Debtors, Creditors'
+
+## Add Transactions
+- Change input icons
+- CHange classes names in add transactions
+
+## Add new Contract
+- Assign appropriate classes names and IDS and names ....
 
                                 # TOMMOROOE
                                 -----------

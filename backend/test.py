@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Transactions
+from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Relationships, Transactions
 from sqlalchemy import extract, func, and_
 
 def egp(value):
@@ -514,3 +514,27 @@ def CH():
     transactions_list = [{'date': transaction.date.strftime("%a %d/%m/%Y"), 'amount': transaction.amount} for transaction in transactions__lazy]
 
     [print('transaction $-->', transaction) for transaction in transactions_list]
+
+def rel_Db():
+    
+    # salah_rel = Relationships(user_id=2, contact_id=3)
+    # salah_rel2 = Relationships(user_id=2, contact_id=2)
+    # emad_rel = Relationships(user_id=1, contact_id=1)
+    
+    # db.session.add(salah_rel)
+    # db.session.add(salah_rel2)
+    # db.session.add(emad_rel)
+    
+    # db.session.commit()
+    
+    # print(salah_rel)
+    # print(salah_rel2)
+    # print(emad_rel)
+    
+    contacts = db.session.query(Contacts).filter(Relationships.user_id==2).join(Relationships, Relationships.contact_id == Contacts.id).all()
+    
+    print('contacts', contacts)
+     
+    contacts_list = [{'contact_id': contact.id, 'contact_name': contact.name, 'contact_name': contact.name, 'contact_name': contact.name, 'contact_phone': contact.phone} for contact in contacts]
+    
+    print('contacts_list', contacts_list)

@@ -56,6 +56,9 @@ class UsersSpendings(db.Model):
     
 class Contacts(db.Model):
     
+    # This should be a tuple
+    __table_args__ = (db.UniqueConstraint('phone', name='unique_contact_phone'),)
+    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(64), unique=True, nullable=False)
@@ -63,7 +66,22 @@ class Contacts(db.Model):
     def __repr__(self):
         return '<Contact ID: {}, Contact_Name: {}, Contact_phone: {}>'.format(self.id, self.name, self.phone)
         
-        
+
+class Relationships(db.Model):
+    
+    __table_args__ = (db.UniqueConstraint('user_id', 'contact_id', name='unique_user_contact'),)
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    contact_id = db.Column(db.Integer, db.ForeignKey('contacts.id'), nullable=False)
+    
+    def __repr__(self):
+        return '<Relationship ID: {}, User_id: {}, Contact_id: {}>'.format(self.id, self.user_id, self.contact_id)
+    
+    user = db.relationship('Users', backref=db.backref('user_relationships'), lazy=True)
+    
+    contact = db.relationship('Contacts', backref=db.backref('contact_relationships'), lazy='joined')
+    
 class Transactions(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
@@ -83,3 +101,5 @@ class Transactions(db.Model):
     
     def __repr__(self):
         return '<Transaction ID: {}, Amount: {}, Date: {}, User ID: {}, User Name: {}, Contact ID: {}, Contact Name: {}>'.format(self.id, self.amount, self.date, self.user_id, self.user.name, self.contact_id, self.contact.name)
+    
+    
