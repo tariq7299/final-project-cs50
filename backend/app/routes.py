@@ -290,9 +290,9 @@ def add_new_contact():
         try:
             post_data = request.get_json()  
             
-            new_contact_name = post_data.get('contactName')   
+            new_contact_name = post_data.get('contactName').strip()
             
-            new_contact_phone = post_data.get('contactPhone')   
+            new_contact_phone = post_data.get('contactPhone').strip()   
             
             new_contact = Contacts(name=new_contact_name, phone=new_contact_phone)
             db.session.add(new_contact)
@@ -344,25 +344,27 @@ def new_transactions():
         selected_year   = post_data.get('selectedYear')
         selected_month_num   = post_data.get('selectedMonth')
         selected_day  = post_data.get('selectedDay')
-        submitted_amount  = post_data.get('submitedAmount')
+        submittedAmount  = post_data.get('submittedAmount')
         # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
-        submitted_category  = post_data.get('category').strip()
+        new_contact_phone  = post_data.get('newContactPhone')
 
-        Transactions(amount=submitted_amount)    
         try:
             
-            amount = app.helpers.convert_float_to_int(amount)
+            submitted_integer_amount = app.helpers.convert_float_to_int(submittedAmount)
 
-            new_expense = Transactions(user_id=2, date=datetime(selected_year, selected_month_num, selected_day), amount_spent=amount, category=category)
-            new_expense = UsersSpendings(user_id=2, date=datetime(selected_year, selected_month_num, selected_day), amount_spent=amount, category=category)
+            new_contact_id = db.session.query(Contacts.id).filter(Contacts.phone==new_contact_phone).scalar()
             
-            db.session.add(new_expense)
+            new_transactions = Transactions(amount=submitted_integer_amount, date=datetime(selected_year, selected_month_num, selected_day), user_id=2, contact_id=new_contact_id)
+            
+            db.session.add(new_transactions)
             
             db.session.commit()
             
-            submitted_amount_as_egp_currency = app.helpers.egp(submitted_amount)
+            submitted_amount_as_egp_currency = app.helpers.egp(submittedAmount)
             
-            response_object = {'submitedAmountSpent': submitted_amount_as_egp_currency, 'submitedCategory':submitted_category}
+            new_contact_name = db.session.query(Contacts.name).filter(Contacts.phone==new_contact_phone).scalar()
+            
+            response_object = {'submittedAmount': submitted_amount_as_egp_currency, 'submittedContactName':new_contact_name}
             
             return jsonify(response_object)
         

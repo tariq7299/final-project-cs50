@@ -30,31 +30,17 @@
             autofocus label="Deal Amount" prepend-icon="mdi-cash" class="expense-input" clearable>
             </v-text-field>
 
-            <!-- <div class="contact-info-wrapper"> -->
 
-                <div class="contacts-drop-down-wrapper">                
-                    <div class="test-wrapper">
-                        <v-select v-model="selectedContact" name="contact" id="contact" label="Contact" prepend-icon="mdi-notification-clear-all" :items="contacts" item-title="contact_name" item-value="contact_phone" class="expense-input" clearable>
+                <div class="contacts-drop-down-wrapper">       
+                             
+                        <v-select v-model="selectedContact" name="contact" id="contact" label="Contact" prepend-icon="mdi-notification-clear-all" :items="contacts" item-title="contact_name" item-value="contact_phone" class="expense-input" clearable :hint="phoneNumber">
                         </v-select>
-                        <p>{{ selectedContact }}</p>
-                    </div>
 
                     <div class="new-contact-btn-wrapper">
                         <router-link to="/add-new-contact"><v-btn class="new-contact-bnt"><span>Add New</span></v-btn></router-link> 
-                        <!-- <v-btn class="new-contact-bnt"><span>Add New</span></v-btn> -->
                     </div>
                 </div>
                 
-                <!-- <div class="test-contact-phone-wrapper">
-                    <v-text-field name="contact_phone" id="contact_phone" placeholder=""
-                   autofocus label=""  class="contact-phone-readonly" clearable  :model-value="selectedContact" readonly variant="plain">
-                   </v-text-field>
-                </div> -->
-
-            <!-- </div> -->
-            
-            <h1>{{console.log('this.selectedContact', selectedContact)}}</h1>
-
             <v-text-field v-model="expenseNote" name="expense-note" id="expense-note" placeholder="Type a note" label="Note" prepend-icon="mdi-note" class="expense-input">
             </v-text-field>
             
@@ -129,8 +115,8 @@
                         selectedYear: this.selectedYear,
                         selectedMonth: this.selectedMonth,
                         selectedDay: this.selectedDay,
-                        amount: this.amount,
-                        contact: this.selectedContact,
+                        submittedAmount: this.amount,
+                        newContactPhone: this.selectedContact,
                         
                     })
                     .then((response) => {
@@ -138,10 +124,9 @@
                         console.log('this.selectedContact', this.selectedContact)
                         // Handle success response
                         const submittedAmount = response.data.submittedAmount;
-                        const submittedContact = response.data.submittedContact;
+                        const submittedContactName = response.data.submittedContactName;
                         
-                        
-                        alert(`Success! ${submittedAmount} has been added to your ${submittedContact} expenses.`);
+                        alert(`Transaction Successful! You've added a transaction with ${submittedContactName} for an amount of ${submittedAmount}.`);
                     })
                     .catch((error) => {
                         if (error.response) {
@@ -182,6 +167,9 @@
           selectedDay () {
             
             return this.selectedDate ? this.selectedDate.getDate() : ''
+          },
+          phoneNumber () {
+            return this.selectedContact ? 'Phone Number - ' + this.selectedContact : ''
           }
   
     },
@@ -214,14 +202,6 @@
     
   }
 
-  .contact-info-wrapper{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    /* justify-content: center; */
-    align-items: baseline;
-    margin: 0;
-  }
   .contacts-drop-down-wrapper {
     width: 100%;
     display: flex;
@@ -231,35 +211,18 @@
 
   }
 
-  .contact-phone-readonly {
-    /* font-size: 10px; */
-        /* white-space: normal;
-        word-wrap: break-word; */
-    /* padding:0 30px 0 30px ; */
-    width: 200px;
-    /* display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 100%; */
-    /* margin: auto; */
-  }
   
-  .test-contact-phone-wrapper{
-     padding: 0 40px 0 40px ;
-  }
-
     .expense-input {
         width: 100%;
     }
     
     #contact{
+        font-size: small;
         flex: 1 1 auto;
     }
 
     .new-contact-btn-wrapper {
         padding: 10px 0 10px 0;
-        
         flex:0 1 auto;
         
     }

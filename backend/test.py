@@ -514,6 +514,8 @@ def CH():
     transactions_list = [{'date': transaction.date.strftime("%a %d/%m/%Y"), 'amount': transaction.amount} for transaction in transactions__lazy]
 
     [print('transaction $-->', transaction) for transaction in transactions_list]
+    
+    
 
 def rel_Db():
     
