@@ -155,6 +155,7 @@
 ## Add Transactions
 - Change input icons
 - CHange classes names in add transactions
+- Make the app take date includeing seconds and minutes and hourse, and don't extract month ...etc
 
 ## Add new Contract
 - Assign appropriate classes names and IDS and names ....

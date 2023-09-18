@@ -8,42 +8,57 @@
       <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
         <v-form @submit.prevent="addExpense" class="formTest">
     
-          <!-- 
-              "@click:clear" : This becasue the clear symbol of the v-text-field doesn't clear the input of user, so i had to manually clear it by @click event 
-              I couldn't set "label:'Date'", and I had to use v-binf on it :label="formattedDate", because if I used the latter method "label" will block ':value="formattedDate"' from appearing in the input field !
-          -->
-          <v-text-field class="expense-input"  :value="formattedDate" clearable prepend-icon="mdi-calendar" placeholder="For example : 2023-02-07" @click:clear="selectedDate = null" @keydown.delete="handleDelete" :label="formattedDate"> 
-    
             <!-- 
-              I have used v-model="menu" and :close-on-content-click="false" in order to prevent the datePicker from disappearing after I click on a date, as this is the default behavior of 'v-menu' nested elements. However, this default behavior is interfering with the functionality of the datepicker.
-             -->
-            <v-menu activator="parent" v-model="menu" :close-on-content-click="false" height="550" class="veutify-menu">
-    
-              <!--@click:save="menu = false" @click:cancel="menu = false" : Are used to a make v-menu closes only when I press 'OK' or 'CANCEL'   -->
-              <v-date-picker v-model="selectedDate" @click:save="menu = false" @click:cancel="menu = false"></v-date-picker>
-    
-            </v-menu>
-    
-          </v-text-field >
-    
-              <v-text-field v-model="amountSpent" name="amount-spent" id="amount_spent" placeholder="Enter Amount"
-              autofocus label="Deal Amount" prepend-icon="mdi-cash" class="expense-input" clearable>
-              </v-text-field>
-              
-              <div class="contacts-drop-down-wrapper">                
-                  <v-select v-model="selectedCategory" name="contact" id="contact" label="Contact" prepend-icon="mdi-notification-clear-all" :items="contacts" class="expense-input" clearable>
-                  </v-select>
-                  <div class="new-contact-btn-wrapper">
-                    <router-link to="/add-new-contact"><v-btn class="new-contact-bnt"><span>Add New</span></v-btn></router-link> 
-                      <!-- <v-btn class="new-contact-bnt"><span>Add New</span></v-btn> -->
-                  </div>
-              </div>
+                "@click:clear" : This becasue the clear symbol of the v-text-field doesn't clear the input of user, so i had to manually clear it by @click event 
+                I couldn't set "label:'Date'", and I had to use v-binf on it :label="formattedDate", because if I used the latter method "label" will block ':value="formattedDate"' from appearing in the input field !
+            -->
+            <v-text-field class="expense-input"  :model-value="formattedDate" clearable prepend-icon="mdi-calendar" placeholder="For example : 2023-02-07" @click:clear="selectedDate = null" @keydown.delete="handleDelete" label="Transaction Date"> 
+        
+                <!-- 
+                I have used v-model="menu" and :close-on-content-click="false" in order to prevent the datePicker from disappearing after I click on a date, as this is the default behavior of 'v-menu' nested elements. However, this default behavior is interfering with the functionality of the datepicker.
+                -->
+                <v-menu activator="parent" v-model="menu" :close-on-content-click="false" height="550" class="veutify-menu">
+        
+                <!--@click:save="menu = false" @click:cancel="menu = false" : Are used to a make v-menu closes only when I press 'OK' or 'CANCEL'   -->
+                <v-date-picker v-model="selectedDate" @click:save="menu = false" @click:cancel="menu = false"></v-date-picker>
+        
+                </v-menu>
+        
+            </v-text-field>
 
-              <v-text-field v-model="expenseNote" name="expense-note" id="expense-note" placeholder="Type a note"
-              label="Note" prepend-icon="mdi-note" class="expense-input">
-              </v-text-field>
-              
-              <v-btn class="" type="submit" id="button">Add Transaction</v-btn>
+            <v-text-field v-model="amount" name="amount-spent" id="amount_spent" placeholder="Enter Amount"
+            autofocus label="Deal Amount" prepend-icon="mdi-cash" class="expense-input" clearable>
+            </v-text-field>
+
+            <!-- <div class="contact-info-wrapper"> -->
+
+                <div class="contacts-drop-down-wrapper">                
+                    <div class="test-wrapper">
+                        <v-select v-model="selectedContact" name="contact" id="contact" label="Contact" prepend-icon="mdi-notification-clear-all" :items="contacts" item-title="contact_name" item-value="contact_phone" class="expense-input" clearable>
+                        </v-select>
+                        <p>{{ selectedContact }}</p>
+                    </div>
+
+                    <div class="new-contact-btn-wrapper">
+                        <router-link to="/add-new-contact"><v-btn class="new-contact-bnt"><span>Add New</span></v-btn></router-link> 
+                        <!-- <v-btn class="new-contact-bnt"><span>Add New</span></v-btn> -->
+                    </div>
+                </div>
+                
+                <!-- <div class="test-contact-phone-wrapper">
+                    <v-text-field name="contact_phone" id="contact_phone" placeholder=""
+                   autofocus label=""  class="contact-phone-readonly" clearable  :model-value="selectedContact" readonly variant="plain">
+                   </v-text-field>
+                </div> -->
+
+            <!-- </div> -->
+            
+            <h1>{{console.log('this.selectedContact', selectedContact)}}</h1>
+
+            <v-text-field v-model="expenseNote" name="expense-note" id="expense-note" placeholder="Type a note" label="Note" prepend-icon="mdi-note" class="expense-input">
+            </v-text-field>
+            
+            <v-btn class="" type="submit" id="button">Add Transaction</v-btn>
             
       </v-form>
             
@@ -67,9 +82,9 @@
         name: 'AddTransactions',
         data () {
             return {
-                amountSpent:'',
+                amount:'',
                 contacts: [],
-                selectedCategory: '',
+                selectedContact: '',
                 calendarData: {},
                 expenseNote: '',
                 selectedDate: new Date(),
@@ -104,24 +119,29 @@
   
            
             addExpense() {
-                const path = 'http://127.0.0.1:8083/add_expenses';
+
+                const apiUrl = process.env.VUE_APP_API_BASE_URL;
+
+                const path = apiUrl + '/new-transactions';
   
                 axios
                     .post(path, {
                         selectedYear: this.selectedYear,
                         selectedMonth: this.selectedMonth,
                         selectedDay: this.selectedDay,
-                        amountSpent: this.amountSpent,
-                        contact: this.selectedCategory,
+                        amount: this.amount,
+                        contact: this.selectedContact,
+                        
                     })
                     .then((response) => {
   
-                        
+                        console.log('this.selectedContact', this.selectedContact)
                         // Handle success response
-                        const submitedAmountSpent = response.data.submitedAmountSpent;
-                        const submitedCategory = response.data.submitedCategory;
+                        const submittedAmount = response.data.submittedAmount;
+                        const submittedContact = response.data.submittedContact;
                         
-                        alert(`Success! ${submitedAmountSpent} has been added to your ${submitedCategory} expenses.`);
+                        
+                        alert(`Success! ${submittedAmount} has been added to your ${submittedContact} expenses.`);
                     })
                     .catch((error) => {
                         if (error.response) {
@@ -194,7 +214,14 @@
     
   }
 
-
+  .contact-info-wrapper{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: baseline;
+    margin: 0;
+  }
   .contacts-drop-down-wrapper {
     width: 100%;
     display: flex;
@@ -203,7 +230,25 @@
     gap: 10px
 
   }
+
+  .contact-phone-readonly {
+    /* font-size: 10px; */
+        /* white-space: normal;
+        word-wrap: break-word; */
+    /* padding:0 30px 0 30px ; */
+    width: 200px;
+    /* display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%; */
+    /* margin: auto; */
+  }
   
+  .test-contact-phone-wrapper{
+     padding: 0 40px 0 40px ;
+  }
+
     .expense-input {
         width: 100%;
     }

@@ -323,16 +323,17 @@ def new_transactions():
     if request.method == "GET":
 
         contacts = db.session.query(Contacts).filter(Relationships.user_id==2).join(Relationships, Relationships.contact_id == Contacts.id).all()
-        
-        contacts_list = [{'contact_id': contact.id, 'contact_name': contact.name, 'contact_name': contact.name, 'contact_name': contact.name, 'contact_phone': contact.phone} for contact in contacts]
-        
+                
+        contacts_list = [{'contact_phone': contact.phone, 'contact_name': contact.name, } for contact in contacts]
+                
         contacts_names = []
         
         [contacts_names.append(contact.name) for contact in contacts]
         
+        print(contacts_list)
         # print('contacts_names', contacts_names)
         
-        response_object = {'status':'success', 'contacts': contacts_names}
+        response_object = {'status':'success', 'contacts': contacts_list}
 
         return jsonify(response_object)
     
@@ -343,13 +344,11 @@ def new_transactions():
         selected_year   = post_data.get('selectedYear')
         selected_month_num   = post_data.get('selectedMonth')
         selected_day  = post_data.get('selectedDay')
-        submitted_amount_spent  = post_data.get('amountSpent')
+        submitted_amount  = post_data.get('submitedAmount')
         # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
         submitted_category  = post_data.get('category').strip()
-        # print('selectedYear', selected_year)
-        # print('selected_month_num', selected_month_num)
-        # print('selected_day', selected_day)
-    
+
+        Transactions(amount=submitted_amount)    
         try:
             
             amount = app.helpers.convert_float_to_int(amount)
@@ -361,9 +360,9 @@ def new_transactions():
             
             db.session.commit()
             
-            submitted_amount_spent_as_egp_currency = app.helpers.egp(submitted_amount_spent)
+            submitted_amount_as_egp_currency = app.helpers.egp(submitted_amount)
             
-            response_object = {'submitedAmountSpent': submitted_amount_spent_as_egp_currency, 'submitedCategory':submitted_category}
+            response_object = {'submitedAmountSpent': submitted_amount_as_egp_currency, 'submitedCategory':submitted_category}
             
             return jsonify(response_object)
         
