@@ -26,8 +26,10 @@ def after_request(response):
 @appRoutes.route("/register_user", methods=["POST","GET"])
 def register():
     
+    session.clear()
+    
     if request.method == "POST":
-        
+
         post_data = request.get_json()
         
         first_name = post_data.get('firstName')
@@ -37,15 +39,15 @@ def register():
         password = post_data.get('password')
         password_confirm = post_data.get('passwordConfirm')
         
-        print('first_name', first_name)
-        print('last_name', last_name)
-        print('username', username)
-        print('email', email)
-        print('password', password)
-        print('password_confirm', password_confirm)
+        # print('first_name', first_name)
+        # print('last_name', last_name)
+        # print('username', username)
+        # print('email', email)
+        # print('password', password)
+        # print('password_confirm', password_confirm)
         
         hashed_password = generate_password_hash(password)
-        print('hashed_password', hashed_password)
+        # print('hashed_password', hashed_password)
 
         # If left any field empty
         if not username or not password or not password_confirm:
@@ -87,7 +89,8 @@ def register():
             # Remember which user has logged in
             session["user_id"] = user_id
             
-            print('session["user_id"]', session["user_id"])
+            user_id00 = session.get('user_id')
+            
             # success="true" get added as a query in the url of login.html
             # this will activate alert() function in JS
             response_object = {'success': True}
@@ -154,11 +157,13 @@ def login():
 @appRoutes.route("/user_wallet", methods=["POST","GET"])
 def user_wallet():
     
+    current_user_id = session.get('user_id')
+    print('user_id_wallet', current_user_id)
     # Replace this user id from by the one foumd in session['user_id']
     # current_user_id = session["user_id"]
-    current_user_id = session["user_id"]
+    # current_user_id = session["user_id"]
     
-    print('current_user_id', current_user_id)
+    # print('current_user_id', current_user_id)
     
     # IF we GET this route, to we need to sent to frontend the months and days of the current year
     if request.method == "GET":
@@ -264,9 +269,9 @@ def add_expenses():
 def load_recent_month_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
-    current_user_id = session["user_id"]
+    current_user_id = session.get('user_id')
     
-    print('current_user_id', current_user_id)
+    print('user_id_load', current_user_id)
     
     if request.method == "GET":
         

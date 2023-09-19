@@ -50,7 +50,7 @@
                     const apiUrl = process.env.VUE_APP_API_BASE_URL;
                     const path = apiUrl + '/user_wallet';
 
-                    const response = await axios.get(path);
+                    const response = await axios.get(path, { withCredentials: true });
 
                     this.wallet = response.data.wallet;
 

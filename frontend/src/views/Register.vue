@@ -77,11 +77,10 @@
 
             axios
 
-                .post(path, requestData)
+                .post(path, requestData, { withCredentials: true })
 
                 .then((response) => {
                     if (response.status === 200 && response.data.success) {
-                        console.log("SUCCESSSSSSS")
                         // Redirect the user to the home page
                         this.$router.push({ name: 'Home' });
                     }
