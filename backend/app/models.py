@@ -11,15 +11,25 @@ def init_db(app):
 
 class Users(db.Model):
     
+    __table_args__ = (
+        
+        db.UniqueConstraint('user_id', name='unique_user_id'),
+        db.UniqueConstraint('username', name='unique_username'),
+        db.UniqueConstraint('email', name='unique_email')
+    )
+    
     # # Acutally  no mre need to specifiy "__tablename__" as it actully converts thw CamelCase "Users" to a snake_case "users" and make it as the table name
     # __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=True)
-    username = db.Column(db.String(64), unique=True)
-    phone = db.Column(db.String(64), unique=True)
+    first_name = db.Column(db.String(64), nullable=False)
+    last_name = db.Column(db.String(64), nullable=False)
+    username = db.Column(db.String(64), unique=True, nullable=False)
+    email = db.Column(db.String(64), unique=True, nullable=False)
+    hash = db.Column(db.String(81), nullable=False)
+    
     
     def __repr__(self):
-        return '<User ID: {}, Name: {}, username: {}, phone: {}>'.format(self.user_id, self.name, self.username, self.phone)
+        return '<User ID: {}, First Name: {}, Last Name: {}, username: {}, email: {}, hash: {}>'.format(self.user_id, self.first_name, self.last_name, self.username, self.email, self.hash)
     
 # I found out that the best way to store money values in sqlite db, si by specifiyng the column type as 'Integer', and when I want to lets say store "3.59" i store like that int(3.59 * 100) so it will be stored like that "359", and when I want to retrive the value I do that '359/100' so the value will be converted to floasting number once more '3.59' ! 
 class UsersWallets(db.Model):

@@ -5,8 +5,24 @@ import Contacts from '../views/Contacts.vue'
 import AddTransactions from '../views/AddTransactions.vue'
 import ContactHistory from '../views/ContactHistory.vue'
 import AddNewContact from '../views/AddNewContact.vue'
+import Register from '../views/Register.vue'
 
 const routes = [
+  {
+    path: '/register',
+    name: 'register',
+    component: Register,
+  },
+  // {
+  //   path: '/login',
+  //   name: 'login',
+  //   component: Login,
+  // },
+  // {
+  //   path: '/logout',
+  //   name: 'logout',
+  //   component: Logout,
+  // },
   {
     path: '/',
     name: 'Home',

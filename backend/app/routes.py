@@ -23,24 +23,155 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+@appRoutes.route("/register_user", methods=["POST","GET"])
+def register():
+    
+    if request.method == "POST":
+        
+        post_data = request.get_json()
+        
+        first_name = post_data.get('firstName')
+        last_name = post_data.get('lastName')
+        username = post_data.get('username')
+        email = post_data.get('email')
+        password = post_data.get('password')
+        password_confirm = post_data.get('passwordConfirm')
+        
+        print('first_name', first_name)
+        print('last_name', last_name)
+        print('username', username)
+        print('email', email)
+        print('password', password)
+        print('password_confirm', password_confirm)
+        
+        hashed_password = generate_password_hash(password)
+        print('hashed_password', hashed_password)
+
+        # If left any field empty
+        if not username or not password or not password_confirm:
+            error_message = 'Please fill in all fields !'
+            return jsonify({'error_message': error_message}), 400
+
+        # IF two passwords fields don't match
+        if password != password_confirm:
+            error_message = "Passwords don't match! Please try again."
+            return jsonify({'error_message': error_message}), 400
+        
+        # Validate the password if it containes especial characters and should 8 characters long
+        # if helpers.validate_password(password):
+        #     flash_message = helpers.validate_password(password)
+        #     flash(flash_message)
+        #     return redirect(url_for('register'))
+
+        # Checks if username already exists in database
+        db_username = db.session.query(Users.username).filter(Users.username==username).scalar()
+        
+        print('db_username', db_username)
+        
+        if db_username:
+            error_message = "Username already exists! Please choose a new one."
+            return jsonify({'error_message': error_message}), 400
+        
+        try: 
+            
+            new_user = Users(first_name=first_name, last_name=last_name, username=username, email=email, hash=hashed_password)
+            
+            db.session.add(new_user)
+            
+            user_id = db.session.query(Users.user_id).filter(Users.username==username).scalar()
+            
+            print('user_id', user_id)
+            
+            db.session.commit()
+
+            # Remember which user has logged in
+            session["user_id"] = user_id
+            
+            print('session["user_id"]', session["user_id"])
+            # success="true" get added as a query in the url of login.html
+            # this will activate alert() function in JS
+            response_object = {'success': True}
+             
+            return jsonify(response_object)
+        
+        except Exception as e:
+            db.session.rollback()
+            
+            error_message = 'An error occurred while adding the expense! Error message: ' + str(e)
+            return jsonify({'error_message': error_message}), 400
+        
+        finally:
+            
+            db.session.close()
+
+@appRoutes.route("/login", methods=["POST"])
+def login():
+    
+    # Forget any user_id
+    session.clear()
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        
+        post_data = request.get_json()
+        
+        username = post_data.get('username')
+        password = post_data.get('password')
+
+        # Ensure username was submitted
+        if not username:
+            error_message = "must provide username"
+            return jsonify({'error_message': error_message}), 400
+
+        # Ensure password was submitted
+        elif not password:
+            error_message = "must provide password"
+            return jsonify({'error_message': error_message}), 400
+        
+
+        # Query database for username
+        user_info = db.session.query(Users.user_id, Users.username, Users.hash).filter(Users.username==username).all()
+        
+        for user_tuple in user_info:
+            user_id = user_tuple[0]
+            db_username = user_tuple[1]
+            hash_value = user_tuple[2]
+            
+        # Ensure username exists and password is correct
+        if not db_username or not check_password_hash(hash_value, password):
+            error_message = "invalid username and/or password"
+            return jsonify({'error_message': error_message}), 400
+
+        # Remember which user has logged in
+        session["user_id"] = user_id
+
+        response_object = {'status': 'success'}
+             
+        return jsonify(response_object)
+
+    
+
 @appRoutes.route("/user_wallet", methods=["POST","GET"])
 def user_wallet():
     
     # Replace this user id from by the one foumd in session['user_id']
-    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    # current_user_id = session["user_id"]
+    current_user_id = session["user_id"]
+    
+    print('current_user_id', current_user_id)
     
     # IF we GET this route, to we need to sent to frontend the months and days of the current year
     if request.method == "GET":
         try:
             
-            total_net_balance = db.session.query(func.sum(Transactions.amount)).filter(Transactions.user_id==salah_id).scalar()
+            total_net_balance = db.session.query(func.sum(Transactions.amount)).filter(Transactions.user_id==current_user_id).scalar()
                         
             total_net_balance = app.helpers.egp(app.helpers.convert_int_to_float(total_net_balance)) 
             
             debt = 0
             credit = 0
 
-            net_balance_per_contact = db.session.query(func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
+            net_balance_per_contact = db.session.query(func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==current_user_id).group_by(Transactions.contact_id).all()
             
             for net_balance, in net_balance_per_contact:
                 if net_balance > 0:
@@ -88,7 +219,7 @@ def get_calendar():
 def add_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
-    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    current_user_id = session["user_id"]
     
     if request.method == "POST":
         
@@ -109,11 +240,11 @@ def add_expenses():
         print('expense_note', expense_note)
         try:
             
-            app.queries.expenses_queries.insert_new_expense_into_db(salah_id, selected_year, selected_month_num, selected_day, submitted_amount_spent, submitted_category, expense_note)
+            app.queries.expenses_queries.insert_new_expense_into_db(current_user_id, selected_year, selected_month_num, selected_day, submitted_amount_spent, submitted_category, expense_note)
             
             submitted_amount_spent_as_egp_currency = app.helpers.egp(submitted_amount_spent)
             
-            response_object = {'submitedAmountSpent': submitted_amount_spent_as_egp_currency, 'submitedCategory':submitted_category}
+            response_object = {'status': 'success', 'submitedAmountSpent': submitted_amount_spent_as_egp_currency, 'submitedCategory':submitted_category}
             
             return jsonify(response_object)
         
@@ -133,7 +264,9 @@ def add_expenses():
 def load_recent_month_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
-    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    current_user_id = session["user_id"]
+    
+    print('current_user_id', current_user_id)
     
     if request.method == "GET":
         
@@ -143,11 +276,11 @@ def load_recent_month_expenses():
             
             # extract() is used to get the years from date object !, of the column 'date' of type 'db.date'
             # with_entities() It gets specific columns only
-            years = app.queries.expenses_queries.select_years_contains_expenses(salah_id)
+            years = app.queries.expenses_queries.select_years_contains_expenses(current_user_id)
 
             most_recent_year = years[0]
             
-            most_recent_month_of_expenses = app.queries.expenses_queries.select_most_recent_month(salah_id, most_recent_year)
+            most_recent_month_of_expenses = app.queries.expenses_queries.select_most_recent_month(current_user_id, most_recent_year)
             
             years_and_months = []
             for year in years:
@@ -171,10 +304,10 @@ def load_recent_month_expenses():
                 years_and_months.append({'year': year, 'months': months_list, 'opened': False}) 
                            
 
-            month_expenses = app.queries.expenses_queries.select_expenses_in_month(salah_id, most_recent_year, most_recent_month_of_expenses)
+            month_expenses = app.queries.expenses_queries.select_expenses_in_month(current_user_id, most_recent_year, most_recent_month_of_expenses)
             
         
-            total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, most_recent_year, most_recent_month_of_expenses)
+            total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(current_user_id, most_recent_year, most_recent_month_of_expenses)
     
             # Formatig the total amount spent as a currency 
             total_amount_of_month_expenses = app.helpers.egp(app.helpers.convert_int_to_float(total_amount_of_month_expenses))
@@ -198,7 +331,7 @@ def load_recent_month_expenses():
 def fetch_selected_month_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
-    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    current_user_id = session["user_id"]
     
     if request.method == "POST":
         
@@ -210,12 +343,12 @@ def fetch_selected_month_expenses():
             selected_month_abbr   = post_data.get('selectedMonth')
             selected_month_num = datetime.strptime(selected_month_abbr, '%b').month
             
-            month_expenses = app.queries.expenses_queries.select_expenses_in_month(salah_id, selected_year, selected_month_num)
+            month_expenses = app.queries.expenses_queries.select_expenses_in_month(current_user_id, selected_year, selected_month_num)
             
             # TO-DO ---> need to change some names here.
             month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': app.helpers.convert_int_to_float(spending.amount_spent), 'category': spending.category, 'note': spending.note} for spending in month_expenses]
             
-            total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, selected_year, selected_month_num)
+            total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(current_user_id, selected_year, selected_month_num)
             
             # Formatig the total amount spent as a currency 
             total_amount_of_month_expenses = app.helpers.egp(app.helpers.convert_int_to_float(total_amount_of_month_expenses))
@@ -238,12 +371,12 @@ def fetch_selected_month_expenses():
 def load_net_balance():
     
     # Replace this user id from by the one foumd in session['user_id']
-    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+    current_user_id = session["user_id"]
     
     if request.method == "GET":
         try:
             
-            net_balance = db.session.query(func.sum(Transactions.amount)).filter(Transactions.user_id==salah_id).scalar()
+            net_balance = db.session.query(func.sum(Transactions.amount)).filter(Transactions.user_id==current_user_id).scalar()
             
             net_balance = app.helpers.egp(app.helpers.convert_int_to_float(net_balance))
             
@@ -266,11 +399,13 @@ def load_net_balance():
 @appRoutes.route("/people", methods=["POST","GET"])
 def load_people():
     
+    current_user_id = session["user_id"]
+    
     if request.method == "GET":
         try:
                          
             #   With utlizing the 'lazy' and 'realatioship' technique/feature (this defined in the db model itself)
-            transactions = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
+            transactions = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==current_user_id).group_by(Transactions.contact_id).all()
             
             # for transaction in transactions:
             #     print('transaction.contact_name__2', transaction[0].contact.name)
@@ -304,7 +439,7 @@ def load_people():
             
             contact_phone   = post_data.get('contactPhone')
             
-            transactions = db.session.query(Transactions).filter(and_(Transactions.user_id==2), (Contacts.phone==contact_phone)).order_by(Transactions.date.desc()).join(Contacts)
+            transactions = db.session.query(Transactions).filter(and_(Transactions.user_id==current_user_id), (Contacts.phone==contact_phone)).order_by(Transactions.date.desc()).join(Contacts)
     
             transactions_list = [{'id': transaction.id, 'date': transaction.date.strftime("%a %d/%m/%Y"), 'amount': app.helpers.convert_int_to_float(transaction.amount), 'note': transaction.note} for transaction in transactions]
             
@@ -323,6 +458,8 @@ def load_people():
 @appRoutes.route("/new-contact", methods=["POST","GET"])
 def add_new_contact():
     
+    current_user_id = session["user_id"]
+     
     if request. method == 'POST':
         try:
             post_data = request.get_json()  
@@ -357,9 +494,11 @@ def add_new_contact():
 @appRoutes.route("/new-transactions", methods=["POST","GET"])
 def new_transactions():
      
+    current_user_id = session["user_id"]
+
     if request.method == "GET":
 
-        contacts = db.session.query(Contacts).filter(Relationships.user_id==2).join(Relationships, Relationships.contact_id == Contacts.id).all()
+        contacts = db.session.query(Contacts).filter(Relationships.user_id==current_user_id).join(Relationships, Relationships.contact_id == Contacts.id).all()
                 
         contacts_list = [{'contact_phone': contact.phone, 'contact_name': contact.name, } for contact in contacts]
                 

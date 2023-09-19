@@ -1,6 +1,6 @@
 <template>
 
-    <div class=" text-center home-view">
+    <div class=" text-center view-container">
         
         <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
         <CurrentViewSummary></CurrentViewSummary>
@@ -115,7 +115,7 @@
 
 <style>
 
-    .home-view {
+    .view-container {
         width: 90vw;
         max-width: 800px;
         margin: auto;

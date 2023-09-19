@@ -6,6 +6,7 @@
 - Replace alerts() with more user friendly notification !
 - Access mobiles kits (like, NOTIFICATIONS, STORAGE, CAMERA....etc)
 - Rebuild and populate all dbs
+- Error messages presents very sensitive info 
 
 - Add a SYSTEMATIC APPROACH TO : 
         0- Create a Word/.md file that ESABLISHES THE TEKA/TARIQ GUIDLINES FOR Flask and Vue and maybe other frameworks/budles/languages (which illustrats these keypoints: like for example: How to ornize files and folders, How to style the app, liek where to put the scoped styles and globla styles..., How to create the env variables, ...etc), and remeber to always create a didicated guidline file for every framwork, language !
@@ -24,6 +25,9 @@
 - Create to main versions of your codebase ! one that is dependednt on functions (functional programming) and another one that is dependent on objects (OOP)
 - Make a function in helpers for "response_object", (That can create responses objects)
 - USE 'PUT' and 'DELETE' instead of 'POST' in appropriate stiuations.
+
+## routes.py (/register_user)
+
 ## models.py
 - Add indexes to databases to make querieas it faster
 - Make name in users table as first name and last name
@@ -44,6 +48,22 @@
 - Create a notes column for User Expenses, and connect it to frontend
 - Add Email column to USers db model
 - Add CheckContstraint to all tables that don't have one
+-  Understand the 'CONSTRAINT uniqu'
+                CREATE TABLE users (
+                        user_id INTEGER NOT NULL, 
+                        first_name VARCHAR(64) NOT NULL, 
+                        last_name VARCHAR(64) NOT NULL, 
+                        username VARCHAR(64) NOT NULL, 
+                        email VARCHAR(64) NOT NULL, 
+                        hash VARCHAR(81) NOT NULL, 
+                        PRIMARY KEY (user_id), 
+                        CONSTRAINT unique_user_id UNIQUE (user_id), 
+                        CONSTRAINT unique_username UNIQUE (username), 
+                        CONSTRAINT unique_email UNIQUE (email), 
+                        UNIQUE (username), 
+                        UNIQUE (email)
+                );
+
 
 ## run.py
 - How to find a way to the server url dynamic in the frontend ??, like every time I want to make a axios request I won't have to type the exactly localhost...:5000, because sometimes the port number changes !
