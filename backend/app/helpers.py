@@ -3,7 +3,20 @@ from app.models import db, Users, UsersSpendings, UsersWallets
 from datetime import datetime
 from sqlalchemy import extract, func
 from calendar import monthrange, day_name, month_abbr
+import requests
+import uuid
+from functools import wraps
+from flask import redirect, render_template, session
 
+
+def login_required(f):
+    # This supposed to be @functools.wraps(f), this keeps the name and docstring of "f" function passed in decorated_function(*args, **kwargs), so without @functools.wraps(f), f.__name__ would change completely to decorated_function() instead of its correct __name__ which is in our case (login() or index(), history() ...etc)
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect("/login")
+        return f(*args, **kwargs)
+    return decorated_function
 
 # It formats any number given to a Egypting currency format
 def egp(amount):
