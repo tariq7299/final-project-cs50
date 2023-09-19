@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 
-            <v-text-field v-model="expenseNote" name="expense-note" id="expense-note" placeholder="Type a note" label="Note" prepend-icon="mdi-note" class="expense-input">
+            <v-text-field v-model="transactionNote" name="expense-note" id="expense-note" placeholder="Type a note" label="Note" prepend-icon="mdi-note" class="expense-input" type="text">
             </v-text-field>
             
             <v-btn class="" type="submit" id="button">Add Transaction</v-btn>
@@ -72,7 +72,7 @@
                 contacts: [],
                 selectedContact: '',
                 calendarData: {},
-                expenseNote: '',
+                transactionNote: '',
                 selectedDate: new Date(),
                 menu: false,
             }
@@ -117,6 +117,7 @@
                         selectedDay: this.selectedDay,
                         submittedAmount: this.amount,
                         newContactPhone: this.selectedContact,
+                        transactionNote: this.transactionNote
                         
                     })
                     .then((response) => {
@@ -162,7 +163,7 @@
           },
           selectedMonth () {
            
-            return this.selectedDate ? this.selectedDate.getMonth() : ''
+            return this.selectedDate ? this.selectedDate.getMonth()+1 : ''
           },
           selectedDay () {
             

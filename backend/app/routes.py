@@ -70,10 +70,16 @@ def add_expenses():
         submitted_amount_spent  = post_data.get('amountSpent')
         # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
         submitted_category  = post_data.get('category').strip()
+        expense_note = post_data.get('expenseNote')
        
+        print('selected_year', selected_year)
+        print('selected_month_num', selected_month_num)
+        print('selected_day', selected_day)
+        print('submitted_amount_spent', submitted_category)
+        print('expense_note', expense_note)
         try:
             
-            app.queries.expenses_queries.insert_new_expense_into_db(salah_id, selected_year, selected_month_num, selected_day, submitted_amount_spent, submitted_category)
+            app.queries.expenses_queries.insert_new_expense_into_db(salah_id, selected_year, selected_month_num, selected_day, submitted_amount_spent, submitted_category, expense_note)
             
             submitted_amount_spent_as_egp_currency = app.helpers.egp(submitted_amount_spent)
             
@@ -143,7 +149,7 @@ def load_recent_month_expenses():
             # Formatig the total amount spent as a currency 
             total_amount_of_month_expenses = app.helpers.egp(total_amount_of_month_expenses)
 
-            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': app.helpers.convert_int_to_float(spending.amount_spent), 'category': spending.category} for spending in month_expenses]
+            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': app.helpers.convert_int_to_float(spending.amount_spent), 'category': spending.category, 'note': spending.note} for spending in month_expenses]
                     
             response_object = { 'status': 'success', 'years_and_months': years_and_months, 'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
             
@@ -177,7 +183,7 @@ def fetch_selected_month_expenses():
             month_expenses = app.queries.expenses_queries.select_expenses_in_month(salah_id, selected_year, selected_month_num)
             
             # TO-DO ---> need to change some names here.
-            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': app.helpers.convert_int_to_float(spending.amount_spent), 'category': spending.category} for spending in month_expenses]
+            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': app.helpers.convert_int_to_float(spending.amount_spent), 'category': spending.category, 'note': spending.note} for spending in month_expenses]
             
             total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, selected_year, selected_month_num)
             
@@ -241,7 +247,7 @@ def load_people():
             #     print('transaction.contact_phone', transaction[0].user.name)
             #     print('transaction_amount', transaction.contact_net_balance)
             
-            transactions_list = [{'contact_name': transaction[0].contact.name, 'contact_phone': transaction[0].contact.phone, 'transations_net_balance': transaction.contact_net_balance} for transaction in transactions] 
+            transactions_list = [{'contact_name': transaction[0].contact.name, 'contact_phone': transaction[0].contact.phone, 'transations_net_balance': app.helpers.convert_int_to_float(transaction.contact_net_balance)} for transaction in transactions] 
             
             # We have to put "wallet" into an abject to jsonify() it later, so we can send it to the client
             response_object = { 'status': 'success', 'transactions': transactions_list }
@@ -260,6 +266,7 @@ def load_people():
             
             return jsonify(response_object), 400
         
+    # this user presses on any Contact to see that contact history
     if request.method == "POST":
         try:    
             
@@ -269,7 +276,7 @@ def load_people():
             
             transactions = db.session.query(Transactions).filter(and_(Transactions.user_id==2), (Contacts.phone==contact_phone)).order_by(Transactions.date.desc()).join(Contacts)
     
-            transactions_list = [{'id': transaction.id, 'date': transaction.date.strftime("%a %d/%m/%Y"), 'amount': transaction.amount} for transaction in transactions]
+            transactions_list = [{'id': transaction.id, 'date': transaction.date.strftime("%a %d/%m/%Y"), 'amount': app.helpers.convert_int_to_float(transaction.amount), 'note': transaction.note} for transaction in transactions]
             
             # print('transactions_list', transactions_list)
             
@@ -347,6 +354,7 @@ def new_transactions():
         submittedAmount  = post_data.get('submittedAmount')
         # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
         new_contact_phone  = post_data.get('newContactPhone')
+        transaction_note = post_data.get('transactionNote')
 
         try:
             
@@ -354,7 +362,7 @@ def new_transactions():
 
             new_contact_id = db.session.query(Contacts.id).filter(Contacts.phone==new_contact_phone).scalar()
             
-            new_transactions = Transactions(amount=submitted_integer_amount, date=datetime(selected_year, selected_month_num, selected_day), user_id=2, contact_id=new_contact_id)
+            new_transactions = Transactions(amount=submitted_integer_amount, date=datetime(selected_year, selected_month_num, selected_day), user_id=2, contact_id=new_contact_id, note=transaction_note)
             
             db.session.add(new_transactions)
             
