@@ -45,9 +45,12 @@ class UsersSpendings(db.Model):
     spending_id = db.Column(db.Integer, primary_key=True)
     # Define the foreign key column
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    date = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
     amount_spent = db.Column(db.Integer, nullable=False)
     category = db.Column(db.String(64), unique=False, nullable=False)
+    note = db.Column(db.String(200), default="No notes")
+    # By definning a relationship you can now access the
+    
     # Define the relationship between UserSpending and User
     user = db.relationship('Users', backref=db.backref('spendings', lazy=True))
     
@@ -89,7 +92,7 @@ class Transactions(db.Model):
     date = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     contact_id = db.Column(db.Integer, db.ForeignKey('contacts.id'), nullable=False)
-    
+    note = db.Column(db.String(200), default="No notes")
     # By definning a relationship you can now access the user info from 'Users' model, by typing 'Transactions.user'
     # And Vice versa, so  "backref=db.backref('user_transactions')" enables you to access user transactions from 'Users'db model, by typing "Users.user_transactions"
     # lazy=joined and lazy=True are the same (They supposed to not be the same, but I still can't understand the difference )

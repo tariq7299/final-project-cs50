@@ -8,11 +8,11 @@ import app.helpers
 
 # This file holds all my CRUD queries that is related users expenses
 
-def insert_new_expense_into_db(user_id, year, month, day, amount, category):
+def insert_new_expense_into_db(user_id, year, month, day, amount, category, note):
     
     amount = app.helpers.convert_float_to_int(amount)
 
-    new_expense = UsersSpendings(user_id=user_id, date=datetime(year, month, day), amount_spent=amount, category=category)
+    new_expense = UsersSpendings(user_id=user_id, date=datetime(year, month, day), amount_spent=amount, category=category, note=note)
     
     db.session.add(new_expense)
     
@@ -69,7 +69,7 @@ def select_all_months_contain_expenses_in_specific_year(user_id, year):
 
 def select_expenses_in_month(user_id, year, month):
     
-    month_expenses = UsersSpendings.query.filter(UsersSpendings.user_id == user_id).filter(extract('year', UsersSpendings.date) == year).filter(extract('month', UsersSpendings.date) == month).order_by(UsersSpendings.date.desc()).all()
+    month_expenses = UsersSpendings.query.filter(UsersSpendings.user_id == user_id).filter(extract('year', UsersSpendings.date) == year).filter(extract('month', UsersSpendings.date) == month).order_by(UsersSpendings.spending_id.desc()).all()
     
     return month_expenses
 

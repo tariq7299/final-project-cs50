@@ -2,33 +2,29 @@
     <div class="contact-history-container">
 
         <Header class="sector" pageTitle="Contact Dealings History"></Header>
-  
-        <div class="contact-info">
-            <div class="info-row">
-                <p class="label">Name</p>
-                <p class="name">{{ contactName }}</p>
+
+        <div class="sticky-header">
+            <div class="contact-info">
+                <div class="info-row">
+                    <p class="label">Name</p>
+                    <p class="name">{{ contactName }}</p>
+                </div>
+                <div class="info-row">
+                    <p class="label">Phone</p>
+                    <p class="phone">{{ contactPhone }}</p>
+                </div>
+                <div class="sector">
+                    <UserWallet walletTitle="Contact Net Balance" :amount="contactNetBalance"></UserWallet>
+                </div>
             </div>
-            <div class="info-row">
-                <p class="label">Phone</p>
-                <p class="phone">{{ contactPhone }}</p>
-            </div>
-            <div class="sector">
-                <UserWallet walletTitle="Contact Net Balance" :amount="contactNetBalance"></UserWallet>
-            </div>
-        </div>
+        </div>        
 
         <div class="contact-history">
             <Days :groupedByDay="groupedTransactionsByDay"></Days>
-            <!-- <h1>{{ coonsol.log(groupedTransactionsByDay) }}</h1>
-            <h1>{{ coonsol.table(groupedTransactionsByDay) }}</h1> -->
-            <!-- <div v-for="(transaction, index) in transactions" :key="index">
-                <p>{{transaction.date}}</p>
-                <p>{{transaction.amount}}</p>
-            </div> -->
         </div>
         
     </div>
-    </template>
+</template>
 
 <script>
 import axios from 'axios'
@@ -144,5 +140,13 @@ import Days from '@/components/Days.vue';
     font-style: italic;
     font-weight: 500;
 }
+
+.sticky-header {
+        position: sticky;
+        top: 3.8rem;
+        background: var(--background);
+        padding-top: 1rem;
+        z-index: 1019;
+    }
 
 </style>

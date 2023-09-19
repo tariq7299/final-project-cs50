@@ -110,6 +110,7 @@
                       selectedDay: this.selectedDay,
                       amountSpent: this.amountSpent,
                       category: this.selectedCategory,
+                      expenseNote: this.expenseNote
                   })
                   .then((response) => {
 
@@ -152,7 +153,7 @@
           return this.selectedDate ? this.selectedDate.getFullYear() : ''
         },
         selectedMonth () {
-          return this.selectedDate ? this.selectedDate.getMonth() : ''
+          return this.selectedDate ? this.selectedDate.getMonth()+1 : ''
         },
         selectedDay () {
           return this.selectedDate ? this.selectedDate.getDate() : ''
