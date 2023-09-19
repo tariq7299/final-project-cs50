@@ -6,6 +6,8 @@
 - Replace alerts() with more user friendly notification !
 - Access mobiles kits (like, NOTIFICATIONS, STORAGE, CAMERA....etc)
 - Rebuild and populate all dbs
+- Update requirments.txt
+- Remeber To switch to prduction before deplying
 
 - Add a SYSTEMATIC APPROACH TO : 
         0- Create a Word/.md file that ESABLISHES THE TEKA/TARIQ GUIDLINES FOR Flask and Vue and maybe other frameworks/budles/languages (which illustrats these keypoints: like for example: How to ornize files and folders, How to style the app, liek where to put the scoped styles and globla styles..., How to create the env variables, ...etc), and remeber to always create a didicated guidline file for every framwork, language !
@@ -24,6 +26,11 @@
 - Create to main versions of your codebase ! one that is dependednt on functions (functional programming) and another one that is dependent on objects (OOP)
 - Make a function in helpers for "response_object", (That can create responses objects)
 - USE 'PUT' and 'DELETE' instead of 'POST' in appropriate stiuations.
+- Organize your routes to be in different files of routes.py, with each file contains related routes
+- Understand what @appRoutes.after_request does
+- Understand what this does SESSION_PERMANENT=False
+SESSION_TYPE="filesystem"
+-
 ## models.py
 - Add indexes to databases to make querieas it faster
 - Make name in users table as first name and last name
@@ -88,6 +95,7 @@
 - Create a layout.vue/base.vue component that will be used glabally across all of your views and components
 - Create Make every part of the web app as a compoennet that can be ssinged and custmized through props and data, to fit in every view ! 
 - Add responsive to every page
+- Fix the warning after you type "npm run serve"
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css

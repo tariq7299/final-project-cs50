@@ -1,4 +1,4 @@
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint, redirect, render_template, session, url_for, flash
 from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Relationships, Transactions
 from datetime import datetime
 from sqlalchemy import extract, func, and_
@@ -7,8 +7,21 @@ import app.helpers
 import app.queries.users_queries
 import app.queries.expenses_queries
 
+from flask_session import Session
+from werkzeug.security import check_password_hash, generate_password_hash
+from app.helpers import login_required
+import requests
+
 
 appRoutes = Blueprint("routes", __name__)
+
+@appRoutes.after_request
+def after_request(response):
+    """Ensure responses aren't cached"""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 @appRoutes.route("/user_wallet", methods=["POST","GET"])
 def user_wallet():
@@ -21,7 +34,7 @@ def user_wallet():
         try:
             
             total_net_balance = db.session.query(func.sum(Transactions.amount)).filter(Transactions.user_id==salah_id).scalar()
-            
+                        
             total_net_balance = app.helpers.egp(app.helpers.convert_int_to_float(total_net_balance)) 
             
             debt = 0
