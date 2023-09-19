@@ -2,12 +2,11 @@
 
   <div class="contacts-view-container">
 
-    <Header class="sector" pageTitle="Dealings History"></Header>
-
     <CurrentViewSummary></CurrentViewSummary>
     
     <div class="sticky-header">
-
+        
+        <Header class="sector" pageTitle="Dealings History"></Header>
 
         <div class=" sector view-by-container">
 

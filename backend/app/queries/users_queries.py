@@ -17,6 +17,7 @@ import app.queries.expenses_queries
 # THis fetch the user's wallet info (like: balance, debt, credit)
 def get_user_wallet(user_id):
     
+    
     # This SELECT the user's wallet from db
     wallet_class_instance  = db.session.query(UsersWallets).filter(UsersWallets.user_id == user_id).first()
     

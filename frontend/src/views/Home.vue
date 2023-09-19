@@ -6,16 +6,17 @@
         <CurrentViewSummary></CurrentViewSummary>
         
         <!-- This contains the page title only -->
-        <Header pageTitle="Expenses"/>
         
         <!-- This contains :
             - input for year
             - input for month
             - Also it is resposible for fetching monthly expenses from server that belonged to the iputted time frame by the cirrent user
         -->
-
+        
         <!-- 'sticky-header' will make the the indented elemnts stick at the top-->
         <div class="sticky-header">
+
+            <Header class="sector" pageTitle="Expenses"/>
 
             <div class="row sector">
                 <div class="col-12">

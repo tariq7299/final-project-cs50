@@ -20,8 +20,25 @@ def user_wallet():
     if request.method == "GET":
         try:
             
-            # 'wallet' contains user wallet info (balance, debt, credit)
-            wallet = app.queries.users_queries.get_user_wallet(salah_id)
+            total_net_balance = db.session.query(func.sum(Transactions.amount)).filter(Transactions.user_id==salah_id).scalar()
+            
+            total_net_balance = app.helpers.egp(app.helpers.convert_int_to_float(total_net_balance)) 
+            
+            debt = 0
+            credit = 0
+
+            net_balance_per_contact = db.session.query(func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
+            
+            for net_balance, in net_balance_per_contact:
+                if net_balance > 0:
+                    credit += net_balance
+                else:
+                    debt += net_balance
+            
+            debt =  app.helpers.egp(app.helpers.convert_int_to_float(debt))
+            credit =  app.helpers.egp(app.helpers.convert_int_to_float(credit))
+            
+            wallet = {'netBalance': total_net_balance, 'credit': credit, 'debt': debt}
             
             # We have to put "wallet" into an abject to jsonify() it later, so we can send it to the client
             response_object = { 'status': 'success', 'wallet': wallet }
@@ -147,7 +164,7 @@ def load_recent_month_expenses():
             total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, most_recent_year, most_recent_month_of_expenses)
     
             # Formatig the total amount spent as a currency 
-            total_amount_of_month_expenses = app.helpers.egp(total_amount_of_month_expenses)
+            total_amount_of_month_expenses = app.helpers.egp(app.helpers.convert_int_to_float(total_amount_of_month_expenses))
 
             month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': app.helpers.convert_int_to_float(spending.amount_spent), 'category': spending.category, 'note': spending.note} for spending in month_expenses]
                     
@@ -188,7 +205,7 @@ def fetch_selected_month_expenses():
             total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(salah_id, selected_year, selected_month_num)
             
             # Formatig the total amount spent as a currency 
-            total_amount_of_month_expenses = app.helpers.egp(total_amount_of_month_expenses)
+            total_amount_of_month_expenses = app.helpers.egp(app.helpers.convert_int_to_float(total_amount_of_month_expenses))
 
             
             response_object = { 'status': 'success', 'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
@@ -215,7 +232,7 @@ def load_net_balance():
             
             net_balance = db.session.query(func.sum(Transactions.amount)).filter(Transactions.user_id==salah_id).scalar()
             
-            net_balance = app.helpers.egp(net_balance)
+            net_balance = app.helpers.egp(app.helpers.convert_int_to_float(net_balance))
             
             # We have to put "wallet" into an abject to jsonify() it later, so we can send it to the client
             response_object = { 'status': 'success', 'net_balance': net_balance }

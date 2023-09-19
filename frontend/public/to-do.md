@@ -130,6 +130,7 @@
 - animate show years and months select
 - Also animate the changing of Month on "2023-Nov", whenever user chooses a month, also maybe change the background color of '2023-Nov'
 - Expenses entered by user appear as expense*100, !!!, so we need to fix this (Try to enter an expense)
+- Add expnese note <div> under each category in HOME, all the backend stiff are done, only front end remain
 ## SpendingsDays
 - Enable Users to view there expenses/spendings in different currencies !
 

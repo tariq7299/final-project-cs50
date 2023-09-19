@@ -7,21 +7,19 @@
         </div>
         <div class="" v-else>
 
-            <div class="row sector" v-show="homePage">
-                <div class="col-6 d-flex justify-content-start">
-                    <UserWallet walletTitle="Balance" :amount="wallet.balance"/>        
+            <div class="wallet-container">
+                <div class="wallet-row-1">
+                    <UserWallet walletTitle="Debt" :amount="wallet.debt" class="wallet-unit debt"/>
+                    <UserWallet walletTitle="Credit" :amount="wallet.credit" class="wallet-unit credit"/>
                 </div>
-                <div class="col-6 d-flex justify-content-end">
-                    <UserWallet walletTitle="Debt" :amount="wallet.debt"/>
+                <div class="wallet-row-2">
+                    <UserWallet walletTitle="Net Balance" :amount="wallet.netBalance" class="wallet-unit net-balance"/>        
                 </div>
-                <div class="col-12 d-flex justify-content-center">
-                    <UserWallet walletTitle="Credit" :amount="wallet.credit"/>
-                </div>
-            </div>
+            </div>        
 
-            <div class="row sector" v-show="peoplePage">
+            <!-- <div class="row sector" v-show="peoplePage">
                 <UserWallet walletTitle="Net Balance" :amount="netBalance" ></UserWallet>
-            </div>
+            </div> -->
 
         </div>
 </template>
@@ -55,37 +53,41 @@
                     const response = await axios.get(path);
 
                     this.wallet = response.data.wallet;
+
                     this.loading = false; // Set loading to false when data is fetched
+
                 }   catch (error) {
                     console.error('Error fetching data:', error);
                     alert(`Oops! Something went wrong. Please try again or contact support for assistance. Error message: ${error}`);
                     this.loading = false; // Set loading to false in case of an error
                 }
             },
-            async fetchUserNetBalance() {
-                try {
-                    const apiUrl = process.env.VUE_APP_API_BASE_URL;
-                    const path = apiUrl + '/net_balance';
+            // async fetchUserNetBalance() {
+            //     try {
+            //         const apiUrl = process.env.VUE_APP_API_BASE_URL;
+            //         const path = apiUrl + '/net_balance';
 
-                    const response = await axios.get(path);
+            //         const response = await axios.get(path);
 
-                    this.netBalance = response.data.net_balance;
-                    this.loading = false; // Set loading to false when data is fetched
-                }   catch (error) {
-                    console.error('Error fetching data:', error);
-                    alert(`Oops! Something went wrong. Please try again or contact support for assistance. Error message: ${error}`);
-                    this.loading = false; // Set loading to false in case of an error
-                }
-            },
+            //         this.netBalance = response.data.net_balance;
+            //         this.loading = false; // Set loading to false when data is fetched
+            //     }   catch (error) {
+            //         console.error('Error fetching data:', error);
+            //         alert(`Oops! Something went wrong. Please try again or contact support for assistance. Error message: ${error}`);
+            //         this.loading = false; // Set loading to false in case of an error
+            //     }
+            // },
         },
         // Here we can actually remove async and await keywords !, because there is no lines od code after "await this.fetchUserWallet()" !!
         async created() {
             // To activate it only if the user navigates to home page
-            if(this.$route.path === '/') {    
-                await this.fetchUserWallet()
-            } else if (this.$route.path === '/contacts') {
-                await this.fetchUserNetBalance()
-            }
+            // await this.fetchUserNetBalance()
+            await this.fetchUserWallet()
+            // if(this.$route.path === '/') {    
+            //     await this.fetchUserWallet()
+            // } else if (this.$route.path === '/contacts') {
+            //     await this.fetchUserNetBalance()
+            // }
         },
         computed: {
             homePage () {
@@ -95,13 +97,13 @@
                     return false
                 }
             },
-            peoplePage () {
-                if(this.$route.path === '/contacts') {
-                    return true
-                } else {
-                    return false
-                }
-            },
+            // peoplePage () {
+            //     if(this.$route.path === '/contacts') {
+            //         return true
+            //     } else {
+            //         return false
+            //     }
+            // },
             colorNetBalance () {
                 return this.netBalance > 0 ? {'color': 'GREEN'} : {'color': 'RED'}
             }
@@ -110,4 +112,41 @@
 </script>
 
 <style scoped>
+
+.wallet-container {
+    padding:  1.5rem 1rem 1.6rem 0.5rem
+}
+
+.wallet-row-1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.wallet-row-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* .wallet-grid {
+display: grid;
+grid-template-rows: 100px;
+grid-template-columns: 100px 100px 100px 100px 100px 100px 100px 100px;
+}
+
+.net-balance {
+    grid-row: span 1;
+    grid-column: span 3;
+}
+.debt {
+    grid-row: span 1;
+    grid-column: span 2;
+
+}
+.credit {
+    grid-row: span 1;
+    grid-column: span 2;
+
+} */
+
 </style>

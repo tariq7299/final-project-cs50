@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Relationships, Transactions
 from sqlalchemy import extract, func, and_
+import app.helpers
 
 def egp(value):
     """Format value as USD."""
@@ -47,6 +48,32 @@ def add_wallet():
     db.session.commit()
     
     print(emad_wallet, salah_wallet, mark_wallet)
+    
+
+def wallet2():
+    
+    total_net_balance = db.session.query(func.sum(Transactions.amount)).filter(Transactions.user_id==2).scalar()
+
+    print('total_net_balance', app.helpers.convert_int_to_float(total_net_balance))
+
+    debt = 0
+    credit = 0
+    
+    net_balance_per_contact = db.session.query(func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==2).group_by(Transactions.contact_id).all()
+    
+    print('net_balance_per_contact-->', net_balance_per_contact)
+
+    [print('net-->', net) for net in net_balance_per_contact]
+    
+    for net_balance, in net_balance_per_contact:
+        if net_balance > 0:
+            credit += net_balance
+        else:
+            debt += net_balance
+    
+    print('credit', app.helpers.convert_int_to_float(credit))
+    print('debt', app.helpers.convert_int_to_float(debt))
+     
 
 def show_wallet():
     wallet  = db.session.query(UsersWallets).filter(UsersWallets.user_id == 2).first()
@@ -391,19 +418,40 @@ def pop_contacts():
     
     db.create_all()
     
-    contact_shawn = Contacts(name="Koftes Shawn", phone="01086767536")
-    contact_sobhy = Contacts(name="Khaled Sobhy", phone="01084682636")
-    contact_ElShabah = Contacts(name="Abdelrahman ElShabah", phone="01083222336")
+    # contact_shawn = Contacts(name="Koftes Shawn", phone="01086767536")
+    # contact_sobhy = Contacts(name="Khaled Sobhy", phone="01084682636")
+    contact_shaba7 = Contacts(name="Abdelrahman SHABA7", phone="01083er2336")
+    contact_keke = Contacts(name="Abdelrahman keke", phone="01083er2656")
+    contact_foo= Contacts(name="foo ElShabah", phone="0108322asd36")
+    contact_ahmed = Contacts(name="Ahemd kaherfs", phone="010832242336")
+    contact_soso = Contacts(name="lop", phone="01874y623")
+    contact_ElShfah = Contacts(name="Moataz dodo", phone="047y73")
+    contact_moo = Contacts(name="moo ElShabah", phone="01083cd36")
+    contact_spider = Contacts(name="Lizard Spider MOOn", phone="0102322336")
     
     contacts = []
-    contacts.append(contact_shawn)
-    contacts.append(contact_sobhy)
-    contacts.append(contact_ElShabah)
+    # contacts.append(contact_shawn)
+    # contacts.append(contact_sobhy)
+    contacts.append(contact_shaba7)
+    contacts.append(contact_keke)
+    contacts.append(contact_foo)
+    contacts.append(contact_ahmed)
+    contacts.append(contact_soso)
+    contacts.append(contact_ElShfah)
+    contacts.append(contact_moo)
+    contacts.append(contact_spider)
     
-    db.session.add(contact_shawn)
-    db.session.add(contact_sobhy)
-    db.session.add(contact_ElShabah)
-
+    # db.session.add(contact_shawn)
+    # db.session.add(contact_sobhy)
+    db.session.add(contact_shaba7)
+    db.session.add(contact_keke)
+    db.session.add(contact_foo)
+    db.session.add(contact_ahmed)
+    db.session.add(contact_soso)
+    db.session.add(contact_ElShfah)
+    db.session.add(contact_moo)
+    db.session.add(contact_spider)
+    
     db.session.commit()
     
     [print(contact) for contact in contacts] 
@@ -424,15 +472,17 @@ def pop_transactions():
         transactions_time_list.append(transaction_time)
         
     amounts = [-103, 140, -420, 543, -349, 234, -473, 233]
+    
+    
 
-    for amount, transaction_time in zip(amounts, transactions_time_list):
+    for amount, transaction_time, contact_id in zip(amounts, transactions_time_list, range(1, 9, 1)):
         
         salah_transactions = Transactions(
             
             amount=amount,
             date=transaction_time,
             user_id=2,
-            contact_id=3,
+            contact_id=contact_id,
         )
         
         db.session.add(salah_transactions)
