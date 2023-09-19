@@ -8,6 +8,7 @@
 - Rebuild and populate all dbs
 
 - Add a SYSTEMATIC APPROACH TO : 
+        0- Create a Word/.md file that ESABLISHES THE TEKA/TARIQ GUIDLINES FOR Flask and Vue and maybe other frameworks/budles/languages (which illustrats these keypoints: like for example: How to ornize files and folders, How to style the app, liek where to put the scoped styles and globla styles..., How to create the env variables, ...etc), and remeber to always create a didicated guidline file for every framwork, language !
         1- fixed margins acrros sectors
         2- Components driven engineering
         3- In styling (like for example: there is global styles, and styles under each component, and scoped styles under each view, adn there is a place in every view for @media for differet screen sizes)
