@@ -145,6 +145,7 @@
 -  Make the add expense button not floating but instead a part of the pview, to not obstruct any expenses
 - Prevent default after submitting and clear all inputs, after user submits as it doesn't get cleared automatically
 - Get the value of date in add expense as a whole date object thatincludes actual time, and store it in db  in server side
+- Make user Unable to enter negative expenses !
 ## ChooseTimeFrame
 - Add the total expense beside each month name
 - Animate the arrow when user clicks on the already opened accordion !
@@ -157,6 +158,7 @@
 - Change input icons
 - CHange classes names in add transactions
 - Make the app take date includeing seconds and minutes and hourse, and don't extract month ...etc
+- Make user choose whether it is a debt or credit instead of typing negative and positive beside the number
 
 ## Add new Contract
 - Assign appropriate classes names and IDS and names ....
