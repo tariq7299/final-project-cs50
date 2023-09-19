@@ -88,4 +88,21 @@ So when you click VEU js takes control and actually do his job, but fails in add
 *How to see the changes*
 - Visit Home page, and look at years and months accordion and try chooseing different year or a month, you will aslo notice that you have to double click the month in order to change its color.
 
+## 'UserWallet' branch 
+
+*files to check **or** files that is relative*
+- routes.py (user_wallet())
+- CurrentViewSummary.vue
+- models.py (class UsersWallet)
+
+*What this branch does*
+- It is a different implementation of how I fetch users wallet info (things like balance, debt, credit)
+- So in that 'UserWallet' branch i used to store each of wallet info as a column in db then I have discovered -hopfully- a better way !, and that by calculating the debt snd credit from transactions table, And also, I have removed the UsersWallet model/table comletely !.
+- Also a note about 'balance' column that I have removed this functionality from my app, so now there is no balance or the ability to make users enter a balance  fornow (I wll add it later ISA) 
+
+
+*How to see the changes*
+- Visit Home page and look at currentViewSummary div
+- Also you can go to routes.py, and then look at user_wallet()
+- Also you can visit models.py and look at Class UsersWallet
 
