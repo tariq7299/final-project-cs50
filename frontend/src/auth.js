@@ -7,8 +7,8 @@ export async function isAuthenticated() {
 
         const response = await axios.get(path, {withCredentials: true});
 
-        console.log('response.data.isLogged', response.data.isLogged)
-        
+        // console.log('response.data.isLogged', response.data.isLogged)
+
         return response.data.isLogged;
 
     } catch (error) {

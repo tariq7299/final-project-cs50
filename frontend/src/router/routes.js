@@ -29,16 +29,12 @@ const routes = [
     meta: { requiresAuth: false }
   },
   {
-    // ':' means that there be a variable be placed after :, and not normal string
-    // so this url is have 'GET' values inside it !
-    // '?' indicates that 'currentDay' variable is optional and not required, and I put it becasue when i remove it and try to navigate to the previous url/page it outputs an error
-    // 'calenderDays*' the '*' indicates that 'calenderDays' is a normal variable, but instead it is an iterable (like an array)
+    
 
     path: '/addExpenses',
     name: 'addExpenses',
     component: AddExpenses,
     meta: { requiresAuth: true }
-    // props: true
   },
   {
     path: '/contacts',
@@ -59,6 +55,10 @@ const routes = [
   meta: { requiresAuth: true }
 },
 {
+  // ':' means that there be a variable be placed after :, and not normal string
+    // so this url is have 'GET' values inside it !
+    // '?' indicates that 'currentDay' variable is optional and not required, and I put it becasue when i remove it and try to navigate to the previous url/page it outputs an error
+    // 'exampleUrlParam*' the '*' indicates that 'exampleUrlParam' is a normal variable, but instead it is an iterable (like an array)
   path: '/contact-history/:contactName/:contactPhone/:contactNetBalance',
   name: 'contactHistory',
   component: ContactHistory,
@@ -78,16 +78,35 @@ const router = createRouter({
 
 import { isAuthenticated } from './../auth.js' 
 
-router.beforeEach(async (to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (await isAuthenticated()) {
-      next()
-    } else {
-      next('/login')
-    }
-  } else {
-    next()
+
+// This is mplemented from vue js document, and it is a better way than the one down below
+// 'to' : THis represents the destination route
+// 'from' : THis represents the source route
+router.beforeEach(async (to, from) => {
+  if (
+    // make sure the user is authenticated
+    !(await isAuthenticated()) &&
+    // ❗️ Avoid an infinite redirect
+    to.name !== 'login' &&
+
+    to.meta.requiresAuth
+  ) {
+    // redirect the user to the login page
+    return { name: 'login' }
   }
 })
+
+// This is an older method to the same as above, where next() where used
+// router.beforeEach(async (to, from, next) => {
+//   if (to.matched.some(record => record.meta.requiresAuth)) {
+//     if (await isAuthenticated()) {
+//       next()
+//     } else {
+//       next('/login')
+//     }
+//   } else {
+//     next()
+//   }
+// })
 
 export default router
