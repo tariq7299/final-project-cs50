@@ -561,7 +561,7 @@ def new_transactions():
 
             new_contact_id = db.session.query(Contacts.id).filter(Contacts.phone==new_contact_phone).scalar()
             
-            new_transactions = Transactions(amount=submitted_integer_amount, date=datetime(selected_year, selected_month_num, selected_day), user_id=CURRENT_USER_ID, contact_id=new_contact_id, note=transaction_note)
+            new_transactions = Transactions(amount=submitted_integer_amount, date=datetime(selected_year, selected_month_num, selected_day), user_id=current_user_id, contact_id=new_contact_id, note=transaction_note)
             
             db.session.add(new_transactions)
             

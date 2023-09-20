@@ -8,6 +8,8 @@
 - Rebuild and populate all dbs
 - Error messages presents very sensitive info 
 - Your session variables in .env are not secure at all !
+- Update requirments.txt
+- Remeber To switch to prduction before deplying
 
 - Add a SYSTEMATIC APPROACH TO : 
         0- Create a Word/.md file that ESABLISHES THE TEKA/TARIQ GUIDLINES FOR Flask and Vue and maybe other frameworks/budles/languages (which illustrats these keypoints: like for example: How to ornize files and folders, How to style the app, liek where to put the scoped styles and globla styles..., How to create the env variables, ...etc), and remeber to always create a didicated guidline file for every framwork, language !
@@ -29,6 +31,11 @@
 
 ## routes.py (/register_user)
 
+- Organize your routes to be in different files of routes.py, with each file contains related routes
+- Understand what @appRoutes.after_request does
+- Understand what this does SESSION_PERMANENT=False
+SESSION_TYPE="filesystem"
+-
 ## models.py
 - Add indexes to databases to make querieas it faster
 - Make name in users table as first name and last name
@@ -110,6 +117,7 @@
 - Create Make every part of the web app as a compoennet that can be ssinged and custmized through props and data, to fit in every view ! 
 - Add responsive to every page
 - Create a message (v-model variable) that will be displayed wheenver there is no data sent from server (like in case of a new user)
+- Fix the warning after you type "npm run serve"
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css
