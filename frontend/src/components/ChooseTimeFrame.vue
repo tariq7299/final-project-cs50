@@ -58,8 +58,11 @@ export default {
                 if (response.data.noExpensesFound) {
 
                     // Create a computed variable of v-model that will containa message to to display to user that there is no expenses
-
                     this.loading = false;
+                    return
+                } else if (response.data.userNotLogged) {
+
+                    this.$router.push({ name: 'login' });
                     return
                 }
                 // GET years and months 
@@ -117,6 +120,11 @@ export default {
                 .post(path, requestData, { withCredentials: true })
 
                 .then((response) => {
+                    
+                    if (response.data.userNotLogged) {
+                        this.$router.push({ name: 'login' });
+                        return
+                    }
 
                     // Update component data based on the response
 

@@ -12,7 +12,9 @@
 - Remeber To switch to prduction before deplying
 - validation ! (Empty values, Incorrect type, IF note provided as an empty string then assign it as None, to make db assing it a default value)
 - Read this link thoroughly https://flask.palletsprojects.com/en/2.3.x/config/ of flask configuration before deployment !, and don't forget to create a new config.py file for deplyment env variables, that are different than the one found on .env 
-- 
+- Remove to-do and flask-session file from remote repo only
+- Try a different cookies storage technique, other that 'filesystem'
+- Refrish page after user logs out
 
 - Add a SYSTEMATIC APPROACH TO : 
         0- Create a Word/.md file that ESABLISHES THE TEKA/TARIQ GUIDLINES FOR Flask and Vue and maybe other frameworks/budles/languages (which illustrats these keypoints: like for example: How to ornize files and folders, How to style the app, liek where to put the scoped styles and globla styles..., How to create the env variables, ...etc), and remeber to always create a didicated guidline file for every framwork, language !
@@ -31,6 +33,7 @@
 - Create to main versions of your codebase ! one that is dependednt on functions (functional programming) and another one that is dependent on objects (OOP)
 - Make a function in helpers for "response_object", (That can create responses objects)
 - USE 'PUT' and 'DELETE' instead of 'POST' in appropriate stiuations.
+- Remove responses with 'error_message', and status 400, when there is nothing wrong happend, andinstead find another more appropriate and  user friendly way to send back wrong entries from user !
 
 ## routes.py (/register_user)
 
@@ -121,6 +124,7 @@ SESSION_TYPE="filesystem"
 - Add responsive to every page
 - Create a message (v-model variable) that will be displayed wheenver there is no data sent from server (like in case of a new user)
 - Fix the warning after you type "npm run serve"
+- Create a better and more user friendly alert()/flash/notifictiion messages
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css
@@ -196,6 +200,18 @@ SESSION_TYPE="filesystem"
 
 ## Add new Contract
 - Assign appropriate classes names and IDS and names ....
+
+## Register.vue
+- Add nice icons before each input
+- style it a bit more
+- Add Login page link if user has an account
+
+## Login.vue
+- Add nice icons
+- Style page
+- Add Register if user doesn\t have an account
+
+
 
                                 # TOMMOROOE
                                 -----------

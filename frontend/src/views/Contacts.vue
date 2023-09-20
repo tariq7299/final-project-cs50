@@ -102,6 +102,10 @@ export default {
 
                 const response = await axios.get(path, { withCredentials: true });
 
+                if (response.data.userNotLogged) {
+                    this.$router.push({ name: 'login' });
+                    return
+                }
                 // GET years and months 
                 this.transactions = response.data.transactions
                 

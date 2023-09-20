@@ -82,7 +82,8 @@
                 .then((response) => {
                     if (response.status === 200 && response.data.success) {
                         // Redirect the user to the home page
-                        this.$router.push({ name: 'Home' });
+                        this.$router.push({ name: 'login' });
+                        alert('Success ! Account has been created, Please Login !');
                     }
                 })
                 .catch((error) => {

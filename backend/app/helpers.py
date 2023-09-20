@@ -14,7 +14,8 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if session.get("user_id") is None:
-            return redirect("/login")
+            response_object = { 'status': 'success', 'userNotLogged': True}
+            return jsonify(response_object)
         return f(*args, **kwargs)
     return decorated_function
 

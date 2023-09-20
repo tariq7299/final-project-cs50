@@ -59,6 +59,11 @@ import Days from '@/components/Days.vue';
                 .post(path, requestData, { withCredentials: true })
 
                 .then((response) => {
+                    
+                    if (response.data.userNotLogged) {
+                            this.$router.push({ name: 'login' });
+                            return
+                        }
 
                     this.transactions = response.data.transactions;
                 })

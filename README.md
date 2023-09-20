@@ -15,11 +15,13 @@ npm install --save-dev dotenv-webpack # To be able to use env variables in vue
 
 ### Compiles and hot-reloads for development
 ```
-# If you will authinticate users using 'Seesion-qthuitication' technique, You have to set theses two environment variables in flask backend, as this is necessary becasue this app uses CORS
+# Due to the fact that this app uses CORS, you must set these three environment variables in the flask backend if you plan to authenticate users using the "Session-Authentication " approach.
+
 SESSION_TYPE = 'filesystem'
 SESSION_COOKIE_SECURE = True 
 SESSION_COOKIE_SAMESITE = 'None' 
-{ withCredentials: true } # Alos include this in every axios request sent from frontend (Vue js) to backend (Flask)
+
+{ withCredentials: true } # Also include this in every axios request sent from frontend (Vue js) to backend (Flask)
 
 npm run serve
 ```

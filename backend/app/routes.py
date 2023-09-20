@@ -10,7 +10,6 @@ import app.queries.expenses_queries
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.helpers import login_required
-import requests
 
 
 appRoutes = Blueprint("routes", __name__)
@@ -85,11 +84,6 @@ def register():
             print('user_id', user_id)
             
             db.session.commit()
-
-            # Remember which user has logged in
-            session["user_id"] = user_id
-            
-            user_id00 = session.get('user_id')
             
             # success="true" get added as a query in the url of login.html
             # this will activate alert() function in JS
@@ -135,7 +129,10 @@ def login():
         # Query database for username
         user_info = db.session.query(Users.user_id, Users.username, Users.hash).filter(Users.username==username).all()
         
+        print('user_info', user_info)
+        
         for user_tuple in user_info:
+            print('user_tuple', user_tuple)
             user_id = user_tuple[0]
             db_username = user_tuple[1]
             hash_value = user_tuple[2]
@@ -148,13 +145,22 @@ def login():
         # Remember which user has logged in
         session["user_id"] = user_id
 
-        response_object = {'status': 'success'}
+        response_object = {'success': True}
              
         return jsonify(response_object)
 
+@appRoutes.route("/logout", methods=["GET"])
+def logout():
     
-
+    session.clear()
+    
+    response_object = {'success': True}
+    
+    return jsonify(response_object)
+    
+    
 @appRoutes.route("/user_wallet", methods=["POST","GET"])
+@login_required
 def user_wallet():
     
     current_user_id = session.get('user_id')
@@ -219,6 +225,7 @@ def user_wallet():
             return jsonify(response_object), 400
 
 @appRoutes.route("/get_calendar", methods=["POST","GET"])
+@login_required
 def get_calendar():
         
     # When user loads the page, it will populate the two <select> tags with calendar months of the current year, and calendar days of the current month
@@ -232,9 +239,9 @@ def get_calendar():
 
         return jsonify(response_object)
     
-    
 # This route will get requested when user tries to submit his new expense
 @appRoutes.route("/add_expenses", methods=["POST","GET"])
+@login_required
 def add_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
@@ -255,11 +262,12 @@ def add_expenses():
        
         if expense_note == '' : expense_note = None
        
-        print('selected_year', selected_year)
-        print('selected_month_num', selected_month_num)
-        print('selected_day', selected_day)
-        print('submitted_amount_spent', submitted_category)
-        print('expense_note', expense_note)
+        # print('selected_year', selected_year)
+        # print('selected_month_num', selected_month_num)
+        # print('selected_day', selected_day)
+        # print('submitted_amount_spent', submitted_category)
+        # print('expense_note', expense_note)
+        
         try:
             
             app.queries.expenses_queries.insert_new_expense_into_db(current_user_id, selected_year, selected_month_num, selected_day, submitted_amount_spent, submitted_category, expense_note)
@@ -283,6 +291,7 @@ def add_expenses():
 
 # USER LOADS SPENDING PAGE
 @appRoutes.route("/load_recent_month_expenses", methods=["POST","GET"])
+@login_required
 def load_recent_month_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
@@ -299,7 +308,7 @@ def load_recent_month_expenses():
             # extract() is used to get the years from date object !, of the column 'date' of type 'db.date'
             # with_entities() It gets specific columns only
             years = app.queries.expenses_queries.select_years_contains_expenses(current_user_id)
-            print('years', years)
+            # print('years', years)
             # This would mean that there is no expenses found in db
             if not years:
                 response_object = { 'status': 'success', 'noExpensesFound': True}
@@ -307,10 +316,10 @@ def load_recent_month_expenses():
             
             
             most_recent_year = years[0]
-            print('most_recent_year', most_recent_year)
+            # print('most_recent_year', most_recent_year)
             
             most_recent_month_of_expenses = app.queries.expenses_queries.select_most_recent_month(current_user_id, most_recent_year)
-            print('most_recent_month_of_expenses', most_recent_month_of_expenses)
+            # print('most_recent_month_of_expenses', most_recent_month_of_expenses)
             
             years_and_months = []
             for year in years:
@@ -333,12 +342,12 @@ def load_recent_month_expenses():
                         
                 years_and_months.append({'year': year, 'months': months_list, 'opened': False}) 
                            
-            print('months_list', months_list)
-            print('years_and_months', years_and_months)
+            # print('months_list', months_list)
+            # print('years_and_months', years_and_months)
 
             month_expenses = app.queries.expenses_queries.select_expenses_in_month(current_user_id, most_recent_year, most_recent_month_of_expenses)
             
-            print('month_expenses', month_expenses)
+            # print('month_expenses', month_expenses)
         
             total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(current_user_id, most_recent_year, most_recent_month_of_expenses)
     
@@ -361,6 +370,7 @@ def load_recent_month_expenses():
 # @<bluebrint name>.route()
 # USER CHOOSE MONTH IN SPENDING PAGE
 @appRoutes.route("/fetch_selected_month_expenses", methods=["POST","GET"])
+@login_required
 def fetch_selected_month_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
@@ -399,8 +409,9 @@ def fetch_selected_month_expenses():
         except Exception as e:
             error_message = 'An error occurred while fetching expenses! Error message: ' + str(e)
             return jsonify({'error_message': error_message}), 400
-        
+
 @appRoutes.route("/net_balance", methods=["POST","GET"])
+@login_required
 def load_net_balance():
     
     # Replace this user id from by the one foumd in session['user_id']
@@ -428,11 +439,11 @@ def load_net_balance():
             
             return jsonify(response_object), 400
             
-
 @appRoutes.route("/people", methods=["POST","GET"])
+@login_required
 def load_people():
     
-    current_user_id = session["user_id"]
+    current_user_id = session.get('user_id')
     
     if request.method == "GET":
         try:
@@ -441,7 +452,7 @@ def load_people():
             transactions = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==current_user_id).group_by(Transactions.contact_id).all()
             
             # for transaction in transactions:
-            #     print('transaction.contact_name__2', transaction[0].contact.name)
+                # print('transaction.contact_name__2', transaction[0].contact.name)
             #     print('transaction.contact_phone', transaction[0].user.name)
             #     print('transaction_amount', transaction.contact_net_balance)
             
@@ -487,8 +498,8 @@ def load_people():
             error_message = 'An error occurred while fetching expenses! Error message: ' + str(e)
             return jsonify({'error_message': error_message}), 400
         
-
 @appRoutes.route("/new-contact", methods=["POST","GET"])
+@login_required
 def add_new_contact():
     
     current_user_id = session.get('user_id')
@@ -504,6 +515,7 @@ def add_new_contact():
             new_contact = Contacts(name=new_contact_name, phone=new_contact_phone)
             db.session.add(new_contact)
             db.session.commit()
+            
             
             # Try a new way to get the 'user_id', like by joininng the two tables toghether then extracting the user_id where name is 'Mohamed' --for example
             new_relationship = Relationships(user_id=current_user_id, contact_id=new_contact.id)
@@ -525,10 +537,12 @@ def add_new_contact():
             db.session.close()
             
 @appRoutes.route("/new-transactions", methods=["POST","GET"])
+@login_required
 def new_transactions():
      
-    current_user_id = session["user_id"]
-
+    current_user_id = session.get('user_id')
+    print('current_user_id', current_user_id)
+    
     if request.method == "GET":
 
         contacts = db.session.query(Contacts).filter(Relationships.user_id==current_user_id).join(Relationships, Relationships.contact_id == Contacts.id).all()

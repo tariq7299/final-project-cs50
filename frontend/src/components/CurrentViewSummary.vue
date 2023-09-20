@@ -52,6 +52,11 @@
 
                     const response = await axios.get(path, { withCredentials: true });
 
+                    if (response.data.userNotLogged) {
+                        this.$router.push({ name: 'login' });
+                        return
+                    }
+
                     this.wallet = response.data.wallet;
 
                     this.loading = false; // Set loading to false when data is fetched

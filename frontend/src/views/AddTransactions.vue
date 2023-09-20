@@ -6,7 +6,7 @@
       <Header class="sector" pageTitle="Add Transactions"></Header>
   
       <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
-        <v-form @submit.prevent="addExpense" class="formTest">
+        <v-form @submit.prevent="addTransaction" class="formTest">
     
             <!-- 
                 "@click:clear" : This becasue the clear symbol of the v-text-field doesn't clear the input of user, so i had to manually clear it by @click event 
@@ -97,6 +97,11 @@
                         const path = apiUrl + '/new-transactions';
 
                         const response = await axios.get(path, { withCredentials: true });
+                        
+                        if (response.data.userNotLogged) {
+                            this.$router.push({ name: 'login' });
+                            return
+                        }
   
                         this.contacts = response.data.contacts
   
@@ -106,7 +111,7 @@
                 },
   
            
-            addExpense() {
+            addTransaction() {
 
                 const apiUrl = process.env.VUE_APP_API_BASE_URL;
 
@@ -123,6 +128,11 @@
                         
                     }, { withCredentials: true })
                     .then((response) => {
+
+                        if (response.data.userNotLogged) {
+                            this.$router.push({ name: 'login' });
+                            return
+                        }
   
                         console.log('this.selectedContact', this.selectedContact)
                         // Handle success response

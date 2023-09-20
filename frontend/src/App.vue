@@ -26,6 +26,12 @@
                     <li class="nav-item">
                         <a class="nav-link" :href="addTransaction">Add Transactions</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" :href="loginUrl">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" @click="logout" href="#">Logout</a>
+                    </li>
                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -57,6 +63,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 
   export default {
     name: 'App',
@@ -77,7 +84,36 @@
       addTransaction(){
         const frontendUrl = process.env.FORNTEND_BASE_URL;
         return frontendUrl + '/AddTransactions';
+      },
+      loginUrl(){
+        const frontendUrl = process.env.FORNTEND_BASE_URL;
+        return frontendUrl + '/login';
       }
+    },
+    methods: {
+      
+      async logout(){
+        try {
+                const apiUrl = process.env.VUE_APP_API_BASE_URL;
+
+                const path = apiUrl + '/logout';
+
+                const response = await axios.get(path, { withCredentials: true });
+                
+                // 
+                if (response.data.success) {
+
+                  this.$router.push({ name: 'login' })
+                  alert("You Have Successfully Logged Out")
+                  return
+                }
+
+            }   catch (error) {
+                console.error(error);
+                alert(`Oops! Something went wrong. Please try again or contact support for assistance. Error message: ${error}`);
+            }
+        },
+
     }
 }
 </script>

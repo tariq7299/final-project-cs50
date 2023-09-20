@@ -89,6 +89,11 @@
 
                       const response = await axios.get(path, { withCredentials: true });
 
+                    if (response.data.userNotLogged) {
+                      this.$router.push({ name: 'login' });
+                      return
+                    }
+
                       this.categories = response.data.categories
 
                   }   catch (error) {
@@ -114,7 +119,10 @@
                   }, { withCredentials: true })
                   .then((response) => {
 
-                      
+                    if (response.data.userNotLogged) {
+                      this.$router.push({ name: 'login' });
+                      return
+                    }
                       // Handle success response
                       const submitedAmountSpent = response.data.submitedAmountSpent;
                       const submitedCategory = response.data.submitedCategory;

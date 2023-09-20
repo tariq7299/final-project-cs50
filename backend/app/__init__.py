@@ -26,9 +26,6 @@ def create_app():
     from app import routes
     # <app instence>.register_blueprint(<file name contains the blueprint>.<blue print name>)
     app.register_blueprint(routes.appRoutes)
-    
-    print(app.config['SESSION_COOKIE_SAMESITE'])
-    print(app.config['SECRET_KEY'])
-    
+        
     return app
 

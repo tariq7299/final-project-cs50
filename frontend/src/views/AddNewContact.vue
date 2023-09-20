@@ -60,6 +60,11 @@
                         contactPhone: this.contactPhone
                     }, { withCredentials: true })
                     .then((response) => {
+                        
+                        if (response.data.userNotLogged) {
+                            this.$router.push({ name: 'login' });
+                            return
+                        }
   
                         // Handle success response
                         const newContactName = response.data.newContactName;

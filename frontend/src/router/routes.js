@@ -6,6 +6,7 @@ import AddTransactions from '../views/AddTransactions.vue'
 import ContactHistory from '../views/ContactHistory.vue'
 import AddNewContact from '../views/AddNewContact.vue'
 import Register from '../views/Register.vue'
+import Login from '../views/Login.vue'
 
 const routes = [
   {
@@ -13,11 +14,11 @@ const routes = [
     name: 'register',
     component: Register,
   },
-  // {
-  //   path: '/login',
-  //   name: 'login',
-  //   component: Login,
-  // },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login,
+  },
   // {
   //   path: '/logout',
   //   name: 'logout',
