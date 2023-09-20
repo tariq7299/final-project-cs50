@@ -8,26 +8,25 @@ import AddNewContact from '../views/AddNewContact.vue'
 import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
 
+
 const routes = [
   {
     path: '/register',
     name: 'register',
     component: Register,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/',
+    name: 'Home',
+    component: Home,
+    meta: { requiresAuth: true }
   },
   {
     path: '/login',
     name: 'login',
     component: Login,
-  },
-  // {
-  //   path: '/logout',
-  //   name: 'logout',
-  //   component: Logout,
-  // },
-  {
-    path: '/',
-    name: 'Home',
-    component: Home,
+    meta: { requiresAuth: false }
   },
   {
     // ':' means that there be a variable be placed after :, and not normal string
@@ -38,36 +37,59 @@ const routes = [
     path: '/addExpenses',
     name: 'addExpenses',
     component: AddExpenses,
-    // props: ture : this means that the variables 'calenderDays' and 'currentDay' will be passed to "addexpense" component as 'props'
+    meta: { requiresAuth: true }
     // props: true
   },
-{
-  path: '/contacts',
-  name: 'contacts',
-  component: Contacts
+  {
+    path: '/contacts',
+    name: 'contacts',
+    component: Contacts,
+    meta: { requiresAuth: true }
   },
   {
-  path: '/add-new-contact',
+    path: '/add-new-contact',
   name: 'addNewContact',
-  component: AddNewContact
-  },
-  {
+  component: AddNewContact,
+  meta: { requiresAuth: true }
+},
+{
   path: '/AddTransactions',
   name: 'transactions',
-  component: AddTransactions
-  },
-  {
+  component: AddTransactions,
+  meta: { requiresAuth: true }
+},
+{
   path: '/contact-history/:contactName/:contactPhone/:contactNetBalance',
   name: 'contactHistory',
   component: ContactHistory,
-  props: true
+  props: true,
+  meta: { requiresAuth: true }
+  // props: ture ' : ' this means that the variables 'contactName' and 'currentDay' and contactNetBalance will be passed to "ContactHistory" component as 'props'
   },
 ]
+
+
 
 const router = createRouter({
     
   history: createWebHistory(process.env.BASE_URL),
   routes,
+})
+
+import { isAuthenticated } from './../auth.js' 
+
+router.beforeEach(async (to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // const athin = await isAuthenticated()
+    console.log('isAuthenticated_befoore', await isAuthenticated())
+    if (await isAuthenticated() === true) {
+      next()
+    } else {
+      next('/login')
+    }
+  } else {
+    next()
+  }
 })
 
 export default router

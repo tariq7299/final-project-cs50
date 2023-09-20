@@ -22,6 +22,14 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+@appRoutes.route("/is-authenticated", methods=["GET"])
+def is_authenticated():
+    
+    
+    return jsonify({'isLogged': True}) if bool(session.get('user_id')) else jsonify({'isLogged': False})
+        
+
+
 @appRoutes.route("/register_user", methods=["POST","GET"])
 def register():
     
