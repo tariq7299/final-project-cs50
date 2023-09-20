@@ -133,6 +133,7 @@ SESSION_TYPE="filesystem"
       component: () => import('./components/Login.vue'),
       meta: { requiresAuth: false }
     },
+- Use vue js router hooks in compoenents instead of using 'if' statments to check the route (), from vue documents (https://router.vuejs.org/guide/advanced/navigation-guards.html)
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css
