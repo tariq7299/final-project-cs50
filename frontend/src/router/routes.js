@@ -80,9 +80,7 @@ import { isAuthenticated } from './../auth.js'
 
 router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // const athin = await isAuthenticated()
-    console.log('isAuthenticated_befoore', await isAuthenticated())
-    if (await isAuthenticated() === true) {
+    if (await isAuthenticated()) {
       next()
     } else {
       next('/login')
