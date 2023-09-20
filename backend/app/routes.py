@@ -170,13 +170,23 @@ def user_wallet():
         try:
             
             total_net_balance = db.session.query(func.sum(Transactions.amount)).filter(Transactions.user_id==current_user_id).scalar()
-                        
+            
+            total_net_balance = total_net_balance or 0
+            
+            # print('total_net_balance1', total_net_balance)
+               
             total_net_balance = app.helpers.egp(app.helpers.convert_int_to_float(total_net_balance)) 
+            
+            # print('total_net_balance2', total_net_balance)
             
             debt = 0
             credit = 0
 
             net_balance_per_contact = db.session.query(func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==current_user_id).group_by(Transactions.contact_id).all()
+            
+            net_balance_per_contact = net_balance_per_contact or []
+            
+            # print('net_balance_per_contact', net_balance_per_contact)
             
             for net_balance, in net_balance_per_contact:
                 if net_balance > 0:
@@ -186,6 +196,9 @@ def user_wallet():
             
             debt =  app.helpers.egp(app.helpers.convert_int_to_float(debt))
             credit =  app.helpers.egp(app.helpers.convert_int_to_float(credit))
+            
+            # print('debt', debt)
+            # print('credit', credit)
             
             wallet = {'netBalance': total_net_balance, 'credit': credit, 'debt': debt}
             
@@ -224,7 +237,8 @@ def get_calendar():
 def add_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
-    current_user_id = session["user_id"]
+    current_user_id = session.get('user_id')
+    print('current_user_id_add_expenses', current_user_id)
     
     if request.method == "POST":
         
@@ -282,10 +296,18 @@ def load_recent_month_expenses():
             # extract() is used to get the years from date object !, of the column 'date' of type 'db.date'
             # with_entities() It gets specific columns only
             years = app.queries.expenses_queries.select_years_contains_expenses(current_user_id)
-
+            print('years', years)
+            # This would mean that there is no expenses found in db
+            if not years:
+                response_object = { 'status': 'success', 'noExpensesFound': True}
+                return jsonify(response_object)
+            
+            
             most_recent_year = years[0]
+            print('most_recent_year', most_recent_year)
             
             most_recent_month_of_expenses = app.queries.expenses_queries.select_most_recent_month(current_user_id, most_recent_year)
+            print('most_recent_month_of_expenses', most_recent_month_of_expenses)
             
             years_and_months = []
             for year in years:
@@ -293,7 +315,7 @@ def load_recent_month_expenses():
                 months = UsersSpendings.query.with_entities(
                     extract('month', UsersSpendings.date)
                 ).filter(
-                    UsersSpendings.user_id == 2
+                    UsersSpendings.user_id == current_user_id
                 ).filter(
                     extract('year', UsersSpendings.date) == year
                 ) .group_by(
@@ -308,9 +330,12 @@ def load_recent_month_expenses():
                         
                 years_and_months.append({'year': year, 'months': months_list, 'opened': False}) 
                            
+            print('months_list', months_list)
+            print('years_and_months', years_and_months)
 
             month_expenses = app.queries.expenses_queries.select_expenses_in_month(current_user_id, most_recent_year, most_recent_month_of_expenses)
             
+            print('month_expenses', month_expenses)
         
             total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(current_user_id, most_recent_year, most_recent_month_of_expenses)
     
@@ -478,7 +503,7 @@ def add_new_contact():
             db.session.commit()
             
             # Try a new way to get the 'user_id', like by joininng the two tables toghether then extracting the user_id where name is 'Mohamed' --for example
-            new_relationship = Relationships(user_id=2, contact_id=new_contact.id)
+            new_relationship = Relationships(user_id=current_user_id, contact_id=new_contact.id)
             db.session.add(new_relationship)
             db.session.commit()
             
@@ -536,7 +561,7 @@ def new_transactions():
 
             new_contact_id = db.session.query(Contacts.id).filter(Contacts.phone==new_contact_phone).scalar()
             
-            new_transactions = Transactions(amount=submitted_integer_amount, date=datetime(selected_year, selected_month_num, selected_day), user_id=2, contact_id=new_contact_id, note=transaction_note)
+            new_transactions = Transactions(amount=submitted_integer_amount, date=datetime(selected_year, selected_month_num, selected_day), user_id=CURRENT_USER_ID, contact_id=new_contact_id, note=transaction_note)
             
             db.session.add(new_transactions)
             

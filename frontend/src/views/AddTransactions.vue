@@ -94,7 +94,7 @@
 
                         const path = apiUrl + '/new-transactions';
 
-                        const response = await axios.get(path);
+                        const response = await axios.get(path, { withCredentials: true });
   
                         this.contacts = response.data.contacts
   
@@ -119,7 +119,7 @@
                         newContactPhone: this.selectedContact,
                         transactionNote: this.transactionNote
                         
-                    })
+                    }, { withCredentials: true })
                     .then((response) => {
   
                         console.log('this.selectedContact', this.selectedContact)

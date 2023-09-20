@@ -87,7 +87,7 @@
 
                       const path = apiUrl + '/get_calendar';
 
-                      const response = await axios.get(path);
+                      const response = await axios.get(path, { withCredentials: true });
 
                       this.categories = response.data.categories
 
@@ -111,7 +111,7 @@
                       amountSpent: this.amountSpent,
                       category: this.selectedCategory,
                       expenseNote: this.expenseNote
-                  })
+                  }, { withCredentials: true })
                   .then((response) => {
 
                       

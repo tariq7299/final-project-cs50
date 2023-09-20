@@ -58,7 +58,7 @@
                     .post(path, {
                         contactName: this.contactName,
                         contactPhone: this.contactPhone
-                    })
+                    }, { withCredentials: true })
                     .then((response) => {
   
                         // Handle success response
