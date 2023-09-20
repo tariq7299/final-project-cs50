@@ -2,6 +2,7 @@
 .flaskenv
 config.py
 instance
+flask_session
 additionalComments.md
 to-do.md
 .DS_Store

@@ -56,7 +56,7 @@ import Days from '@/components/Days.vue';
             };
 
             axios
-                .post(path, requestData)
+                .post(path, requestData, { withCredentials: true })
 
                 .then((response) => {
 

@@ -66,7 +66,7 @@
               categories: [],
               selectedCategory: null,
               calendarData: {},
-              expenseNote: '',
+              expenseNote: null,
               selectedDate: new Date(),
               menu: false,
           }

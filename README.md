@@ -3,16 +3,24 @@
 ## Project setup
 
 ```
+
 vue create app # THis CLI command will init the project, and create all the necessary folders
 vue add vutify # THis will add vutify library, as i used some of its componenets
 npm install
 npm install --save-dev dotenv-webpack # To be able to use env variables in vue
+
 
 ```
 
 
 ### Compiles and hot-reloads for development
 ```
+# If you will authinticate users using 'Seesion-qthuitication' technique, You have to set theses two environment variables in flask backend, as this is necessary becasue this app uses CORS
+SESSION_TYPE = 'filesystem'
+SESSION_COOKIE_SECURE = True 
+SESSION_COOKIE_SAMESITE = 'None' 
+{ withCredentials: true } # Alos include this in every axios request sent from frontend (Vue js) to backend (Flask)
+
 npm run serve
 ```
 
@@ -22,7 +30,8 @@ npm run build
 ```
 
 ### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+See [Vue Configuration Reference](https://cli.vuejs.org/config/).
+See [Flask Configuration Reference](https://flask.palletsprojects.com/en/2.3.x/config/)
 
 
 

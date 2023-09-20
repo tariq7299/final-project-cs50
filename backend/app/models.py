@@ -102,7 +102,7 @@ class Transactions(db.Model):
     date = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     contact_id = db.Column(db.Integer, db.ForeignKey('contacts.id'), nullable=False)
-    note = db.Column(db.String(200), default="No notes")
+    note = db.Column(db.String(200), default="No notes", nullable=False)
     # By definning a relationship you can now access the user info from 'Users' model, by typing 'Transactions.user'
     # And Vice versa, so  "backref=db.backref('user_transactions')" enables you to access user transactions from 'Users'db model, by typing "Users.user_transactions"
     # lazy=joined and lazy=True are the same (They supposed to not be the same, but I still can't understand the difference )

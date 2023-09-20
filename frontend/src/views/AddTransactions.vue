@@ -47,6 +47,8 @@
             <v-btn class="" type="submit" id="button">Add Transaction</v-btn>
             
       </v-form>
+
+      <p>{{ console.log('transactionNote', transactionNote) }}</p>
             
     </div>
   
@@ -72,7 +74,7 @@
                 contacts: [],
                 selectedContact: '',
                 calendarData: {},
-                transactionNote: '',
+                transactionNote: null,
                 selectedDate: new Date(),
                 menu: false,
             }

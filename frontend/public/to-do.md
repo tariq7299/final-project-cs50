@@ -10,6 +10,9 @@
 - Your session variables in .env are not secure at all !
 - Update requirments.txt
 - Remeber To switch to prduction before deplying
+- validation ! (Empty values, Incorrect type, IF note provided as an empty string then assign it as None, to make db assing it a default value)
+- Read this link thoroughly https://flask.palletsprojects.com/en/2.3.x/config/ of flask configuration before deployment !, and don't forget to create a new config.py file for deplyment env variables, that are different than the one found on .env 
+- 
 
 - Add a SYSTEMATIC APPROACH TO : 
         0- Create a Word/.md file that ESABLISHES THE TEKA/TARIQ GUIDLINES FOR Flask and Vue and maybe other frameworks/budles/languages (which illustrats these keypoints: like for example: How to ornize files and folders, How to style the app, liek where to put the scoped styles and globla styles..., How to create the env variables, ...etc), and remeber to always create a didicated guidline file for every framwork, language !

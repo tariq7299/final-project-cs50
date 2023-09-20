@@ -100,7 +100,7 @@ export default {
 
                 const path = apiUrl + '/people';
 
-                const response = await axios.get(path);
+                const response = await axios.get(path, { withCredentials: true });
 
                 // GET years and months 
                 this.transactions = response.data.transactions

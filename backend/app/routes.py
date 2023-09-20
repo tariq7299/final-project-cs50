@@ -159,6 +159,7 @@ def user_wallet():
     
     current_user_id = session.get('user_id')
     print('user_id_wallet', current_user_id)
+    
     # Replace this user id from by the one foumd in session['user_id']
     # current_user_id = session["user_id"]
     # current_user_id = session["user_id"]
@@ -251,6 +252,8 @@ def add_expenses():
         # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
         submitted_category  = post_data.get('category').strip()
         expense_note = post_data.get('expenseNote')
+       
+        if expense_note == '' : expense_note = None
        
         print('selected_year', selected_year)
         print('selected_month_num', selected_month_num)
@@ -488,7 +491,7 @@ def load_people():
 @appRoutes.route("/new-contact", methods=["POST","GET"])
 def add_new_contact():
     
-    current_user_id = session["user_id"]
+    current_user_id = session.get('user_id')
      
     if request. method == 'POST':
         try:
@@ -545,7 +548,7 @@ def new_transactions():
     
     elif request.method == "POST":
         
-            
+        # Needs validation ! (Empty values, Incorrect type, IF note provided as an empty string then assign it as None, to make db assing it a default value)
         post_data = request.get_json()
         selected_year   = post_data.get('selectedYear')
         selected_month_num   = post_data.get('selectedMonth')
@@ -554,6 +557,10 @@ def new_transactions():
         # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
         new_contact_phone  = post_data.get('newContactPhone')
         transaction_note = post_data.get('transactionNote')
+        
+        if transaction_note == '' : transaction_note = None
+        
+        
 
         try:
             
