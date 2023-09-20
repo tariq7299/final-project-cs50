@@ -134,6 +134,7 @@ SESSION_TYPE="filesystem"
       meta: { requiresAuth: false }
     },
 - Use vue js router hooks in compoenents instead of using 'if' statments to check the route (), from vue documents (https://router.vuejs.org/guide/advanced/navigation-guards.html)
+- Choose a better navigation bar, and adjust it (Like removing the search field, assigining links...etc)
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css
@@ -175,16 +176,16 @@ SESSION_TYPE="filesystem"
                         </template>
 
 - animate show years and months select
-- Also animate the changing of Month on "2023-Nov", whenever user chooses a month, also maybe change the background color of '2023-Nov'
-- Expenses entered by user appear as expense*100, !!!, so we need to fix this (Try to enter an expense)
+- Also animate the changing of Month on "2023-Nov", whenever user choosess a month, also maybe change the background color of '2023-Nov'
+- Expenses entered by user appear as expense*100, !!!, so we need to fix this (Try to enter an expense) @#
 - Add expnese note <div> under each category in HOME, all the backend stiff are done, only front end remain
 ## SpendingsDays
 - Enable Users to view there expenses/spendings in different currencies !
 
 ## AddExpense
 - Create a num pad instead of phone num pad
-- Clear days <sleelct> after user changes month 
-- Add an alert after user adds/submits an expenses
+- Clear days <sleelct> after user changes month @#
+- Add an alert after user adds/submits an expenses @#
 - Rebuild AddExpense frontend from groundup using Plain CHAD CSS
 - Handle form vaidation via HTML in frontend
 - Style the frontend --- COLORS  NICEER-ICONS BETTER-BUTTON
@@ -225,11 +226,8 @@ SESSION_TYPE="filesystem"
                                 # TOMMOROOE
                                 -----------
 
-- Remove 00:00 GMT
-- Style the Home page a little biy
-- Create the Add new Expense
 
-                                # TOMMOROOE
+                                # Some Notes
                                 -----------
 
 - Security Considerations: Be cautious about displaying too much technical information to the user, as it could potentially expose sensitive information or be exploited by malicious users. Ensure that the error message does not leak sensitive data.
