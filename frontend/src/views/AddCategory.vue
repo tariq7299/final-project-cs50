@@ -1,24 +1,18 @@
-
 <template>
-    <div class="add-expenses">
+  
+    <div class="add-new-category-container">
   
       <!-- '.sector' class just applies a 'margin-bottom', and it is defined globally in 'App.vue', to make consistent spacing between sectors/sections -->
-      <Header class="sector" pageTitle="Add New Contact"></Header>
+      <Header class="sector" pageTitle="Add New Category"></Header>
   
       <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
-        <v-form @submit.prevent="addNewContact" class="formTest">
+        <v-form @submit.prevent="addNewCategory" class="formTest">
     
-          
-    
-              <v-text-field v-model="contactName" name="amount-spent" id="amount_spent" placeholder="Enter Contact Name"
-              autofocus label="Contact Name" prepend-icon="mdi-account-box" class="input" clearable>
+              <v-text-field v-model="category" name="category-input" id="category-input" placeholder="Enter Category Name"
+              autofocus label="New Category Title" prepend-icon="mdi-account-box" class="input" clearable>
               </v-text-field>
               
-              <v-text-field v-model="contactPhone" name="expense-note" id="expense-note" placeholder="Enter Contact Phone Number"
-              label="Contact Phone" prepend-icon="mdi-card-account-phone" class="input">
-              </v-text-field>
-              
-              <v-btn class="" type="submit" id="button">Add Contact</v-btn>
+              <v-btn class="" type="submit" id="button">Add Category</v-btn>
             
       </v-form>
             
@@ -32,23 +26,18 @@
     import Header from './../components/Header'
     
     export default {
-        name: 'AddNewContact',
+        name: 'AddNewCategory',
         data () {
             return {
-                contactName:'',
-                contactPhone: '',
+                category:'',
             }
         },
-      //   data: () => ({
-      //   selectedDate: null,
-      //   menu: false,
-      // }),
         components: {
           Header,
         },
         methods: {
   
-            addNewContact() {
+            addNewCategory() {
 
                 const apiUrl = process.env.VUE_APP_API_BASE_URL;
 
@@ -56,8 +45,7 @@
   
                 axios
                     .post(path, {
-                        contactName: this.contactName,
-                        contactPhone: this.contactPhone
+                        category: this.category,
                     }, { withCredentials: true })
                     .then((response) => {
                         
@@ -67,10 +55,9 @@
                         }
   
                         // Handle success response
-                        const newContactName = response.data.newContactName;
-                        const newContactPhone = response.data.newContactPhone;
+                        const newCategory = response.data.newCategory;
                         
-                        alert(`Success! ${newContactName} with phone ${newContactPhone} has been added to your contacts`);
+                        alert(`Success! ${newCategory} has been added to your categories`);
                     })
                     .catch((error) => {
                         if (error.response) {
@@ -89,17 +76,17 @@
                     });
             },
             handleDelete() {
-        this.selectedDate = null;
+                this.selectedDate = null;
         
-      },
+            },
         },
-      
+        
     }
   </script>
   
   <style scoped>
   
-  .add-expenses {
+  .add-new-category-container {
     height: 100vh;
     width: 90vw;
     max-width: 800px;
@@ -128,7 +115,7 @@
 
     /* @media (max-width: 450px) and (orientation: portrait) {
 
-    .add-expenses {
+    .add-new-category-container {
     height: 100vh;
     width: 90vw;
     max-width: 300px;

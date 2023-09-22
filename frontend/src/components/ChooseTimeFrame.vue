@@ -67,18 +67,15 @@ export default {
                 }
                 // GET years and months 
                 this.yearsAndMonths = response.data.years_and_months
-                console.log('yearsAndMonths', this.yearsAndMonths)
 
                 // Make t
                 this.yearsAndMonths[0].opened = true
 
                 // Choose/select the most recent year, by assinging it to "selectedYear"
                 this.selectedYear = this.yearsAndMonths[0].year;
-                console.log('selectedYear', this.selectedYear)
 
                 // Choose/select the most recent month, by assinging it to "selectedMonth"
                 this.selectedMonth = this.yearsAndMonths[0].months[0];
-                console.log('selectedMonth', this.selectedMonth)
                 // GET the monthly expenses in the "selectedMonth" (the most recent month)
                 this.monthlyExpenses = response.data.monthly_expenses
                 

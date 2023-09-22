@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home'
 import AddExpenses from '../views/AddExpenses.vue'
+import AddNewCategory from '../views/Login.vue'
 import Contacts from '../views/Contacts.vue'
 import AddTransactions from '../views/AddTransactions.vue'
 import ContactHistory from '../views/ContactHistory.vue'
 import AddNewContact from '../views/AddNewContact.vue'
+import AddCategory from '../views/AddCategory.vue'
 import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
-
 
 const routes = [
   {
@@ -29,11 +30,15 @@ const routes = [
     meta: { requiresAuth: false }
   },
   {
-    
-
     path: '/addExpenses',
     name: 'addExpenses',
     component: AddExpenses,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/add-category',
+    name: 'addCategory',
+    component: AddCategory,
     meta: { requiresAuth: true }
   },
   {
@@ -44,9 +49,9 @@ const routes = [
   },
   {
     path: '/add-new-contact',
-  name: 'addNewContact',
-  component: AddNewContact,
-  meta: { requiresAuth: true }
+    name: 'addNewContact',
+    component: AddNewContact,
+    meta: { requiresAuth: true }
 },
 {
   path: '/AddTransactions',
@@ -63,7 +68,7 @@ const routes = [
   name: 'contactHistory',
   component: ContactHistory,
   props: true,
-  meta: { requiresAuth: true }
+  // meta: { requiresAuth: true }
   // props: ture ' : ' this means that the variables 'contactName' and 'currentDay' and contactNetBalance will be passed to "ContactHistory" component as 'props'
   },
 ]
@@ -87,13 +92,13 @@ router.beforeEach(async (to, from) => {
     // make sure the user is authenticated
     !(await isAuthenticated()) &&
     // ❗️ Avoid an infinite redirect
-    to.name !== 'login' &&
+    (to.name !== 'login') &&
 
-    to.meta.requiresAuth
+    (to.meta.requiresAuth)
   ) {
     // redirect the user to the login page
     return { name: 'login' }
-  }
+  } 
 })
 
 // This is an older method to the same as above, where next() where used

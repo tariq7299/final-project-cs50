@@ -8,7 +8,7 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target='"#" + uniqueId' aria-expanded="true" aria-controls="collapseOne">
-                            {{ dayDate }} - Total: {{ totalAmount }}
+                            {{ dayDate }} - Total: {{ totalAmount.toFixed(2) }}
                         </button>
                         </h2>
                         <div :id="uniqueId" class="accordion-collapse collapse show" >

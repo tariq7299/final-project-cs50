@@ -29,11 +29,21 @@
             <v-text-field v-model="amountSpent" name="amount-spent" id="amount_spent" placeholder="Enter Amount"
             autofocus label="Amount Spended" clearable prepend-icon="mdi-cash" class="expense-input">
             </v-text-field>
-            
-            <v-select v-model="selectedCategory" name="category" id="category" label="Category" prepend-icon="mdi-notification-clear-all" :items="categories" class="expense-input" clearable>
-              <!-- <option v-for="(category, index) in categories" :value="category" :key="index">{{ category }}</option> -->
-            </v-select>
-  
+
+
+            <div class="contacts-drop-down-wrapper">      
+
+              <v-select v-model="selectedCategory" name="category" id="category" label="Category" prepend-icon="mdi-notification-clear-all" :items="categories" class="expense-input" clearable>
+                <!-- <option v-for="(category, index) in categories" :value="category" :key="index">{{ category }}</option> -->
+              </v-select>
+
+              <div class="new-category-btn-wrapper">
+                  <router-link to="/add-category"><v-btn class="new-category-btn"><span>Add New</span></v-btn></router-link> 
+              </div>
+              
+          </div>
+
+
             <v-text-field v-model="expenseNote" name="expense-note" id="expense-note" placeholder="Type a note"
             label="Note" clearable prepend-icon="mdi-note" class="expense-input">
             </v-text-field>
@@ -196,7 +206,46 @@
   
 }
 
-.expense-input {
-  width: 100%;
-}
+.formTest{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+  }
+
+  .contacts-drop-down-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px
+
+  }
+
+  
+    .expense-input {
+        width: 100%;
+    }
+    
+    #category{
+        font-size: small;
+        flex: 1 1 auto;
+    }
+
+    .new-category-btn-wrapper {
+        padding: 10px 0 10px 0;
+        flex:0 1 auto;
+        
+    }
+    
+    .new-category-btn span {
+        font-size: 10px;
+        white-space: normal;
+        word-wrap: break-word;
+        font-weight: 600;
+        color: green;
+        /* width: 100px; */
+    }
 </style>
