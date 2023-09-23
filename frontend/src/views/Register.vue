@@ -2,9 +2,10 @@
 
     <div class="view-container">
 
-        <v-alert type="success" title="Alert title" text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, ratione debitis quis est labore voluptatibus! Eaque cupiditate minima, at placeat totam, magni doloremque veniam neque porro libero rerum unde voluptatem!" v-show="showSuccessALert">
-        </v-alert>
-
+        <div class="alert" v-show="errorAlertFound">
+            <v-alert type="error" title="Error" :text="alertMessage"  variant="tonal">
+            </v-alert>
+        </div>
         
     
     <Header class="sector" pageTitle="Register"></Header>
@@ -33,12 +34,6 @@
         <v-btn class="" type="submit">Register</v-btn>
         
     </v-form>
-    <p>{{ console.log(firstName) }}</p>
-    <p>{{ console.log(lastName) }}</p>
-    <p>{{ console.log(username) }}</p>
-    <p>{{ console.log(email) }}</p>
-    <p>{{ console.log(password) }}</p>
-    <p>{{ console.log(passwordConfirm) }}</p>
 
     </div>
 </template>
@@ -58,6 +53,7 @@
             email: '',
             password: '',
             passwordConfirm: '',
+            alertMessage: '',
             showSuccessALert: false
 
         }
@@ -77,7 +73,7 @@
                 username: this.username,
                 email: this.email,
                 password: this.password,
-                passwordConfirm: this.passwordConfirm
+                passwordConfirm: this.passwordConfirm,
             };
 
             axios
@@ -87,19 +83,21 @@
                 .then((response) => {
                     if (response.status === 200 && response.data.success) {
                         // Redirect the user to the home page
-                        this.$router.push({ name: 'login' });
-                        this.showSuccessALert=true
-                        alert('Success ! Account has been created, Please Login !');
+                        this.$router.push({ name: 'login', params: {status: 'success', message:'Account has been created, Please Login !' } });
+                        // alert('Success ! Account has been created, Please Login !');
                     }
                 })
                 .catch((error) => {
                     if (error.response) {
+
                         console.error(error);
                         // The request was made, and the server responded with a non-2xx status code
                         // Handle the error based on the HTTP status code and error message
-                        const status = error.response.status;
-                        const message = error.response.data.error_message;
-                        alert(`Error! Status: ${status}, Message: ${message}`);
+
+                        this.errorAlertFound = true;
+                        this.alertMessage = error.response.data.error_message
+
+                        // alert(`Error! Status: ${status}, Message: ${message}`);
                         this.loading = false; // Set loading to false in case of an error
                     } else if (error.request) {
                         console.error(error);

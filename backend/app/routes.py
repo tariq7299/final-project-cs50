@@ -76,7 +76,7 @@ def register():
         
         print('db_username', db_username)
         
-        if db_username:
+        if bool(db_username):
             error_message = "Username already exists! Please choose a new one."
             return jsonify({'error_message': error_message}), 400
         
@@ -328,9 +328,9 @@ def add_expenses():
                 error_message = 'Amount spent must be a positive number'
                 return jsonify({'error_message': error_message}), 400
                 
-            if expense_note == '' : 
+            if not bool(expense_note): 
                 expense_note = None
-            else: 
+            elif bool(expense_note): 
                 expense_note = expense_note.strip()
                 
         except Exception as e:
@@ -378,7 +378,7 @@ def add_new_category():
                 
                 new_category_name = post_data.get('categoryName').strip()
             
-                if not all([new_category_name]):
+                if not bool(new_category_name):
                         error_message = 'All fields are required'
                         return jsonify({'error_message': error_message}), 400
                 
@@ -390,7 +390,19 @@ def add_new_category():
                 print(e)
                 error_message = 'Please Enter a valid Data'
                 return jsonify({'error_message': error_message}), 400
-
+            
+            print('new_category_name', new_category_name)
+            
+            db_category_id = db.session.query(Categories.id).filter(Categories.name==new_category_name).all()
+            
+            print('db_category_id', db_category_id)
+            
+            
+            
+            if bool(db_category_id):
+                error_message = "Contact already exists!."
+                return jsonify({'error_message': error_message}), 400
+            
             new_category = Categories(name=new_category_name)
             db.session.add(new_category)
             db.session.commit()
@@ -650,6 +662,12 @@ def add_new_contact():
                 error_message = 'Please Enter a valid Data'
                 return jsonify({'error_message': error_message}), 400
 
+            db_contact_phone = db.session.query(Contacts.phone).filter(Contacts.phone==new_contact_phone).scalar()
+            
+            if bool(db_contact_phone):
+                error_message = "Contact already exists!."
+                return jsonify({'error_message': error_message}), 400
+            
             new_contact = Contacts(name=new_contact_name, phone=new_contact_phone)
             db.session.add(new_contact)
             db.session.commit()
@@ -721,9 +739,9 @@ def new_transactions():
                 error_message = 'Amount spent must be a positive number'
                 return jsonify({'error_message': error_message}), 400
                 
-            if transaction_note == '' : 
+            if not bool(transaction_note): 
                 transaction_note = None
-            else: 
+            elif bool(transaction_note): 
                 transaction_note = transaction_note.strip()
                                 
         except Exception as e:

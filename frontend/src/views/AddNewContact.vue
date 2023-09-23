@@ -1,6 +1,15 @@
 
 <template>
     <div class="add-expenses">
+
+      <div class="alert" v-show="successAlertFound">
+          <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
+          </v-alert>
+      </div>
+      <div class="alert" v-show="errorAlertFound">
+          <v-alert type="error" title="Error" :text="alertMessage" variant="tonal">
+          </v-alert>
+      </div>
   
       <!-- '.sector' class just applies a 'margin-bottom', and it is defined globally in 'App.vue', to make consistent spacing between sectors/sections -->
       <Header class="sector" pageTitle="Add New Contact"></Header>
@@ -35,6 +44,9 @@
         name: 'AddNewContact',
         data () {
             return {
+                successAlertFound: false,
+                errorAlertFound: false,
+                alertMessage: '',
                 contactName:'',
                 contactPhone: '',
             }
@@ -69,22 +81,28 @@
                         // Handle success response
                         const newContactName = response.data.newContactName;
                         const newContactPhone = response.data.newContactPhone;
-                        
-                        alert(`Success! ${newContactName} with phone ${newContactPhone} has been added to your contacts`);
+                        this.errorAlertFound = false
+                        this.successAlertFound = true
+                        this.alertMessage = `Success! ${newContactName} with phone ${newContactPhone} has been added to your contacts`
                     })
                     .catch((error) => {
                         if (error.response) {
-                            // The request was made, and the server responded with a non-2xx status code
-                            // Handle the error based on the HTTP status code and error message
-                            const status = error.response.status;
-                            const message = error.response.data.error_message;
-                            alert(`Error! Status: ${status}, Message: ${message}`);
+                          // The request was made, and the server responded with a non-2xx status code
+                          // Handle the error based on the HTTP status code and error message
+                          this.successAlertFound = false
+                          this.errorAlertFound = true
+                          this.alertMessage = error.response.data.error_message
                         } else if (error.request) {
-                            // The request was made, but no response was received
-                            alert('Error! No response received from the server. Please try again or contact support for assistance.');
+                          // The request was made, but no response was received
+                          this.successAlertFound = false
+                          this.errorAlertFound = true
+                          // The request was made, but no response was received
+                          this.alertMessage = 'Error! No response received from the server.'
                         } else {
-                            // Something else happened while setting up the request
-                            alert(`Oops! Something went wrong while adding the expense. Please try again or contact support for assistance.`);
+                          // Something else happened while setting up the request
+                          this.successAlertFound = false
+                          this.errorAlertFound = true
+                          this.alertMessage = `Oops! Something went wrong while adding the expense. Please try again or contact support for assistance.`
                         }
                     });
             },

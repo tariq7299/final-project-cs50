@@ -1,11 +1,20 @@
 <template>
 
-    <div class="view-container">
-        
-    
-    <Header class="sector" pageTitle="Log In"></Header>
+    <div class="view-container" >
 
-    <v-form @submit.prevent="login" class="formTest">
+        <div class="alert" v-show="successAlertFound" >
+            <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
+            </v-alert>
+        </div>
+        <div class="alert" v-show="errorAlertFound">
+            <v-alert type="error" title="Error" :text="alertMessage" variant="tonal">
+            </v-alert>
+        </div>
+
+
+        <Header class="sector" pageTitle="Log In"></Header>
+
+        <v-form @submit.prevent="login" class="formTest">
 
         <v-text-field v-model="username" class="input" id="user-name" name="user-name" placeholder="Type a username for you account..." label="username" type="text" prepend-icon="mdi-account" variant="outlined">
         </v-text-field>
@@ -33,6 +42,9 @@
 
     data () {
         return {
+            successAlertFound: false,
+            errorAlertFound: false,
+            alertMessage: '',
             username: '',
             password: '',
         }
@@ -66,20 +78,20 @@
                         console.error(error);
                         // The request was made, and the server responded with a non-2xx status code
                         // Handle the error based on the HTTP status code and error message
-                        const status = error.response.status;
-                        const message = error.response.data.error_message;
-                        alert(`Error! Status: ${status}, Message: ${message}`);
-                        this.loading = false; // Set loading to false in case of an error
+                        this.successAlertFound = false
+                        this.errorAlertFound = true
+                        this.alertMessage = error.response.data.error_message
                     } else if (error.request) {
                         console.error(error);
                         // The request was made, but no response was received
-                        alert('Error! No response received from the server. Please try again or contact support for assistance.');
-                        this.loading = false; // Set loading to false in case of an error
+                        this.successAlertFound = false
+                        this.errorAlertFound = true
+                        // The request was made, but no response was received
+                        this.alertMessage = 'Error! No response received from the server. Please try again or contact support for assistance.'
                     } else {
-                        console.error(error);
-                        // Something else happened while setting up the request
-                        alert(`Oops! Something went wrong while fetch your expenses. Please try again or contact support for assistance.`);
-                        this.loading = false; // Set loading to false in case of an error
+                        this.successAlertFound = false
+                        this.errorAlertFound = true
+                        this.alertMessage = `Oops! Something went wrong while adding the expense. Please try again or contact support for assistance.`
                     }
                 });
         },
@@ -98,7 +110,14 @@
         }
     },
     created() {
-        this.clearAllSessions()
+        this.clearAllSessions();
+        
+        if (this.$route.params.status === 'success') {
+            this.errorAlertFound = false
+            this.successAlertFound=true;
+            this.alertMessage = this.$route.params.message   
+        }
+
     }
 
     }
@@ -109,4 +128,5 @@
 .input {
     width: 100%;
 }
+
 </style>

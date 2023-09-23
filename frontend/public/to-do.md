@@ -136,6 +136,13 @@ SESSION_TYPE="filesystem"
 - Use vue js router hooks in compoenents instead of using 'if' statments to check the route (), from vue documents (https://router.vuejs.org/guide/advanced/navigation-guards.html)
 - Choose a better navigation bar, and adjust it (Like removing the search field, assigining links...etc)
 - Fix the bug in calender found in addExpenses.vue and addTransactions.vue, I CAN"T CHOOSE A DATE from ALL monthes, only some selected months ! 
+- Use this to remove the alert after a few seconds
+watch: {
+    message(newValue) {
+      // Close after 5 seconds
+      if (newValue) {
+        setTimeout(this.hideAlert, 5000);
+      }
 
 ## Home.vue
 - Make the nav bar stick at top by bootstrap not plain css

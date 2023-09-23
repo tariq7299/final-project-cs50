@@ -1,6 +1,15 @@
 <template>
   
     <div class="add-new-category-container">
+
+        <div class="alert" v-show="successAlertFound">
+          <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
+          </v-alert>
+      </div>
+      <div class="alert" v-show="errorAlertFound">
+          <v-alert type="error" title="Error" :text="alertMessage" variant="tonal">
+          </v-alert>
+      </div>
   
       <!-- '.sector' class just applies a 'margin-bottom', and it is defined globally in 'App.vue', to make consistent spacing between sectors/sections -->
       <Header class="sector" pageTitle="Add New Category"></Header>
@@ -29,15 +38,21 @@
         name: 'AddNewCategory',
         data () {
             return {
+                successAlertFound: false,
+                errorAlertFound: false,
+                alertMessage: '',
                 category:'',
             }
         },
+      
         components: {
           Header,
         },
         methods: {
   
             addNewCategory() {
+
+              
 
                 const apiUrl = process.env.VUE_APP_API_BASE_URL;
 
@@ -55,23 +70,30 @@
                         }
   
                         // Handle success response
-                        const newCategoryName = response.data.newCategoryName;
-                        
-                        alert(`Success! ${newCategoryName} has been added to your categories`);
+
+                        this.errorAlertFound = false
+                        this.successAlertFound = true
+                        this.alertMessage = `Success! ${response.data.newCategoryName} has been added to your categories`
                     })
                     .catch((error) => {
                         if (error.response) {
                             // The request was made, and the server responded with a non-2xx status code
                             // Handle the error based on the HTTP status code and error message
-                            const status = error.response.status;
-                            const message = error.response.data.error_message;
-                            alert(`Error! Status: ${status}, Message: ${message}`);
+                            this.successAlertFound = false
+                            this.errorAlertFound = true
+                            this.alertMessage = error.response.data.error_message
+
                         } else if (error.request) {
-                            // The request was made, but no response was received
-                            alert('Error! No response received from the server. Please try again or contact support for assistance.');
+                          this.successAlertFound = false
+                          this.errorAlertFound = true
+                          // The request was made, but no response was received
+                          this.alertMessage = 'Error! No response received from the server. Please try again or contact support for assistance.'
                         } else {
-                            // Something else happened while setting up the request
-                            alert(`Oops! Something went wrong while adding the expense. Please try again or contact support for assistance.`);
+                          // Something else happened while setting up the request
+                          
+                          this.successAlertFound = false
+                          this.errorAlertFound = true
+                          this.alertMessage = `Oops! Something went wrong while adding the expense. Please try again or contact support for assistance.`
                         }
                     });
             },

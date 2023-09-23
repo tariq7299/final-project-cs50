@@ -185,6 +185,9 @@ import axios from 'axios'
     margin-bottom: 1rem;
   }
 
+  .alert {
+    padding: 1rem 0 ;
+}
   
 
 
