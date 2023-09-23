@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Relationships, Transactions
+from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Relationships, Transactions, Categories
 from sqlalchemy import extract, func, and_
 import app.helpers
 
@@ -141,7 +141,7 @@ def pop_spend():
     [print(spending) for spending in user_spendings_today]
     
 def pop_spend2():
-    
+
     # Assuming 'db' is your SQLAlchemy instance
     date_to_insert = datetime(2022, 1, 5)
 
@@ -149,45 +149,63 @@ def pop_spend2():
     time_intervals = [timedelta(hours=i) for i in range(8)]
 
     spending_time_list = []
-    
+
     for time_interval in time_intervals:
         spending_time = date_to_insert + time_interval
         spending_time_list.append(spending_time)
         
     amounts = [100, 140, 200, 143, 334, 234, 452, 233]
-    
+
     categories = ['Bills', 'Car', 'Clothes', 'Communication', 'Eating out', 'Entertainment', 'Food', 'Gifts']
-    
-    for amount, spending_time, category in zip(amounts, spending_time_list, categories):
+
+    categories_id = ['1', '2', '3', '4', '5', '6', '7', '8']
+
+    for amount, spending_time, category_id in zip(amounts, spending_time_list, categories_id):
         salah_spendings = UsersSpendings(
             user_id=2,
             amount_spent=amount,
-            category=category,
+            category_id=category_id,
             date=spending_time
         )
         
         db.session.add(salah_spendings)
-    
-    
+
+
     db.session.commit()
-    
-    user_spendings = db.session.query(UsersSpendings).filter(UsersSpendings.user_id == 2)
-    
+
+    user_spendings = db.session.query(UsersSpendings).filter(UsersSpendings.user_id == 1)
+
     [print(spending) for spending in user_spendings]
+
+# def rel_Db():
+
+    # salah_rel = Relationships(user_id=2, contact_id=3)
+    # salah_rel2 = Relationships(user_id=2, contact_id=2)
+    # emad_rel = Relationships(user_id=1, contact_id=1)
+
+    # db.session.add(salah_rel)
+    # db.session.add(salah_rel2)
+    # db.session.add(emad_rel)
+
+    # db.session.commit()
+
+    # print(salah_rel)
+    # print(salah_rel2)
+    # print(emad_rel)
     
     
     
     
     
 def show_spend():
-    
-    salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
-    
+
+    # salah_id = Users.query.filter_by(name="Ahmed Salah").first().user_id
+
     # # Get all spendings for Ahmed in the year 2020
     # start_date = datetime(2020, 1, 1)
     # end_date = datetime(2020, 12, 31)
     # salah_spendings_2020 = UsersSpendings.query.filter_by(user_id=salah_id).filter(UsersSpendings.date >= start_date, UsersSpendings.date <= end_date).all()
-    
+
     # for spend_day in salah_spendings_2020:
     #     print(f'Spending ID: {spend_day.spending_id}')
     #     print(f'User ID: {spend_day.user_id}')
@@ -196,13 +214,21 @@ def show_spend():
     #     print(f'Item Type: {spend_day.category}')
     #     print()
 
-    specific_date = datetime(2023, 9, 6)
-    start_of_day = specific_date
-    end_of_day = specific_date + timedelta(days=1)
-     
-    user_spendings_today = UsersSpendings.query.filter(and_(UsersSpendings.user_id == salah_id, UsersSpendings.date >= start_of_day, UsersSpendings.date < end_of_day)).order_by(UsersSpendings.date.desc()).all()
+    # specific_date = datetime(2023, 9, 6)
+    # start_of_day = specific_date
+    # end_of_day = specific_date + timedelta(days=1)
+        
+    # user_spendings_today = UsersSpendings.query.filter(and_(UsersSpendings.user_id == salah_id, UsersSpendings.date >= start_of_day, UsersSpendings.date < end_of_day)).order_by(UsersSpendings.date.desc()).all()
     
-    [print(spending) for spending in user_spendings_today]
+    user_spendings_today = db.session.query(UsersSpendings, Categories.name).join(Categories, UsersSpendings.category_id == Categories.id).filter(UsersSpendings.user_id == 25, extract('year', UsersSpendings.date) == 2023, extract('month', UsersSpendings.date) == 9).order_by(UsersSpendings.spending_id.desc()).all()
+
+    # [print(spending) for spending in user_spendings_today]
+    
+    month_expenses_list = [{'spending_id': tuple[0].spending_id, 'user_id': tuple[0].user_id, 'date': tuple[0].date.strftime("%a %d/%m/%Y"), 'amount_spent': app.helpers.convert_int_to_float(tuple[0].amount_spent), 'category': tuple[1], 'note': tuple[0].note} for tuple in user_spendings_today]
+
+    # [print(spending, category_name) for spending, category_name in user_spendings_today]
+    
+    [print(spending) for spending in month_expenses_list]
     
     # user_spendings = UsersSpendings.query.filter_by(user_id= 2).all()
     # [print(spending) for spending in user_spendings]
@@ -590,3 +616,13 @@ def rel_Db():
     contacts_list = [{'contact_id': contact.id, 'contact_name': contact.name, 'contact_name': contact.name, 'contact_name': contact.name, 'contact_phone': contact.phone} for contact in contacts]
     
     print('contacts_list', contacts_list)
+
+def pop_cat():
+    categories = ['Bills', 'Car', 'Clothes', 'Communication', 'Eating out', 'Entertainment', 'Food', 'Gifts', 'Health', 'House', 'Kids', 'Sports', 'Transport']
+    
+    for C_name in categories:
+        new_category = Categories(name=C_name)
+        db.session.add(new_category)
+    db.session.commit()
+    
+    

@@ -41,11 +41,11 @@
 
                 const apiUrl = process.env.VUE_APP_API_BASE_URL;
 
-                const path = apiUrl + '/new-contact';
+                const path = apiUrl + '/new-category';
   
                 axios
                     .post(path, {
-                        category: this.category,
+                      categoryName: this.category,
                     }, { withCredentials: true })
                     .then((response) => {
                         
@@ -55,9 +55,9 @@
                         }
   
                         // Handle success response
-                        const newCategory = response.data.newCategory;
+                        const newCategoryName = response.data.newCategoryName;
                         
-                        alert(`Success! ${newCategory} has been added to your categories`);
+                        alert(`Success! ${newCategoryName} has been added to your categories`);
                     })
                     .catch((error) => {
                         if (error.response) {

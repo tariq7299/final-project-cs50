@@ -1,5 +1,5 @@
-from flask import request, jsonify, Blueprint, redirect, render_template, session, url_for, flash
-from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Relationships, Transactions
+from flask import request, jsonify, Blueprint, redirect, render_template, session, url_for, flash, make_response
+from app.models import db, Users, UsersSpendings, UsersWallets, Contacts, Relationships, Transactions, Categories, UserCategory
 from datetime import datetime
 from sqlalchemy import extract, func, and_
 from calendar import month_abbr
@@ -10,7 +10,7 @@ import app.queries.expenses_queries
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.helpers import login_required
-
+from uuid import uuid4
 
 appRoutes = Blueprint("routes", __name__)
 
@@ -20,15 +20,14 @@ def after_request(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
+    # csrf_token = str(uuid4())
+    # print('csrf_tokeninRESP ', csrf_token)
+    # response.set_cookie('Csrftoken', csrf_token, httponly="True", samesite="None", secure="True")
     return response
 
 @appRoutes.route("/is-authenticated", methods=["GET"])
 def is_authenticated():
-    
-    
     return jsonify({'isLogged': True}) if bool(session.get('user_id')) else jsonify({'isLogged': False})
-        
-
 
 @appRoutes.route("/register_user", methods=["POST","GET"])
 def register():
@@ -81,15 +80,25 @@ def register():
             error_message = "Username already exists! Please choose a new one."
             return jsonify({'error_message': error_message}), 400
         
+         
         try: 
             
             new_user = Users(first_name=first_name, last_name=last_name, username=username, email=email, hash=hashed_password)
             
             db.session.add(new_user)
             
-            user_id = db.session.query(Users.user_id).filter(Users.username==username).scalar()
+            new_user_id = db.session.query(Users.user_id).filter(Users.username==username).scalar()
             
-            print('user_id', user_id)
+            print('new_user_id', new_user_id)
+            
+            db.session.commit()
+            
+            
+            
+            for default_category_id in range(1, 14, 1):
+                new_user_category = UserCategory(user_id=new_user_id, category_id=default_category_id)
+                
+                db.session.add(new_user_category)
             
             db.session.commit()
             
@@ -123,6 +132,8 @@ def login():
         username = post_data.get('username')
         password = post_data.get('password')
 
+        print('username', username)
+        print('password', password)
         # Ensure username was submitted
         if not username:
             error_message = "must provide username"
@@ -135,15 +146,18 @@ def login():
         
 
         # Query database for username
-        user_info = db.session.query(Users.user_id, Users.username, Users.hash).filter(Users.username==username).all()
+        user_info_tuple = db.session.query(Users.user_id, Users.username, Users.hash).filter(Users.username==username).first()
         
-        print('user_info', user_info)
+        print('user_info', user_info_tuple)
         
-        for user_tuple in user_info:
-            print('user_tuple', user_tuple)
-            user_id = user_tuple[0]
-            db_username = user_tuple[1]
-            hash_value = user_tuple[2]
+        if not user_info_tuple:
+            error_message = "No account Asociated with that user name, please register first !"
+            return jsonify({'error_message': error_message}), 400
+        
+        print('user_info_tuple', user_info_tuple)
+        user_id = user_info_tuple[0]
+        db_username = user_info_tuple[1]
+        hash_value = user_info_tuple[2]
             
         # Ensure username exists and password is correct
         if not db_username or not check_password_hash(hash_value, password):
@@ -151,11 +165,29 @@ def login():
             return jsonify({'error_message': error_message}), 400
 
         # Remember which user has logged in
+        
+        # csrf_token = uuid4()
+        # # I have used str() because the value returned by user is string and not Integer
+        # session['csrf_token'] = str(csrf_token)
+
+        # response_object = {'success': True, 'csrf_token': csrf_token}
+        
+        # return jsonify(response_object)
+        
+        # Generate a CSRF token (you may use a library or generate it securely)
+        csrf_token = uuid4()
         session["user_id"] = user_id
 
-        response_object = {'success': True}
+        session['csrf_token'] = str(csrf_token)
+        
+        print("session['csrf_token']", session['csrf_token'])
+        # Set the CSRF token as an HttpOnly cookie
+        response = jsonify({'success': True, 'csrf_token': csrf_token})
+        
+        response.set_cookie('csrfToken', value=str(csrf_token), httponly=True)
+        return response
+
              
-        return jsonify(response_object)
 
 @appRoutes.route("/logout", methods=["GET"])
 def logout():
@@ -235,17 +267,26 @@ def user_wallet():
 @appRoutes.route("/get_calendar", methods=["POST","GET"])
 @login_required
 def get_calendar():
+    
+    current_user_id = session.get('user_id')
         
     # When user loads the page, it will populate the two <select> tags with calendar months of the current year, and calendar days of the current month
     if request.method == "GET":
 
+        user_categories = db.session.query(Categories).filter(UserCategory.user_id==current_user_id).join(UserCategory).all()
         
-        # THese are the expenses categories that will be sent to client, to choose one, so the expenses client made is added to that very categoty in db
-        categories = ['Bills', 'Car', 'Clothes', 'Communication', 'Eating out', 'Entertainment', 'Food', 'Gifts', 'Health', 'House', 'Kids', 'Sports', 'Transport']
+        user_categories_list = [{'category_id': user_category.id, 'category_name': user_category.name} for user_category in user_categories]
         
-        response_object = {'status':'success', 'categories':categories}
-
+        response_object = {'status':'success', 'categories':user_categories_list}
+        
         return jsonify(response_object)
+    
+        # # THese are the expenses categories that will be sent to client, to choose one, so the expenses client made is added to that very categoty in db
+        # categories = ['Bills', 'Car', 'Clothes', 'Communication', 'Eating out', 'Entertainment', 'Food', 'Gifts', 'Health', 'House', 'Kids', 'Sports', 'Transport']
+        
+        # response_object = {'status':'success', 'categories':categories}
+
+        # return jsonify(response_object)
     
 # This route will get requested when user tries to submit his new expense
 @appRoutes.route("/add_expenses", methods=["POST","GET"])
@@ -258,36 +299,61 @@ def add_expenses():
     
     if request.method == "POST":
         
-        
         post_data = request.get_json()
-        selected_year   = post_data.get('selectedYear')
-        selected_month_num   = post_data.get('selectedMonth')
-        selected_day  = post_data.get('selectedDay')
-        submitted_amount_spent  = post_data.get('amountSpent')
-        # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
-        submitted_category  = post_data.get('category').strip()
-        expense_note = post_data.get('expenseNote')
-       
-        if expense_note == '' : expense_note = None
-       
-        # print('selected_year', selected_year)
-        # print('selected_month_num', selected_month_num)
-        # print('selected_day', selected_day)
-        # print('submitted_amount_spent', submitted_category)
-        # print('expense_note', expense_note)
         
+        
+        try: 
+            selected_year   = post_data.get('selectedYear')
+            selected_month_num   = post_data.get('selectedMonth')
+            selected_day  = post_data.get('selectedDay')
+            submitted_amount_spent  = float(post_data.get('amountSpent'))
+            submitted_category_id  = post_data.get('categoryId')
+            expense_note = post_data.get('expenseNote')
+            
+            # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
+            
+            if session.get('csrf_token') != request.cookies.get('csrfToken'):
+                error_message = 'Unathorised access'
+                return jsonify({'error_message': error_message}), 400
+            
+            # print("csrf_token__inPOST", csrf_token)
+            
+            if not all([selected_year, selected_month_num, selected_day, submitted_amount_spent, submitted_category_id]):
+                    error_message = 'All fields are required'
+                    return jsonify({'error_message': error_message}), 400
+                
+            datetime(int(selected_year), int(selected_month_num), int(selected_day))
+                
+            if submitted_amount_spent <= 0:
+                error_message = 'Amount spent must be a positive number'
+                return jsonify({'error_message': error_message}), 400
+                
+            if expense_note == '' : 
+                expense_note = None
+            else: 
+                expense_note = expense_note.strip()
+                
+        except Exception as e:
+            error_message = 'Please Enter a valid Data'
+            return jsonify({'error_message': error_message}), 400
+        
+
+       
         try:
             
-            app.queries.expenses_queries.insert_new_expense_into_db(current_user_id, selected_year, selected_month_num, selected_day, submitted_amount_spent, submitted_category, expense_note)
+            app.queries.expenses_queries.insert_new_expense_into_db(current_user_id, selected_year, selected_month_num, selected_day, submitted_amount_spent, submitted_category_id, expense_note)
             
             submitted_amount_spent_as_egp_currency = app.helpers.egp(submitted_amount_spent)
             
-            response_object = {'status': 'success', 'submitedAmountSpent': submitted_amount_spent_as_egp_currency, 'submitedCategory':submitted_category}
+            submitted_category_name = db.session.query(Categories.name).filter(Categories.id==submitted_category_id).scalar()
+            
+            response_object = {'status': 'success', 'submitedAmountSpent': submitted_amount_spent_as_egp_currency, 'submitedCategoryName':submitted_category_name}
             
             return jsonify(response_object)
         
         except Exception as e:
             
+            print('errrorrr', e)
             db.session.rollback()
             
             error_message = 'An error occurred while adding the expense! Error message: ' + str(e)
@@ -297,6 +363,54 @@ def add_expenses():
             
             db.session.close()
 
+@appRoutes.route("/new-category", methods=["POST","GET"])
+@login_required
+def add_new_category():
+    
+    current_user_id = session.get('user_id')
+    
+    if request.method == 'POST':
+        
+        try: 
+            post_data = request.get_json()  
+            
+            try: 
+                
+                new_category_name = post_data.get('categoryName').strip()
+            
+                if not all([new_category_name]):
+                        error_message = 'All fields are required'
+                        return jsonify({'error_message': error_message}), 400
+                
+                if session.get('csrf_token') != request.cookies.get('csrfToken'):
+                    error_message = 'Unathorised access'
+                    return jsonify({'error_message': error_message}), 400
+            
+            except Exception as e:
+                print(e)
+                error_message = 'Please Enter a valid Data'
+                return jsonify({'error_message': error_message}), 400
+
+            new_category = Categories(name=new_category_name)
+            db.session.add(new_category)
+            db.session.commit()
+        
+            # Try a new way to get the 'user_id', like by joininng the two tables toghether then extracting the user_id where name is 'Mohamed' --for example
+            new_user_category = UserCategory(user_id=current_user_id, category_id=new_category.id)
+            db.session.add(new_user_category)
+            db.session.commit()
+            
+            response_object = {'status': 'success', 'newCategoryName': new_category_name}
+            
+            return jsonify(response_object)
+        
+        except Exception as e:
+            
+            db.session.rollback()
+                
+            error_message = 'An error occurred while adding the expense! Error message: ' + str(e)
+            return jsonify({'error_message': error_message}), 400
+    
 # USER LOADS SPENDING PAGE
 @appRoutes.route("/load_recent_month_expenses", methods=["POST","GET"])
 @login_required
@@ -362,7 +476,7 @@ def load_recent_month_expenses():
             # Formatig the total amount spent as a currency 
             total_amount_of_month_expenses = app.helpers.egp(app.helpers.convert_int_to_float(total_amount_of_month_expenses))
 
-            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': app.helpers.convert_int_to_float(spending.amount_spent), 'category': spending.category, 'note': spending.note} for spending in month_expenses]
+            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': app.helpers.convert_int_to_float(spending.amount_spent), 'category': category_name, 'note': spending.note} for spending, category_name in month_expenses]
                     
             response_object = { 'status': 'success', 'years_and_months': years_and_months, 'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
             
@@ -397,7 +511,7 @@ def fetch_selected_month_expenses():
             month_expenses = app.queries.expenses_queries.select_expenses_in_month(current_user_id, selected_year, selected_month_num)
             
             # TO-DO ---> need to change some names here.
-            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': app.helpers.convert_int_to_float(spending.amount_spent), 'category': spending.category, 'note': spending.note} for spending in month_expenses]
+            month_expenses_list = [{'spending_id': spending.spending_id, 'user_id': spending.user_id, 'date': spending.date.strftime("%a %d/%m/%Y"), 'amount_spent': app.helpers.convert_int_to_float(spending.amount_spent), 'category': category_name, 'note': spending.note} for spending, category_name in month_expenses]
             
             total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(current_user_id, selected_year, selected_month_num)
             
@@ -512,19 +626,34 @@ def add_new_contact():
     
     current_user_id = session.get('user_id')
      
-    if request. method == 'POST':
+    if request.method == 'POST':
+        
         try:
             post_data = request.get_json()  
             
-            new_contact_name = post_data.get('contactName').strip()
+            try: 
+                
+                new_contact_name = post_data.get('contactName').strip()
             
-            new_contact_phone = post_data.get('contactPhone').strip()   
+                new_contact_phone = int(post_data.get('contactPhone'))
+                
+                if not all([new_contact_name, new_contact_phone]):
+                        error_message = 'All fields are required'
+                        return jsonify({'error_message': error_message}), 400
+                
+                if session.get('csrf_token') != request.cookies.get('csrfToken'):
+                    error_message = 'Unathorised access'
+                    return jsonify({'error_message': error_message}), 400
             
+            except Exception as e:
+                print(e)
+                error_message = 'Please Enter a valid Data'
+                return jsonify({'error_message': error_message}), 400
+
             new_contact = Contacts(name=new_contact_name, phone=new_contact_phone)
             db.session.add(new_contact)
             db.session.commit()
-            
-            
+        
             # Try a new way to get the 'user_id', like by joininng the two tables toghether then extracting the user_id where name is 'Mohamed' --for example
             new_relationship = Relationships(user_id=current_user_id, contact_id=new_contact.id)
             db.session.add(new_relationship)
@@ -557,12 +686,6 @@ def new_transactions():
                 
         contacts_list = [{'contact_phone': contact.phone, 'contact_name': contact.name, } for contact in contacts]
                 
-        contacts_names = []
-        
-        [contacts_names.append(contact.name) for contact in contacts]
-        
-        print(contacts_list)
-        # print('contacts_names', contacts_names)
         
         response_object = {'status':'success', 'contacts': contacts_list}
 
@@ -570,25 +693,51 @@ def new_transactions():
     
     elif request.method == "POST":
         
-        # Needs validation ! (Empty values, Incorrect type, IF note provided as an empty string then assign it as None, to make db assing it a default value)
         post_data = request.get_json()
-        selected_year   = post_data.get('selectedYear')
-        selected_month_num   = post_data.get('selectedMonth')
-        selected_day  = post_data.get('selectedDay')
-        submittedAmount  = post_data.get('submittedAmount')
-        # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
-        new_contact_phone  = post_data.get('newContactPhone')
-        transaction_note = post_data.get('transactionNote')
-        
-        if transaction_note == '' : transaction_note = None
-        
-        
+    
+        try: 
+            selected_year   = post_data.get('selectedYear')
+            selected_month_num   = post_data.get('selectedMonth')
+            selected_day  = post_data.get('selectedDay')
+            submittedAmount  = float(post_data.get('submittedAmount'))
+            contact_phone  = post_data.get('newContactPhone')
+            transaction_note = post_data.get('transactionNote')
+            
+            # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
+            
+            if session.get('csrf_token') != request.cookies.get('csrfToken'):
+                error_message = 'Unathorised access'
+                return jsonify({'error_message': error_message}), 400
+            
+            
+                
+            if not all([selected_year, selected_month_num, selected_day, submittedAmount, contact_phone]):
+                    error_message = 'All fields are required'
+                    return jsonify({'error_message': error_message}), 400
+                
+            datetime(int(selected_year), int(selected_month_num), int(selected_day))
+                
+            if submittedAmount <= 0:
+                error_message = 'Amount spent must be a positive number'
+                return jsonify({'error_message': error_message}), 400
+                
+            if transaction_note == '' : 
+                transaction_note = None
+            else: 
+                transaction_note = transaction_note.strip()
+                                
+        except Exception as e:
+            print(e)
+            error_message = 'Please Enter a valid Data'
+            return jsonify({'error_message': error_message}), 400
+    
+    
 
         try:
             
             submitted_integer_amount = app.helpers.convert_float_to_int(submittedAmount)
 
-            new_contact_id = db.session.query(Contacts.id).filter(Contacts.phone==new_contact_phone).scalar()
+            new_contact_id = db.session.query(Contacts.id).filter(Contacts.phone==contact_phone).scalar()
             
             new_transactions = Transactions(amount=submitted_integer_amount, date=datetime(selected_year, selected_month_num, selected_day), user_id=current_user_id, contact_id=new_contact_id, note=transaction_note)
             
@@ -598,9 +747,9 @@ def new_transactions():
             
             submitted_amount_as_egp_currency = app.helpers.egp(submittedAmount)
             
-            new_contact_name = db.session.query(Contacts.name).filter(Contacts.phone==new_contact_phone).scalar()
+            contact_name = db.session.query(Contacts.name).filter(Contacts.phone==contact_phone).scalar()
             
-            response_object = {'submittedAmount': submitted_amount_as_egp_currency, 'submittedContactName':new_contact_name}
+            response_object = {'submittedAmount': submitted_amount_as_egp_currency, 'submittedContactName':contact_name}
             
             return jsonify(response_object)
         

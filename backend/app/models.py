@@ -51,22 +51,22 @@ class UsersWallets(db.Model):
     def __repr__(self):
         return f'UsersWallets(wallet_id={self.wallet_id}, user_id={self.user_id}, balance={self.balance/100}, debt={self.debt/100}, credit={self.credit/100})'
 class UsersSpendings(db.Model):
-    
     spending_id = db.Column(db.Integer, primary_key=True)
-    # Define the foreign key column
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     amount_spent = db.Column(db.Integer, nullable=False)
-    category = db.Column(db.String(64), unique=False, nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)  # changed 'category' to 'category_id'
     note = db.Column(db.String(200), default="No notes")
-    # By definning a relationship you can now access the
-    
-    # Define the relationship between UserSpending and User
     user = db.relationship('Users', backref=db.backref('spendings', lazy=True))
-    
+
     def __repr__(self):
-        return '<Spending ID: {}, User ID: {}, Date: {}, Amount Spent: {}, Category: {}>'.format(self.spending_id, self.user_id, self.date, self.amount_spent, self.category)
-    
+        return '<Spending ID: {}, User ID: {}, Date: {}, Amount Spent: {}, Category: {}>'.format(self.spending_id, self.user_id, self.date, self.amount_spent, self.category_id)  # changed 'category' to 'category_id'
+
+class Categories(db.Model):  # changed 'db.model' to 'db.Model'
+    id = db.Column(db.Integer, primary_key=True)  # fixed typo 'db.Colomn' to 'db.Column'
+    name = db.Column(db.String(64), nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=True)  # changed 'category.id' to 'categories.id'
+    children = db.relationship('Categories', backref=db.backref('parent', remote_side=[id]))  # changed 'Category' to 'Categories'
 class Contacts(db.Model):
     
     # This should be a tuple
@@ -79,7 +79,15 @@ class Contacts(db.Model):
     def __repr__(self):
         return '<Contact ID: {}, Contact_Name: {}, Contact_phone: {}>'.format(self.id, self.name, self.phone)
         
-
+class UserCategory(db.Model):
+    
+    __table_args__ = (db.UniqueConstraint('user_id', 'category_id', name='unique_user_category'),)
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+    user = db.relationship('Users', backref=db.backref('user_categories', lazy=True))
+    category = db.relationship('Categories', backref=db.backref('user_categories', lazy=True))
 class Relationships(db.Model):
     
     __table_args__ = (db.UniqueConstraint('user_id', 'contact_id', name='unique_user_contact'),)

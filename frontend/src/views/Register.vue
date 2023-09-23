@@ -1,6 +1,10 @@
 <template>
 
     <div class="view-container">
+
+        <v-alert type="success" title="Alert title" text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, ratione debitis quis est labore voluptatibus! Eaque cupiditate minima, at placeat totam, magni doloremque veniam neque porro libero rerum unde voluptatem!" v-show="showSuccessALert">
+        </v-alert>
+
         
     
     <Header class="sector" pageTitle="Register"></Header>
@@ -54,6 +58,7 @@
             email: '',
             password: '',
             passwordConfirm: '',
+            showSuccessALert: false
 
         }
     },
@@ -83,6 +88,7 @@
                     if (response.status === 200 && response.data.success) {
                         // Redirect the user to the home page
                         this.$router.push({ name: 'login' });
+                        this.showSuccessALert=true
                         alert('Success ! Account has been created, Please Login !');
                     }
                 })

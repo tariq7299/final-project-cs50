@@ -33,8 +33,7 @@
 
             <div class="contacts-drop-down-wrapper">      
 
-              <v-select v-model="selectedCategory" name="category" id="category" label="Category" prepend-icon="mdi-notification-clear-all" :items="categories" class="expense-input" clearable>
-                <!-- <option v-for="(category, index) in categories" :value="category" :key="index">{{ category }}</option> -->
+              <v-select v-model="selectedCategoryId" name="category" id="category" label="Category" prepend-icon="mdi-notification-clear-all" :items="categories" item-title="category_name" item-value="category_id" class="expense-input" clearable>
               </v-select>
 
               <div class="new-category-btn-wrapper">
@@ -74,7 +73,7 @@
           return {
               amountSpent:'',
               categories: [],
-              selectedCategory: null,
+              selectedCategoryId: null,
               calendarData: {},
               expenseNote: null,
               selectedDate: new Date(),
@@ -124,7 +123,7 @@
                       selectedMonth: this.selectedMonth,
                       selectedDay: this.selectedDay,
                       amountSpent: this.amountSpent,
-                      category: this.selectedCategory,
+                      categoryId: this.selectedCategoryId,
                       expenseNote: this.expenseNote
                   }, { withCredentials: true })
                   .then((response) => {
@@ -135,7 +134,7 @@
                     }
                       // Handle success response
                       const submitedAmountSpent = response.data.submitedAmountSpent;
-                      const submitedCategory = response.data.submitedCategory;
+                      const submitedCategory = response.data.submitedCategoryName;
                       
                       alert(`Success! ${submitedAmountSpent} has been added to your ${submitedCategory} expenses.`);
                   })
