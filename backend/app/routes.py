@@ -74,10 +74,12 @@ def register():
         # Checks if username already exists in database
         db_username = db.session.query(Users.username).filter(Users.username==username).scalar()
         
+        db_email = db.session.query(Users.email).filter(Users.email==email).scalar()
+        
         print('db_username', db_username)
         
-        if bool(db_username):
-            error_message = "Username already exists! Please choose a new one."
+        if bool(db_username) or bool(db_email):
+            error_message = "Username/Email already exists! Please choose a new one."
             return jsonify({'error_message': error_message}), 400
         
          
@@ -275,6 +277,8 @@ def get_calendar():
 
         user_categories = db.session.query(Categories).filter(UserCategory.user_id==current_user_id).join(UserCategory).all()
         
+        print('user_categories', user_categories)
+        
         user_categories_list = [{'category_id': user_category.id, 'category_name': user_category.name} for user_category in user_categories]
         
         response_object = {'status':'success', 'categories':user_categories_list}
@@ -391,26 +395,35 @@ def add_new_category():
                 error_message = 'Please Enter a valid Data'
                 return jsonify({'error_message': error_message}), 400
             
-            print('new_category_name', new_category_name)
+            category_id = db.session.query(Categories.id).filter(Categories.name==new_category_name).scalar()
             
-            db_category_id = db.session.query(Categories.id).filter(Categories.name==new_category_name).all()
+            if not bool(category_id):
+                new_category = Categories(name=new_category_name)
+                db.session.add(new_category)
+                db.session.commit()
+                category_id = new_category.id
+                
+            db_user_category = db.session.query(UserCategory).filter(UserCategory.user_id==current_user_id, UserCategory.category_id==category_id).all()          
+                  
             
-            print('db_category_id', db_category_id)
-            
-            
-            
-            if bool(db_category_id):
-                error_message = "Contact already exists!."
+            if bool(db_user_category):
+                error_message = "Category already exists!."
                 return jsonify({'error_message': error_message}), 400
             
-            new_category = Categories(name=new_category_name)
-            db.session.add(new_category)
-            db.session.commit()
-        
-            # Try a new way to get the 'user_id', like by joininng the two tables toghether then extracting the user_id where name is 'Mohamed' --for example
-            new_user_category = UserCategory(user_id=current_user_id, category_id=new_category.id)
+            new_user_category = UserCategory(user_id=current_user_id, category_id=category_id)
             db.session.add(new_user_category)
             db.session.commit()
+
+            
+            # print('new_category_name', new_category_name)
+            
+            # print('db_category_id', db_category_id)
+            
+            
+            
+        
+            # Try a new way to get the 'user_id', like by joininng the two tables toghether then extracting the user_id where name is 'Mohamed' --for example
+            
             
             response_object = {'status': 'success', 'newCategoryName': new_category_name}
             
@@ -662,18 +675,23 @@ def add_new_contact():
                 error_message = 'Please Enter a valid Data'
                 return jsonify({'error_message': error_message}), 400
 
-            db_contact_phone = db.session.query(Contacts.phone).filter(Contacts.phone==new_contact_phone).scalar()
+            contact_id = db.session.query(Contacts.id).filter(Contacts.phone==new_contact_phone).scalar()
             
-            if bool(db_contact_phone):
+            if not bool(contact_id):
+                new_contact = Contacts(name=new_contact_name, phone=new_contact_phone)
+                db.session.add(new_contact)
+                db.session.commit()
+                contact_id = new_contact.id
+                
+            db_user_relationship = db.session.query(Relationships).filter(Relationships.user_id==current_user_id, Relationships.contact_id==contact_id).all()    
+            
+            if bool(db_user_relationship):
                 error_message = "Contact already exists!."
                 return jsonify({'error_message': error_message}), 400
             
-            new_contact = Contacts(name=new_contact_name, phone=new_contact_phone)
-            db.session.add(new_contact)
-            db.session.commit()
         
             # Try a new way to get the 'user_id', like by joininng the two tables toghether then extracting the user_id where name is 'Mohamed' --for example
-            new_relationship = Relationships(user_id=current_user_id, contact_id=new_contact.id)
+            new_relationship = Relationships(user_id=current_user_id, contact_id=contact_id)
             db.session.add(new_relationship)
             db.session.commit()
             

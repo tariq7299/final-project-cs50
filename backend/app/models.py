@@ -63,10 +63,13 @@ class UsersSpendings(db.Model):
         return '<Spending ID: {}, User ID: {}, Date: {}, Amount Spent: {}, Category: {}>'.format(self.spending_id, self.user_id, self.date, self.amount_spent, self.category_id)  # changed 'category' to 'category_id'
 
 class Categories(db.Model):  # changed 'db.model' to 'db.Model'
+    
+    # This should be a tuple
+    __table_args__ = (db.UniqueConstraint('name', name='unique_category_name'),)
+    
     id = db.Column(db.Integer, primary_key=True)  # fixed typo 'db.Colomn' to 'db.Column'
-    name = db.Column(db.String(64), nullable=False)
-    parent_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=True)  # changed 'category.id' to 'categories.id'
-    children = db.relationship('Categories', backref=db.backref('parent', remote_side=[id]))  # changed 'Category' to 'Categories'
+    name = db.Column(db.String(64), nullable=False, unique=True)
+   
 class Contacts(db.Model):
     
     # This should be a tuple
@@ -84,8 +87,8 @@ class UserCategory(db.Model):
     __table_args__ = (db.UniqueConstraint('user_id', 'category_id', name='unique_user_category'),)
     
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
     user = db.relationship('Users', backref=db.backref('user_categories', lazy=True))
     category = db.relationship('Categories', backref=db.backref('user_categories', lazy=True))
 class Relationships(db.Model):
