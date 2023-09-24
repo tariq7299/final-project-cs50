@@ -735,10 +735,13 @@ def new_transactions():
             selected_year   = post_data.get('selectedYear')
             selected_month_num   = post_data.get('selectedMonth')
             selected_day  = post_data.get('selectedDay')
-            submittedAmount  = float(post_data.get('submittedAmount'))
+            submittedAmount  = post_data.get('submittedAmount')
+            singedAmount  = post_data.get('singedAmount')
             contact_phone  = post_data.get('newContactPhone')
             transaction_note = post_data.get('transactionNote')
             
+            print('submittedAmount', submittedAmount)
+            print('singedAmount', singedAmount)
             # Please rebuild the db mopdels, in order to maek the app doesn't accept empty category
             
             if session.get('csrf_token') != request.cookies.get('csrfToken'):
@@ -752,8 +755,30 @@ def new_transactions():
                     return jsonify({'error_message': error_message}), 400
                 
             datetime(int(selected_year), int(selected_month_num), int(selected_day))
+            
+            
+            
+            # if not bool(singedAmount.find('+')):
+            #     print('bool(singedAmount.find('+')', bool(singedAmount.find('+')))
+            #     error_message = 'Please type a transaction amount without a sign like "+" or "-" and then choose "Debt" or "Credit" !'
+            #     return jsonify({'error_message': error_message}), 400
                 
+        
+                    
                 
+            if submittedAmount.find('+') == 0 or submittedAmount.find('-') == 0:
+                error_message = 'Please type a transaction amount without a sign like "+" or "-" and then choose "Debt" or "Credit" !'
+                return jsonify({'error_message': error_message}), 400
+            
+            submittedAmount = float(submittedAmount)
+            
+            if singedAmount.find('+') == -1 and singedAmount.find('-') == -1:
+                error_message = 'Please choose "Debt" or "Credit" !'
+                return jsonify({'error_message': error_message}), 400
+            
+            singedAmount = float(singedAmount)
+            
+            
             if not bool(transaction_note): 
                 transaction_note = None
             elif bool(transaction_note): 
@@ -768,7 +793,7 @@ def new_transactions():
 
         try:
             
-            submitted_integer_amount = app.helpers.convert_float_to_int(submittedAmount)
+            submitted_integer_amount = app.helpers.convert_float_to_int(singedAmount)
 
             new_contact_id = db.session.query(Contacts.id).filter(Contacts.phone==contact_phone).scalar()
             
@@ -778,7 +803,7 @@ def new_transactions():
             
             db.session.commit()
             
-            submitted_amount_as_egp_currency = app.helpers.egp(submittedAmount)
+            submitted_amount_as_egp_currency = app.helpers.egp(singedAmount)
             
             contact_name = db.session.query(Contacts.name).filter(Contacts.phone==contact_phone).scalar()
             

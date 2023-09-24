@@ -53,6 +53,28 @@
                           <router-link to="/add-new-contact"><v-btn class="new-contact-bnt"><span>Add New</span></v-btn></router-link> 
                       </div>
                   </div>
+
+                  <div class="cot">
+                    <v-radio-group v-model="debtOrCredit" class="debt-credit-container" inline  >
+                       <v-row justify="start">
+                         <v-col cols="12" sm="6" align="start">
+                           <v-radio value="-" color="red" class="radio-button" >
+                             <template v-slot:label>
+                               <div><strong class="text-error">Debt</strong> (I need to pay to)</div>
+                             </template>
+                           </v-radio>
+                         </v-col>
+                         <v-col cols="12" sm="6" align="start">
+                           <v-radio value="+" color="green" class="radio-button" >
+                           <template v-slot:label>
+                             <div><strong class="text-success">Credit</strong> (I need to collect)</div>
+                           </template>
+                         </v-radio>
+                         </v-col>
+                       </v-row>
+                    </v-radio-group>
+
+                  </div>
                   
               <v-text-field v-model="transactionNote" name="expense-note" id="expense-note" placeholder="Type a note" label="Note" prepend-icon="mdi-note" class="expense-input" type="text">
               </v-text-field>
@@ -61,7 +83,7 @@
               
         </v-form>
   
-        <p>{{ console.log('transactionNote', transactionNote) }}</p>
+        <p>{{ console.log('singedAmount', singedAmount) }}</p>
               
       </div>
     
@@ -94,6 +116,7 @@
                 transactionNote: null,
                 selectedDate: new Date(),
                 menu: false,
+                debtOrCredit: ''
             }
         },
       //   data: () => ({
@@ -143,6 +166,7 @@
                         selectedMonth: this.selectedMonth,
                         selectedDay: this.selectedDay,
                         submittedAmount: this.amount,
+                        singedAmount: this.singedAmount,
                         newContactPhone: this.selectedContact,
                         transactionNote: this.transactionNote
                         
@@ -158,10 +182,15 @@
                         // Handle success response
                         const submittedAmount = response.data.submittedAmount;
                         const submittedContactName = response.data.submittedContactName;
+
                         this.errorAlertFound = false
                         this.successAlertFound = true
-                        
-                        this.alertMessage = `Transaction Successful! You've added a transaction with ${submittedContactName} for an amount of ${submittedAmount}.`
+
+                        if (this.singedAmount.includes('-')) {
+                          this.alertMessage = `Transaction successfull ! A debt of value ${this.amount} owed to ${submittedContactName}has been added to your aacount`
+                        } else {
+                          this.alertMessage = `Transaction successfull ! A credit of value ${this.amount} owed to you by ${submittedContactName} has been added to your aacount`
+                        }
                         
                     })
                     .catch((error) => {
@@ -210,6 +239,10 @@
           },
           phoneNumber () {
             return this.selectedContact ? 'Phone Number - ' + this.selectedContact : ''
+          },
+          singedAmount() {
+            
+            return this.debtOrCredit + this.amount
           }
   
     },
@@ -274,6 +307,20 @@
         font-weight: 600;
         color: green;
         /* width: 100px; */
+    }
+
+    .cot{
+      width: 70%;
+    }
+
+    /* .radio-button{
+      display: inline;
+      width: 300px;
+    } */
+    .debt-credit-container{
+      /* width: 200px; */
+     /* width: 100%; */
+      /* margin: auto; */
     }
 
     /* @media (max-width: 450px) and (orientation: portrait) {
