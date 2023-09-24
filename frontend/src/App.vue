@@ -1,120 +1,16 @@
 <template>
   <div class="parent-container">
 
-      <nav class="navbar sticky-top mb-2" >
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">GoldGardyn</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">GoldGardyn</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" :href="homeUrl">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" :href="addExpensesUrl">Add Expense</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" :href="contactsUrl">People</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" :href="addTransaction">Add Transactions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" :href="loginUrl">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" @click="logout" href="#">Logout</a>
-                    </li>
-                   
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dropdown
-                        </a>
-                        <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li>
-                    </ul>
-                    <form class="d-flex mt-3" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </div>
-            </div>
-            
-        </div>
-      </nav>
-
     <router-view></router-view>
 
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 
   export default {
     name: 'App',
-    computed: {
-      homeUrl() {
-        const frontendUrl = process.env.FORNTEND_BASE_URL;
-        const path =  frontendUrl + '/';
-        return path
-      },
-      addExpensesUrl(){
-        const frontendUrl = process.env.FORNTEND_BASE_URL;
-        return frontendUrl + '/addExpenses';
-      },
-      contactsUrl(){
-        const frontendUrl = process.env.FORNTEND_BASE_URL;
-        return frontendUrl + '/contacts';
-      },
-      addTransaction(){
-        const frontendUrl = process.env.FORNTEND_BASE_URL;
-        return frontendUrl + '/AddTransactions';
-      },
-      loginUrl(){
-        const frontendUrl = process.env.FORNTEND_BASE_URL;
-        return frontendUrl + '/login';
-      }
-    },
-    methods: {
-      
-      async logout(){
-        try {
-                const apiUrl = process.env.VUE_APP_API_BASE_URL;
-
-                const path = apiUrl + '/logout';
-
-                const response = await axios.get(path, { withCredentials: true });
-                
-                // 
-                if (response.data.success) {
-
-                  this.$router.push({ name: 'login' })
-                  alert("You Have Successfully Logged Out")
-                  return
-                }
-
-            }   catch (error) {
-                console.error(error);
-                alert(`Oops! Something went wrong. Please try again or contact support for assistance. Error message: ${error}`);
-            }
-        },
-
-    }
+   
 }
 </script>
 
@@ -162,7 +58,7 @@ import axios from 'axios'
 
   .parent-container {
     margin: auto;
-    /* height: 100%; */
+    height: 100%;
   }
 
   .navbar {

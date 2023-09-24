@@ -1,34 +1,37 @@
 <template>
+    <div>
 
-    <div class="view-container" >
-
-        <div class="alert" v-show="successAlertFound" >
-            <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
-            </v-alert>
+        <NavBar></NavBar>
+        <div class="view-container" >
+    
+            <div class="alert" v-show="successAlertFound" >
+                <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
+                </v-alert>
+            </div>
+            <div class="alert" v-show="errorAlertFound">
+                <v-alert type="error" title="Error" :text="alertMessage" variant="tonal">
+                </v-alert>
+            </div>
+    
+    
+            <Header class="sector" pageTitle="Log In"></Header>
+    
+            <v-form @submit.prevent="login" class="formTest">
+    
+            <v-text-field v-model="username" class="input" id="user-name" name="user-name" placeholder="Type a username for you account..." label="username" type="text" prepend-icon="mdi-account" variant="outlined">
+            </v-text-field>
+    
+            <v-text-field v-model="password" class="input" id="password" name="password" placeholder="Type a password for your account..." label="Password" type="password" prepend-icon="mdi-account" variant="outlined" autocomplete="false">
+            </v-text-field>
+    
+            <v-btn class="" type="submit">Log in</v-btn>
+            
+        </v-form>
+    
+        <p>{{ console.log(username) }}</p>
+        <p>{{ console.log(password) }}</p>
+    
         </div>
-        <div class="alert" v-show="errorAlertFound">
-            <v-alert type="error" title="Error" :text="alertMessage" variant="tonal">
-            </v-alert>
-        </div>
-
-
-        <Header class="sector" pageTitle="Log In"></Header>
-
-        <v-form @submit.prevent="login" class="formTest">
-
-        <v-text-field v-model="username" class="input" id="user-name" name="user-name" placeholder="Type a username for you account..." label="username" type="text" prepend-icon="mdi-account" variant="outlined">
-        </v-text-field>
-
-        <v-text-field v-model="password" class="input" id="password" name="password" placeholder="Type a password for your account..." label="Password" type="password" prepend-icon="mdi-account" variant="outlined" autocomplete="false">
-        </v-text-field>
-
-        <v-btn class="" type="submit">Log in</v-btn>
-        
-    </v-form>
-
-    <p>{{ console.log(username) }}</p>
-    <p>{{ console.log(password) }}</p>
-
     </div>
 </template>
 

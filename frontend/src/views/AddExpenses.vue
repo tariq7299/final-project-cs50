@@ -1,66 +1,70 @@
 
 <template>
-  <div class="add-expenses">
-
-    <div class="alert" v-show="successAlertFound">
-        <v-alert type="success" title="Error" :text="alertMessage" variant="tonal">
-        </v-alert>
-    </div>
-    <div class="alert" v-show="errorAlertFound">
-        <v-alert type="error" title="Error" :text="alertMessage" variant="tonal">
-        </v-alert>
-    </div>
-
-    <!-- '.sector' class just applies a 'margin-bottom', and it is defined globally in 'App.vue', to make consistent spacing between sectors/sections -->
-    <Header class="sector" pageTitle="Add Expenses"></Header>
-
-    <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
-      <v-form @submit.prevent="addExpense" class="formTest">
-  
-        <!-- 
-            "@click:clear" : This becasue the clear symbol of the v-text-field doesn't clear the input of user, so i had to manually clear it by @click event 
-            I couldn't set "label:'Date'", and I had to use v-binf on it :label="formattedDate", because if I used the latter method "label" will block ':value="formattedDate"' from appearing in the input field !
-        -->
-        <v-text-field class="expense-input"  :model-value="formattedDate" clearable prepend-icon="mdi-calendar" placeholder="For example : 2023-02-07" @click:clear="selectedDate = null" @keydown.delete="handleDelete" :label="formattedDate"> 
-  
-          <!-- 
-            I have used v-model="menu" and :close-on-content-click="false" in order to prevent the datePicker from disappearing after I click on a date, as this is the default behavior of 'v-menu' nested elements. However, this default behavior is interfering with the functionality of the datepicker.
-           -->
-          <v-menu activator="parent" v-model="menu" :close-on-content-click="false" height="550" class="veutify-menu">
-  
-            <!--@click:save="menu = false" @click:cancel="menu = false" : Are used to a make v-menu closes only when I press 'OK' or 'CANCEL'   -->
-            <v-date-picker v-model="selectedDate" @click:save="menu = false" @click:cancel="menu = false"></v-date-picker>
-  
-          </v-menu>
-  
-        </v-text-field >
-  
-            <v-text-field v-model="amountSpent" name="amount-spent" id="amount_spent" placeholder="Enter Amount"
-            autofocus label="Amount Spended" clearable prepend-icon="mdi-cash" class="expense-input">
-            </v-text-field>
-
-
-            <div class="contacts-drop-down-wrapper">      
-
-              <v-select v-model="selectedCategoryId" name="category" id="category" label="Category" prepend-icon="mdi-notification-clear-all" :items="categories" item-title="category_name" item-value="category_id" class="expense-input" clearable>
-              </v-select>
-
-              <div class="new-category-btn-wrapper">
-                  <router-link to="/add-category"><v-btn class="new-category-btn"><span>Add New</span></v-btn></router-link> 
+   <div>
+      <NavBar></NavBar>
+      
+      <div class="add-expenses">
+    
+        <div class="alert" v-show="successAlertFound">
+            <v-alert type="success" title="Error" :text="alertMessage" variant="tonal">
+            </v-alert>
+        </div>
+        <div class="alert" v-show="errorAlertFound">
+            <v-alert type="error" title="Error" :text="alertMessage" variant="tonal">
+            </v-alert>
+        </div>
+    
+        <!-- '.sector' class just applies a 'margin-bottom', and it is defined globally in 'App.vue', to make consistent spacing between sectors/sections -->
+        <Header class="sector" pageTitle="Add Expenses"></Header>
+    
+        <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
+          <v-form @submit.prevent="addExpense" class="formTest">
+      
+            <!-- 
+                "@click:clear" : This becasue the clear symbol of the v-text-field doesn't clear the input of user, so i had to manually clear it by @click event 
+                I couldn't set "label:'Date'", and I had to use v-binf on it :label="formattedDate", because if I used the latter method "label" will block ':value="formattedDate"' from appearing in the input field !
+            -->
+            <v-text-field class="expense-input"  :model-value="formattedDate" clearable prepend-icon="mdi-calendar" placeholder="For example : 2023-02-07" @click:clear="selectedDate = null" @keydown.delete="handleDelete" :label="formattedDate"> 
+      
+              <!-- 
+                I have used v-model="menu" and :close-on-content-click="false" in order to prevent the datePicker from disappearing after I click on a date, as this is the default behavior of 'v-menu' nested elements. However, this default behavior is interfering with the functionality of the datepicker.
+               -->
+              <v-menu activator="parent" v-model="menu" :close-on-content-click="false" height="550" class="veutify-menu">
+      
+                <!--@click:save="menu = false" @click:cancel="menu = false" : Are used to a make v-menu closes only when I press 'OK' or 'CANCEL'   -->
+                <v-date-picker v-model="selectedDate" @click:save="menu = false" @click:cancel="menu = false"></v-date-picker>
+      
+              </v-menu>
+      
+            </v-text-field >
+      
+                <v-text-field v-model="amountSpent" name="amount-spent" id="amount_spent" placeholder="Enter Amount"
+                autofocus label="Amount Spended" clearable prepend-icon="mdi-cash" class="expense-input">
+                </v-text-field>
+    
+    
+                <div class="contacts-drop-down-wrapper">      
+    
+                  <v-select v-model="selectedCategoryId" name="category" id="category" label="Category" prepend-icon="mdi-notification-clear-all" :items="categories" item-title="category_name" item-value="category_id" class="expense-input" clearable>
+                  </v-select>
+    
+                  <div class="new-category-btn-wrapper">
+                      <router-link to="/add-category"><v-btn class="new-category-btn"><span>Add New</span></v-btn></router-link> 
+                  </div>
+                  
               </div>
+    
+    
+                <v-text-field v-model="expenseNote" name="expense-note" id="expense-note" placeholder="Type a note"
+                label="Note" clearable prepend-icon="mdi-note" class="expense-input">
+                </v-text-field>
+                
+                <v-btn class="" type="submit" id="button">Add Expense</v-btn>
               
-          </div>
-
-
-            <v-text-field v-model="expenseNote" name="expense-note" id="expense-note" placeholder="Type a note"
-            label="Note" clearable prepend-icon="mdi-note" class="expense-input">
-            </v-text-field>
-            
-            <v-btn class="" type="submit" id="button">Add Expense</v-btn>
-          
-    </v-form>
-          
-  </div>
+        </v-form>
+              
+      </div>
+    </div>
 
 
 </template>

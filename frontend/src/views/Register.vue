@@ -1,41 +1,50 @@
 <template>
+     <div>
+      <NavBar></NavBar>
 
-    <div class="view-container">
-
-        <div class="alert" v-show="errorAlertFound">
-            <v-alert type="error" title="Error" :text="alertMessage"  variant="tonal">
-            </v-alert>
-        </div>
-        
-    
-    <Header class="sector" pageTitle="Register"></Header>
-
-    <v-form @submit.prevent="registerUser" class="formTest">
-
-        <v-text-field v-model="firstName" autofocus class="input" id="first-name" name="first-name" placeholder="Type your first name..." label="First Name" type="text" prepend-icon="mdi-account" variant="outlined" >
-        </v-text-field>
-
-        <v-text-field v-model="lastName" class="input" id="last-name" name="last-name" placeholder="Type your last name..." label="Last Name" type="text" prepend-icon="mdi-account" variant="outlined">
-        </v-text-field>
-
-        <v-text-field v-model="username" class="input" id="user-name" name="user-name" placeholder="Type a username for you account..." label="username" type="text" prepend-icon="mdi-account" variant="outlined">
-        </v-text-field>
-
-        <v-text-field v-model="email" class="input" id="email" name="email" placeholder="Type your email..." label="Email" type="email" prepend-icon="mdi-account" variant="outlined">
-        </v-text-field>
-
-        <v-text-field v-model="password" class="input" id="password" name="password" placeholder="Type a password for your account..." label="Password" type="password" prepend-icon="mdi-account" variant="outlined" autocomplete="false">
-        </v-text-field>
-
-        <v-text-field v-model="passwordConfirm" class="input" id="confirm-password" name="confirm-password" placeholder="Type your password again..." label="Confirm password" type="password" prepend-icon="mdi-account" variant="outlined" autocomplete="false">
-        </v-text-field>
-
-        
-        <v-btn class="" type="submit">Register</v-btn>
-        
-    </v-form>
-
+      <div class="view-container">
+  
+          <div class="alert" v-show="successAlertFound" >
+              <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
+              </v-alert>
+          </div>
+  
+          <div class="alert" v-show="errorAlertFound">
+              <v-alert type="error" title="Error" :text="alertMessage"  variant="tonal">
+              </v-alert>
+          </div>
+          
+      
+      <Header class="sector" pageTitle="Register"></Header>
+  
+      <v-form @submit.prevent="registerUser" class="formTest">
+  
+          <v-text-field v-model="firstName" autofocus class="input" id="first-name" name="first-name" placeholder="Type your first name..." label="First Name" type="text" prepend-icon="mdi-account" variant="outlined" >
+          </v-text-field>
+  
+          <v-text-field v-model="lastName" class="input" id="last-name" name="last-name" placeholder="Type your last name..." label="Last Name" type="text" prepend-icon="mdi-account" variant="outlined">
+          </v-text-field>
+  
+          <v-text-field v-model="username" class="input" id="user-name" name="user-name" placeholder="Type a username for you account..." label="username" type="text" prepend-icon="mdi-account" variant="outlined">
+          </v-text-field>
+  
+          <v-text-field v-model="email" class="input" id="email" name="email" placeholder="Type your email..." label="Email" type="email" prepend-icon="mdi-account" variant="outlined">
+          </v-text-field>
+  
+          <v-text-field v-model="password" class="input" id="password" name="password" placeholder="Type a password for your account..." label="Password" type="password" prepend-icon="mdi-account" variant="outlined" autocomplete="false">
+          </v-text-field>
+  
+          <v-text-field v-model="passwordConfirm" class="input" id="confirm-password" name="confirm-password" placeholder="Type your password again..." label="Confirm password" type="password" prepend-icon="mdi-account" variant="outlined" autocomplete="false">
+          </v-text-field>
+  
+          
+          <v-btn class="" type="submit">Register</v-btn>
+          
+      </v-form>
+  
+      </div>
     </div>
+
 </template>
 
 <script>
@@ -46,7 +55,10 @@
     name: 'Register',
 
     data () {
-        return {
+        return {                
+            successAlertFound: false,
+            errorAlertFound: false,
+            alertMessage: '',
             firstName: '',
             lastName: '',
             username: '',
@@ -90,25 +102,25 @@
                 .catch((error) => {
                     if (error.response) {
 
-                        console.error(error);
                         // The request was made, and the server responded with a non-2xx status code
                         // Handle the error based on the HTTP status code and error message
 
+                        this.successAlertFound = false
                         this.errorAlertFound = true;
                         this.alertMessage = error.response.data.error_message
 
                         // alert(`Error! Status: ${status}, Message: ${message}`);
-                        this.loading = false; // Set loading to false in case of an error
                     } else if (error.request) {
-                        console.error(error);
                         // The request was made, but no response was received
-                        alert('Error! No response received from the server. Please try again or contact support for assistance.');
-                        this.loading = false; // Set loading to false in case of an error
+                        this.successAlertFound = false
+                        this.errorAlertFound = true
+                        // The request was made, but no response was received
+                        this.alertMessage = 'Error! No response received from the server. Please try again or contact support for assistance.'
                     } else {
-                        console.error(error);
                         // Something else happened while setting up the request
-                        alert(`Oops! Something went wrong while fetch your expenses. Please try again or contact support for assistance.`);
-                        this.loading = false; // Set loading to false in case of an error
+                        this.successAlertFound = false
+                        this.errorAlertFound = true
+                        this.alertMessage = `Oops! Something went wrong while adding the expense. Please try again or contact support for assistance.`
                     }
                 });
 

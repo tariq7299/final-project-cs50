@@ -1,28 +1,32 @@
 <template>
-    <div class="contact-history-container">
+     <div>
+      <NavBar></NavBar>
 
-        <Header class="sector" pageTitle="Contact Dealings History"></Header>
-
-        <div class="sticky-header">
-            <div class="contact-info">
-                <div class="info-row">
-                    <p class="label">Name</p>
-                    <p class="name">{{ contactName }}</p>
-                </div>
-                <div class="info-row">
-                    <p class="label">Phone</p>
-                    <p class="phone">{{ contactPhone }}</p>
-                </div>
-                <div class="sector">
-                    <UserWallet walletTitle="Contact Net Balance" :amount="contactNetBalance"></UserWallet>
-                </div>
-            </div>
-        </div>        
-
-        <div class="contact-history">
-            <Days :groupedByDay="groupedTransactionsByDay"></Days>
-        </div>
-        
+      <div class="contact-history-container">
+  
+          <Header class="sector" pageTitle="Contact Dealings History"></Header>
+  
+          <div class="sticky-header">
+              <div class="contact-info">
+                  <div class="info-row">
+                      <p class="label">Name</p>
+                      <p class="name">{{ contactName }}</p>
+                  </div>
+                  <div class="info-row">
+                      <p class="label">Phone</p>
+                      <p class="phone">{{ contactPhone }}</p>
+                  </div>
+                  <div class="sector">
+                      <UserWallet walletTitle="Contact Net Balance" :amount="contactNetBalance"></UserWallet>
+                  </div>
+              </div>
+          </div>        
+  
+          <div class="contact-history">
+              <Days :groupedByDay="groupedTransactionsByDay"></Days>
+          </div>
+          
+      </div>
     </div>
 </template>
 

@@ -1,58 +1,65 @@
 <template>
 
-    <div class=" text-center view-container">
-        
-        <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
-        <CurrentViewSummary></CurrentViewSummary>
-        
-        <!-- This contains the page title only -->
-        
-        <!-- This contains :
-            - input for year
-            - input for month
-            - Also it is resposible for fetching monthly expenses from server that belonged to the iputted time frame by the cirrent user
-        -->
-        
-        <!-- 'sticky-header' will make the the indented elemnts stick at the top-->
-        <div class="sticky-header">
+    <div>
 
-            <Header class="sector" pageTitle="Expenses"/>
-
-            <div class="row sector">
-                <div class="col-12">
-                    <div class= "view-by ">
-                        <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
-                        <label class="radio-label" for="view-by-month">View by Month</label>
-                        <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
-                        <label class="radio-label" for="view-by-day">View by Day</label>
-                    </div>
-
-                </div>    
-        </div>
-
-            <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame" ></MonthTimeFrame>
+        <NavBar></NavBar>
+        <div class=" text-center view-container">
             
-
-            <!-- This holds the total Expenses of the choosen month -->
-
-            <MonthTotal :totalMonthlyExpenses="totalMonthlyExpenses"></MonthTotal>
-
-        </div>
-        
-        <!-- THis contains a child components called 'Day' which each one of them contains the daily expenses details -->
-        <Days :groupedByDay="groupedExpensesByDay" ></Days>
-
-        <!-- This will route the user to 'AddExpenses' view enable users to add new expenses  -->
-        <div class="router-link">
-
-            <router-link class="bottom-fixed" to="addExpenses" >Add Expenses<span class="material-symbols-outlined">add_box</span></router-link>
+    
+    
+    
+            <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
+            <CurrentViewSummary></CurrentViewSummary>
+            
+            <!-- This contains the page title only -->
+            
+            <!-- This contains :
+                - input for year
+                - input for month
+                - Also it is resposible for fetching monthly expenses from server that belonged to the iputted time frame by the cirrent user
+            -->
+            
+            <!-- 'sticky-header' will make the the indented elemnts stick at the top-->
+            <div class="sticky-header">
+    
+                <Header class="sector" pageTitle="Expenses"/>
+    
+                <div class="row sector">
+                    <div class="col-12">
+                        <div class= "view-by ">
+                            <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
+                            <label class="radio-label" for="view-by-month">View by Month</label>
+                            <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
+                            <label class="radio-label" for="view-by-day">View by Day</label>
+                        </div>
+    
+                    </div>    
+            </div>
+    
+                <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame" ></MonthTimeFrame>
+                
+    
+                <!-- This holds the total Expenses of the choosen month -->
+    
+                <MonthTotal :totalMonthlyExpenses="totalMonthlyExpenses"></MonthTotal>
+    
+            </div>
+            
+            <!-- THis contains a child components called 'Day' which each one of them contains the daily expenses details -->
+            <Days :groupedByDay="groupedExpensesByDay" ></Days>
+    
+            <!-- This will route the user to 'AddExpenses' view enable users to add new expenses  -->
+            <div class="router-link">
+    
+                <router-link class="bottom-fixed" to="addExpenses" >Add Expenses<span class="material-symbols-outlined">add_box</span></router-link>
+            </div>
         </div>
     </div>
 
 </template>
 
 <script>
-
+    import axios from 'axios'
     import Header from './../components/Header'
     import CurrentViewSummary from './../components/CurrentViewSummary'
     import MonthTimeFrame from '@/components/MonthTimeFrame.vue';
@@ -60,6 +67,7 @@
     import MonthTotal from '@/components/MonthTotal.vue';
     import AddExpenses from './AddExpenses.vue';
     import ChooseTimeFrame from '@/components/ChooseTimeFrame.vue';
+
 
 
     export default {
@@ -108,8 +116,10 @@
                 
                 return acc;
                 }, {});
-            }
+            },
+         
         },
+      
 }
 </script>
 

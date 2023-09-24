@@ -753,9 +753,6 @@ def new_transactions():
                 
             datetime(int(selected_year), int(selected_month_num), int(selected_day))
                 
-            if submittedAmount <= 0:
-                error_message = 'Amount spent must be a positive number'
-                return jsonify({'error_message': error_message}), 400
                 
             if not bool(transaction_note): 
                 transaction_note = None

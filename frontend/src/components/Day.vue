@@ -36,7 +36,7 @@
                         <div :id="uniqueId" class="accordion-collapse collapse show" >
                         <div class="accordion-body">
                             <div class=" expense" v-for="dailyTransaction in dailyTransactions" :key="dailyTransaction.id">
-                                <span class="category">{{ dailyTransaction.note }}</span><span class="amount">{{ dailyTransaction.amount }}</span> 
+                                <span class="category">{{ dailyTransaction.note }}</span><span class="amount" :style="colorNetBalance(dailyTransaction.amount)">{{ dailyTransaction.amount }}</span> 
                             </div>
                         </div>
                         </div>
@@ -57,6 +57,11 @@
             totalAmount: Number,
             dailyTransactions: Array,
 
+        },
+        methods: {
+            colorNetBalance(amount){
+                return amount > 0 ? {'color': 'GREEN'} : {'color': 'RED'}
+            }
         },
         computed: {
             uniqueId() {

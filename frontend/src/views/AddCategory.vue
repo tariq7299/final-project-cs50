@@ -1,30 +1,33 @@
 <template>
-  
-    <div class="add-new-category-container">
+    <div>
+      <NavBar></NavBar>
 
-        <div class="alert" v-show="successAlertFound">
-          <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
-          </v-alert>
-      </div>
-      <div class="alert" v-show="errorAlertFound">
-          <v-alert type="error" title="Error" :text="alertMessage" variant="tonal">
-          </v-alert>
-      </div>
+      <div class="add-new-category-container">
   
-      <!-- '.sector' class just applies a 'margin-bottom', and it is defined globally in 'App.vue', to make consistent spacing between sectors/sections -->
-      <Header class="sector" pageTitle="Add New Category"></Header>
-  
-      <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
-        <v-form @submit.prevent="addNewCategory" class="formTest">
+          <div class="alert" v-show="successAlertFound">
+            <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
+            </v-alert>
+        </div>
+        <div class="alert" v-show="errorAlertFound">
+            <v-alert type="error" title="Error" :text="alertMessage" variant="tonal">
+            </v-alert>
+        </div>
     
-              <v-text-field v-model="category" name="category-input" id="category-input" placeholder="Enter Category Name"
-              autofocus label="New Category Title" prepend-icon="mdi-account-box" class="input" clearable>
-              </v-text-field>
+        <!-- '.sector' class just applies a 'margin-bottom', and it is defined globally in 'App.vue', to make consistent spacing between sectors/sections -->
+        <Header class="sector" pageTitle="Add New Category"></Header>
+    
+        <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
+          <v-form @submit.prevent="addNewCategory" class="formTest">
+      
+                <v-text-field v-model="category" name="category-input" id="category-input" placeholder="Enter Category Name"
+                autofocus label="New Category Title" prepend-icon="mdi-account-box" class="input" clearable>
+                </v-text-field>
+                
+                <v-btn class="" type="submit" id="button">Add Category</v-btn>
               
-              <v-btn class="" type="submit" id="button">Add Category</v-btn>
-            
-      </v-form>
-            
+        </v-form>
+              
+      </div>
     </div>
   
   

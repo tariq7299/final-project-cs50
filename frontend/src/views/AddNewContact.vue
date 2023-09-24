@@ -1,36 +1,40 @@
 
 <template>
-    <div class="add-expenses">
+   <div>
+      <NavBar></NavBar>
 
-      <div class="alert" v-show="successAlertFound">
-          <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
-          </v-alert>
-      </div>
-      <div class="alert" v-show="errorAlertFound">
-          <v-alert type="error" title="Error" :text="alertMessage" variant="tonal">
-          </v-alert>
-      </div>
+      <div class="add-expenses">
   
-      <!-- '.sector' class just applies a 'margin-bottom', and it is defined globally in 'App.vue', to make consistent spacing between sectors/sections -->
-      <Header class="sector" pageTitle="Add New Contact"></Header>
-  
-      <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
-        <v-form @submit.prevent="addNewContact" class="formTest">
+        <div class="alert" v-show="successAlertFound">
+            <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
+            </v-alert>
+        </div>
+        <div class="alert" v-show="errorAlertFound">
+            <v-alert type="error" title="Error" :text="alertMessage" variant="tonal">
+            </v-alert>
+        </div>
     
-          
+        <!-- '.sector' class just applies a 'margin-bottom', and it is defined globally in 'App.vue', to make consistent spacing between sectors/sections -->
+        <Header class="sector" pageTitle="Add New Contact"></Header>
     
-              <v-text-field v-model="contactName" name="amount-spent" id="amount_spent" placeholder="Enter Contact Name"
-              autofocus label="Contact Name" prepend-icon="mdi-account-box" class="input" clearable>
-              </v-text-field>
-              
-              <v-text-field v-model="contactPhone" name="expense-note" id="expense-note" placeholder="Enter Contact Phone Number"
-              label="Contact Phone" prepend-icon="mdi-card-account-phone" class="input">
-              </v-text-field>
-              
-              <v-btn class="" type="submit" id="button">Add Contact</v-btn>
+        <!-- .prevent modifier is used to prevent the default behavior of the form submission, which is to reload the page. -->
+          <v-form @submit.prevent="addNewContact" class="formTest">
+      
             
-      </v-form>
-            
+      
+                <v-text-field v-model="contactName" name="amount-spent" id="amount_spent" placeholder="Enter Contact Name"
+                autofocus label="Contact Name" prepend-icon="mdi-account-box" class="input" clearable>
+                </v-text-field>
+                
+                <v-text-field v-model="contactPhone" name="expense-note" id="expense-note" placeholder="Enter Contact Phone Number"
+                label="Contact Phone" prepend-icon="mdi-card-account-phone" class="input">
+                </v-text-field>
+                
+                <v-btn class="" type="submit" id="button">Add Contact</v-btn>
+              
+        </v-form>
+              
+      </div>
     </div>
   
   
