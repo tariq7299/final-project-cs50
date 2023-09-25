@@ -96,10 +96,8 @@ import { isAuthenticated } from './../auth';
                 
                 // 
                 if (response.data.success) {
-
-                  this.$router.push({ name: 'login' })
-                  alert("You Have Successfully Logged Out")
-                  return
+                  console.log(this.$route)
+                  this.$router.push({ name: 'login', params: {status: 'success', message:'You Have Successfully Logged Out' } });
                 }
 
             }   catch (error) {
@@ -110,9 +108,7 @@ import { isAuthenticated } from './../auth';
 
     },
     async created() {
-      console.log("isAthuth", isAuthenticated())
       return this.isAuthentic = await isAuthenticated()
-
     }
 }
 </script>

@@ -25,23 +25,23 @@
           <v-text-field v-model="lastName" class="input" id="last-name" name="last-name" placeholder="Type your last name..." label="Last Name" type="text" prepend-icon="mdi-account" variant="outlined">
           </v-text-field>
   
-          <v-text-field v-model="username" class="input" id="user-name" name="user-name" placeholder="Type a username for you account..." label="username" type="text" prepend-icon="mdi-account" variant="outlined">
+          <v-text-field v-model="username" class="input" id="user-name" name="user-name" placeholder="Type a username for you account..." label="username" type="text" prepend-icon="mdi-badge-account" variant="outlined">
           </v-text-field>
   
-          <v-text-field v-model="email" class="input" id="email" name="email" placeholder="Type your email..." label="Email" type="email" prepend-icon="mdi-account" variant="outlined">
+          <v-text-field v-model="email" class="input" id="email" name="email" placeholder="Type your email..." label="Email" type="email" prepend-icon="mdi-at" variant="outlined">
           </v-text-field>
   
-          <v-text-field v-model="password" class="input" id="password" name="password" placeholder="Type a password for your account..." label="Password" type="password" prepend-icon="mdi-account" variant="outlined" autocomplete="false">
+          <v-text-field v-model="password" class="input" id="password" name="password" placeholder="Type a password for your account..." label="Password" type="password" prepend-icon="mdi-lock" variant="outlined" autocomplete="false">
           </v-text-field>
   
-          <v-text-field v-model="passwordConfirm" class="input" id="confirm-password" name="confirm-password" placeholder="Type your password again..." label="Confirm password" type="password" prepend-icon="mdi-account" variant="outlined" autocomplete="false">
+          <v-text-field v-model="passwordConfirm" class="input" id="confirm-password" name="confirm-password" placeholder="Type your password again..." label="Confirm password" type="password" prepend-icon="mdi-lock" variant="outlined" autocomplete="false">
           </v-text-field>
   
           
           <v-btn class="" type="submit">Register</v-btn>
           
       </v-form>
-  
+      <p class="login-link">Already have an account? <a :href="loginUrl">Log in</a> </p>
       </div>
     </div>
 
@@ -123,8 +123,13 @@
                         this.alertMessage = `Oops! Something went wrong while adding the expense. Please try again or contact support for assistance.`
                     }
                 });
-
         }
+    },
+    computed: {
+        loginUrl(){
+        const frontendUrl = process.env.FORNTEND_BASE_URL;
+        return frontendUrl + '/login';
+      },
     }
 
     }
@@ -135,4 +140,9 @@
 .input {
     width: 100%;
 }
+
+.login-link {
+    padding: 50px; 
+}
+
 </style>

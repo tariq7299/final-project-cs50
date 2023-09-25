@@ -6,7 +6,7 @@
       <div class="add-expenses">
     
         <div class="alert" v-show="successAlertFound">
-            <v-alert type="success" title="Error" :text="alertMessage" variant="tonal">
+            <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
             </v-alert>
         </div>
         <div class="alert" v-show="errorAlertFound">

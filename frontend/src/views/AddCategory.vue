@@ -20,7 +20,7 @@
           <v-form @submit.prevent="addNewCategory" class="formTest">
       
                 <v-text-field v-model="category" name="category-input" id="category-input" placeholder="Enter Category Name"
-                autofocus label="New Category Title" prepend-icon="mdi-account-box" class="input" clearable>
+                autofocus label="New Category Title" prepend-icon="mdi-notification-clear-all" class="input" clearable>
                 </v-text-field>
                 
                 <v-btn class="" type="submit" id="button">Add Category</v-btn>

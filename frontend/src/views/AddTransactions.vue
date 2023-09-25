@@ -46,7 +46,7 @@
   
                   <div class="contacts-drop-down-wrapper">       
                                
-                          <v-select v-model="selectedContact" name="contact" id="contact" label="Contact" prepend-icon="mdi-notification-clear-all" :items="contacts" item-title="contact_name" item-value="contact_phone" class="expense-input" clearable :hint="phoneNumber">
+                          <v-select v-model="selectedContact" name="contact" id="contact" label="Contact" prepend-icon="mdi-account-box" :items="contacts" item-title="contact_name" item-value="contact_phone" class="expense-input" clearable :hint="phoneNumber">
                           </v-select>
   
                       <div class="new-contact-btn-wrapper">
@@ -54,17 +54,16 @@
                       </div>
                   </div>
 
-                  <div class="cot">
                     <v-radio-group v-model="debtOrCredit" class="debt-credit-container" inline  >
-                       <v-row justify="start">
-                         <v-col cols="12" sm="6" align="start">
-                           <v-radio value="-" color="red" class="radio-button" >
+                       <v-row>
+                         <v-col cols="12" sm="6" align="start" class="pa-0">
+                           <v-radio value="-" color="red" class="radio-button " >
                              <template v-slot:label>
                                <div><strong class="text-error">Debt</strong> (I need to pay to)</div>
                              </template>
                            </v-radio>
                          </v-col>
-                         <v-col cols="12" sm="6" align="start">
+                         <v-col cols="12" sm="6" align="start" class="pa-0">
                            <v-radio value="+" color="green" class="radio-button" >
                            <template v-slot:label>
                              <div><strong class="text-success">Credit</strong> (I need to collect)</div>
@@ -74,8 +73,6 @@
                        </v-row>
                     </v-radio-group>
 
-                  </div>
-                  
               <v-text-field v-model="transactionNote" name="expense-note" id="expense-note" placeholder="Type a note" label="Note" prepend-icon="mdi-note" class="expense-input" type="text">
               </v-text-field>
               
@@ -309,18 +306,9 @@
         /* width: 100px; */
     }
 
-    .cot{
-      width: 70%;
-    }
-
-    /* .radio-button{
-      display: inline;
-      width: 300px;
-    } */
+   
     .debt-credit-container{
-      /* width: 200px; */
-     /* width: 100%; */
-      /* margin: auto; */
+      width: 70%;
     }
 
     /* @media (max-width: 450px) and (orientation: portrait) {

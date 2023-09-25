@@ -772,12 +772,17 @@ def new_transactions():
             
             submittedAmount = float(submittedAmount)
             
+            if submittedAmount <= 0:
+                error_message = 'Transaction Amount must be a positive number !'
+                return jsonify({'error_message': error_message}), 400
+            
             if singedAmount.find('+') == -1 and singedAmount.find('-') == -1:
                 error_message = 'Please choose "Debt" or "Credit" !'
                 return jsonify({'error_message': error_message}), 400
             
             singedAmount = float(singedAmount)
             
+           
             
             if not bool(transaction_note): 
                 transaction_note = None

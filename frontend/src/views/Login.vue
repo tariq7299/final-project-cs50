@@ -21,7 +21,7 @@
             <v-text-field v-model="username" class="input" id="user-name" name="user-name" placeholder="Type a username for you account..." label="username" type="text" prepend-icon="mdi-account" variant="outlined">
             </v-text-field>
     
-            <v-text-field v-model="password" class="input" id="password" name="password" placeholder="Type a password for your account..." label="Password" type="password" prepend-icon="mdi-account" variant="outlined" autocomplete="false">
+            <v-text-field v-model="password" class="input" id="password" name="password" placeholder="Type a password for your account..." label="Password" type="password" prepend-icon="mdi-lock" variant="outlined" autocomplete="false">
             </v-text-field>
     
             <v-btn class="" type="submit">Log in</v-btn>
@@ -110,17 +110,21 @@
                 console.error(error);
                 alert(`Oops! Something went wrong. Please try again or contact support for assistance. Error message: ${error}`);
             }
+        },
+        showAlertMessageAfterRouting() {
+            console.log('this.this.$route.params.status', this.$route.params.status)
+            if (this.$route.params.status === 'success') {
+        this.errorAlertFound = false
+        this.successAlertFound=true;
+        return this.alertMessage = this.$route.params.message   
+    }
         }
     },
     created() {
         this.clearAllSessions();
-        
-        if (this.$route.params.status === 'success') {
-            this.errorAlertFound = false
-            this.successAlertFound=true;
-            this.alertMessage = this.$route.params.message   
-        }
-
+    },
+    mounted() {
+        this.showAlertMessageAfterRouting();
     }
 
     }
