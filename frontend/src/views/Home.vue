@@ -4,10 +4,6 @@
 
         <NavBar></NavBar>
         <div class=" text-center view-container">
-            
-    
-    
-    
             <!--Contains the wallet info if the current user (things like 'balance', 'credit', 'debt')  -->
             <CurrentViewSummary></CurrentViewSummary>
             
@@ -23,18 +19,8 @@
             <div class="sticky-header">
     
                 <Header class="sector" pageTitle="Expenses"/>
-    
-                <div class="row sector">
-                    <div class="col-12">
-                        <div class= "view-by ">
-                            <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
-                            <label class="radio-label" for="view-by-month">View by Month</label>
-                            <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" checked>
-                            <label class="radio-label" for="view-by-day">View by Day</label>
-                        </div>
-    
-                    </div>    
-            </div>
+
+            <ViewBy></ViewBy>
     
                 <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame" ></MonthTimeFrame>
                 
@@ -67,7 +53,7 @@
     import MonthTotal from '@/components/MonthTotal.vue';
     import AddExpenses from './AddExpenses.vue';
     import ChooseTimeFrame from '@/components/ChooseTimeFrame.vue';
-
+    import ViewBy from '@/components/ViewBy.vue';
 
 
     export default {
@@ -80,6 +66,7 @@
             MonthTotal,
             AddExpenses,
             ChooseTimeFrame,
+            ViewBy
         },
         data() {
             return {
@@ -210,7 +197,7 @@
     }
 
     
-
+/* 
     .view-by {
         display: inline-flex;
         width: 100%;
@@ -242,7 +229,7 @@
 
     .radio-input:checked + .radio-label {
         background: var(--primary);
-    }
+    } */
 
    
 
