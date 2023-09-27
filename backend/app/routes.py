@@ -63,9 +63,9 @@ def register():
             error_message = "Username/Email already exists! Please choose a new one."
             return jsonify({'error_message': error_message}), 400
         
-        if app.helpers.validate_password(password):
-            error_message = app.helpers.validate_password(password)
-            return jsonify({'error_message': error_message}), 400
+        # if app.helpers.validate_password(password):
+        #     error_message = app.helpers.validate_password(password)
+        #     return jsonify({'error_message': error_message}), 400
         
         try: 
             
@@ -154,8 +154,6 @@ def login():
         
         response.set_cookie('csrfToken', value=str(csrf_token), httponly=True)
         return response
-
-             
 
 @appRoutes.route("/logout", methods=["GET"])
 def logout():

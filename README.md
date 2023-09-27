@@ -20,6 +20,7 @@ SESSION_COOKIE_SAMESITE = 'None'
 { withCredentials: true } # Also include this in every axios request sent from frontend (Vue js) to backend (Flask)
 
 npm run serve
+
 ```
 
 ### Compiles and minifies for production
@@ -41,6 +42,7 @@ See [Flask Configuration Reference](https://flask.palletsprojects.com/en/2.3.x/c
 - The main reason for creating this app is to help my brother, who is a small business owner. He needed an app or a spreadsheet to store and organize all his financial information, which he can access from any device. This inspired me to create this financial app. To make it more mobile-friendly and optimized for mobile phones, I decided to make it a Progressive Web App (PWA).
 - The app is a Single Page Application (SPA) that uses Client-Side Rendering (CSR).
 - Although the app is currently missing some features and needs some code cleaning, I'm aware of these issues and plan to continue developing and maintaining the app until it reaches a satisfactory point. After that, I will deploy it and continue maintaining it.
+- In order to run the app you have to run the flask backend in port 8082, (or adjust the the `VUE_APP_API_BASE_URL` in .env found in *frontend/* folder), also run the frontend on port 8080 (or adjust the `FORNTEND_BASE_URL` found .env )
 
 ## Technologies Used
 - Backend:
