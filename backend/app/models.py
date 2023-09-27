@@ -55,19 +55,19 @@ class UsersSpendings(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     amount_spent = db.Column(db.Integer, nullable=False)
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)  # changed 'category' to 'category_id'
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False) 
     note = db.Column(db.String(200), default="No notes")
     user = db.relationship('Users', backref=db.backref('spendings', lazy=True))
 
     def __repr__(self):
-        return '<Spending ID: {}, User ID: {}, Date: {}, Amount Spent: {}, Category: {}>'.format(self.spending_id, self.user_id, self.date, self.amount_spent, self.category_id)  # changed 'category' to 'category_id'
+        return '<Spending ID: {}, User ID: {}, Date: {}, Amount Spent: {}, Category: {}>'.format(self.spending_id, self.user_id, self.date, self.amount_spent, self.category_id) 
 
-class Categories(db.Model):  # changed 'db.model' to 'db.Model'
+class Categories(db.Model): 
     
     # This should be a tuple
     __table_args__ = (db.UniqueConstraint('name', name='unique_category_name'),)
     
-    id = db.Column(db.Integer, primary_key=True)  # fixed typo 'db.Colomn' to 'db.Column'
+    id = db.Column(db.Integer, primary_key=True)  
     name = db.Column(db.String(64), nullable=False, unique=True)
    
 class Contacts(db.Model):

@@ -3,15 +3,11 @@
 ## Project setup
 
 ```
-
 vue create app # THis CLI command will init the project, and create all the necessary folders
 vue add vutify # THis will add vutify library, as i used some of its componenets
 npm install
 npm install --save-dev dotenv-webpack # To be able to use env variables in vue
-
-
 ```
-
 
 ### Compiles and hot-reloads for development
 ```
@@ -36,17 +32,76 @@ See [Vue Configuration Reference](https://cli.vuejs.org/config/).
 See [Flask Configuration Reference](https://flask.palletsprojects.com/en/2.3.x/config/)
 
 
+# GoldGardyn The financial Progressive web app
+## Video Demo:  [<URL HERE>](https://youtu.be/3CKUVbKEDsA)
+## Description
+- The application is called **GoldGardyn** and it's a finance app with two main functionalities:
+    1. It calculates the user's expenses and spendings.
+    2. It stores all the debts and credits of the user between him and other people/contacts.
+- The main reason for creating this app is to help my brother, who is a small business owner. He needed an app or a spreadsheet to store and organize all his financial information, which he can access from any device. This inspired me to create this financial app. To make it more mobile-friendly and optimized for mobile phones, I decided to make it a Progressive Web App (PWA).
+- The app is a Single Page Application (SPA) that uses Client-Side Rendering (CSR).
+- Although the app is currently missing some features and needs some code cleaning, I'm aware of these issues and plan to continue developing and maintaining the app until it reaches a satisfactory point. After that, I will deploy it and continue maintaining it.
 
-## Notes on vuetify in this project
+## Technologies Used
+- Backend:
+    - Flask
+    - SQLite with SQLAlchemy as the ORM
+    - Sessions for authentication
+    - Implemented CSRF tokens for added security in validating user inputs
+- Frontend:
+    - Vue3
+    - Vue Router
+    - Vuetify
+    - Bootstrap
 
-- After adding vuetify, it actually overrides all the default styles of HTML elements !. so lets say for example there is a default `padding` in `<button>` tags, However after adding vuetify, it removes this `padding`, so you have to specify a custom `padding` by you in `<style>`, all of that apply to every element in the whole app.
-## Some notes on branches
+## File and Folder Structure
+- Backend:
+  - The backend uses the Flask microframework.
+  - Instead of using Flask's templating engine (Jinja), I used Vue3 to build the user interface.
+  - Flask is used as an API to fetch data stored in my database.
+  - Inside the `backend/` folder:
+      - `app/` folder: Contains several files:
+          - `queries/`: Contains any database queries used in `routes.py`. It holds two files:
+            - `expenses_queries.py`: Holds the queries related to user expenses.
+            - `users_queries.py`: Holds all the queries related to the user itself and his info, like `name`, `email`, etc.
+          - `__init__.py`: Contains some initial configuration of my Flask app, like registering blueprints, CORS, and Session().
+          - `helpers.py`: Contains some helper functions.
+          - `models.py`: Contains the models of all my database tables.
+          - `routes.py`: Contains all the routes of my app (All GET, POST requests coming from the client side).
+      - Outside of `app/` but still inside `backend/`:
+        - `run.py`: Responsible for running my app.
+        - `test.py`: My lab, where it holds any code that I want to test or experiment with before actually implementing it into my app.
+
+## Frontend Structure
+- `public/` folder: Contains several files:
+    - `index.html`: The main HTML file.
+    - `additionalComments.md`: Contains additional comments about the project.
+    - `passive-event-notoriousBug.js`: A JavaScript file that contains a function found on the internet that fixes a notorious bug.
+- `src/` folder: Contains several sub-folders and files:
+    - `components/` folder: Contains all of the frontend Vue.js components used in the app. Here's a quick overview of the main components:
+        - `ChooseTimeFrame.vue`: Displays an accordion that shows a list of months and years that contain expenses. It fetches the expenses data in the most recent month of the most recent year (if the user didn't choose a month, if they did, then it will fetch the expenses data of the chosen month).
+        - `MonthTimeFrame.vue`: Displays the current selected year and month of expenses, and a button that will show the accordion of `ChooseMonthTimeFrame.vue`.
+        - `Day.vue`: Represents a particular day that contains user data. Each day is represented as a Bootstrap Accordion.
+        - `Days.vue`: A parent component of `Day.vue`. It makes the days that contain user data more versatile and flexible to be reused in other components/views.
+        - `Header.vue`: Contains the page title and is used in every view.
+    - `views/` folder: Contains all of the frontend Vue.js views, which are navigated using Vue Router. Here's an overview of each view and its functionality:
+        - `AddCategory.vue`: Contains a form that enables users to create a new custom-named category of expenses, instead of using default categories.
+        - `AddExpenses.vue`: Contains a form that enables users to add a new expense on a particular date and choose a category to store that expense under.
+        - `AddNewContact.vue`: Contains a form that enables users to add new contacts. These contacts will be used when users add transactions between themselves and these contacts.
+        - `Contacts.vue`: Displays all transactions of all contacts.
+        - `ContactHistory.vue`: Displays all past transactions that occurred between the user and this contact.
+        - `Home.vue`: The home page of the app. It displays two main things: The user's wallet (his debt, credit, net balance) and his/her expenses.
+
+# Notes on Vuetify in this Project
+- After adding Vuetify, it overrides all the default styles of HTML elements. For example, there is a default `padding` in `<button>` tags. However, after adding Vuetify, this `padding` is removed. Therefore, you have to specify a custom `padding` in `<style>`. This applies to every element in the entire app.
+
+# Some notes on branches
 - First of all !, all of those branches is not fully working but rather it is some different versions of implementing some components and parts of the code   
 
-### 'router-link' branch
+## 'router-link' branch
 *files to check **or** files that is relative*
 - 'Home.vue'
-- 'routes.js'
+- 'routes.js' 
 - 'AddExpense'
 - 'routes.py'
 - 'MonthTimeFrame'
@@ -58,7 +113,7 @@ In this branch I have used `<router-link>` that belongs to vue js, by passing so
 - Just visit 'Add Expenses' link at the bottom of page in Home view  
 - Understand what is going on in "AddExpense.vue" and 'Home.vue' and 'routes.js'
 
-### 'monthTimeFrameBranch' branch
+## 'monthTimeFrameBranch' branch
 *files to check **or** files that is relative*
 - 'MonthTimeFrame'
 - 'routes.py'
@@ -70,7 +125,7 @@ In this branch I used different ways to view years and months, by using differen
 - Visit Home page, look at the years and months selecet inputs
 - Understand what is going on in "MonthTimeFrame.vue' and axios requests that sent back and fourth to the flask server in 'routes.py'
 - All the main changes can be found in 'methods:' in 'MonthTimeFrame'
-### 'monthTimeFrameBranch' branch
+## 'monthTimeFrameBranch' branch
 *files to check **or** files that is relative*
 - 'MonthTimeFrame'
 - 'routes.py'

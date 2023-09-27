@@ -16,7 +16,7 @@
                     <a class="nav-link active" aria-current="page" :href="homeUrl">Expenses</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" :href="contactsUrl">People</a>
+                    <a class="nav-link" :href="contactsUrl">Contacts</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" :href="addExpensesUrl">Add Expense</a>

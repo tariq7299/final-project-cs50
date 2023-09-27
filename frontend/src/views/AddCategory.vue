@@ -136,20 +136,4 @@
         width: 100%;
     }
     
-    
-
-    /* @media (max-width: 450px) and (orientation: portrait) {
-
-    .add-new-category-container {
-    height: 100vh;
-    width: 90vw;
-    max-width: 300px;
-    margin: auto;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    flex-direction: column;
-  }
-    } */
-  </style>
+</style>

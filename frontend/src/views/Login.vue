@@ -28,15 +28,11 @@
             
         </v-form>
     
-        <p>{{ console.log(username) }}</p>
-        <p>{{ console.log(password) }}</p>
-    
         </div>
     </div>
 </template>
 
 <script>
-    import { Alert } from 'bootstrap';
     import Header from './../components/Header'
     import axios from 'axios'
 
@@ -112,7 +108,6 @@
             }
         },
         showAlertMessageAfterRouting() {
-            console.log('this.this.$route.params.status', this.$route.params.status)
             if (this.$route.params.status === 'success') {
         this.errorAlertFound = false
         this.successAlertFound=true;

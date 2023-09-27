@@ -20,9 +20,6 @@ def after_request(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
-    # csrf_token = str(uuid4())
-    # print('csrf_tokeninRESP ', csrf_token)
-    # response.set_cookie('Csrftoken', csrf_token, httponly="True", samesite="None", secure="True")
     return response
 
 @appRoutes.route("/is-authenticated", methods=["GET"])
@@ -45,15 +42,7 @@ def register():
         password = post_data.get('password')
         password_confirm = post_data.get('passwordConfirm')
         
-        # print('first_name', first_name)
-        # print('last_name', last_name)
-        # print('username', username)
-        # print('email', email)
-        # print('password', password)
-        # print('password_confirm', password_confirm)
-        
         hashed_password = generate_password_hash(password)
-        # print('hashed_password', hashed_password)
 
         # If left any field empty
         if not username or not password or not password_confirm:
@@ -65,24 +54,19 @@ def register():
             error_message = "Passwords don't match! Please try again."
             return jsonify({'error_message': error_message}), 400
         
-        # Validate the password if it containes especial characters and should 8 characters long
-        # if helpers.validate_password(password):
-        #     flash_message = helpers.validate_password(password)
-        #     flash(flash_message)
-        #     return redirect(url_for('register'))
-
         # Checks if username already exists in database
         db_username = db.session.query(Users.username).filter(Users.username==username).scalar()
         
         db_email = db.session.query(Users.email).filter(Users.email==email).scalar()
-        
-        print('db_username', db_username)
-        
+                
         if bool(db_username) or bool(db_email):
             error_message = "Username/Email already exists! Please choose a new one."
             return jsonify({'error_message': error_message}), 400
         
-         
+        if app.helpers.validate_password(password):
+            error_message = app.helpers.validate_password(password)
+            return jsonify({'error_message': error_message}), 400
+        
         try: 
             
             new_user = Users(first_name=first_name, last_name=last_name, username=username, email=email, hash=hashed_password)
@@ -91,11 +75,7 @@ def register():
             
             new_user_id = db.session.query(Users.user_id).filter(Users.username==username).scalar()
             
-            print('new_user_id', new_user_id)
-            
             db.session.commit()
-            
-            
             
             for default_category_id in range(1, 14, 1):
                 new_user_category = UserCategory(user_id=new_user_id, category_id=default_category_id)
@@ -134,8 +114,6 @@ def login():
         username = post_data.get('username')
         password = post_data.get('password')
 
-        print('username', username)
-        print('password', password)
         # Ensure username was submitted
         if not username:
             error_message = "must provide username"
@@ -150,13 +128,10 @@ def login():
         # Query database for username
         user_info_tuple = db.session.query(Users.user_id, Users.username, Users.hash).filter(Users.username==username).first()
         
-        print('user_info', user_info_tuple)
-        
         if not user_info_tuple:
             error_message = "No account Asociated with that user name, please register first !"
             return jsonify({'error_message': error_message}), 400
         
-        print('user_info_tuple', user_info_tuple)
         user_id = user_info_tuple[0]
         db_username = user_info_tuple[1]
         hash_value = user_info_tuple[2]
@@ -166,18 +141,9 @@ def login():
             error_message = "invalid username and/or password"
             return jsonify({'error_message': error_message}), 400
 
-        # Remember which user has logged in
-        
-        # csrf_token = uuid4()
-        # # I have used str() because the value returned by user is string and not Integer
-        # session['csrf_token'] = str(csrf_token)
-
-        # response_object = {'success': True, 'csrf_token': csrf_token}
-        
-        # return jsonify(response_object)
-        
         # Generate a CSRF token (you may use a library or generate it securely)
         csrf_token = uuid4()
+        # Remember which user has logged in
         session["user_id"] = user_id
 
         session['csrf_token'] = str(csrf_token)
@@ -207,13 +173,7 @@ def user_wallet():
     
     current_user_id = session.get('user_id')
     print('user_id_wallet', current_user_id)
-    
-    # Replace this user id from by the one foumd in session['user_id']
-    # current_user_id = session["user_id"]
-    # current_user_id = session["user_id"]
-    
-    # print('current_user_id', current_user_id)
-    
+        
     # IF we GET this route, to we need to sent to frontend the months and days of the current year
     if request.method == "GET":
         try:
@@ -222,11 +182,7 @@ def user_wallet():
             
             total_net_balance = total_net_balance or 0
             
-            # print('total_net_balance1', total_net_balance)
-               
             total_net_balance = app.helpers.egp(app.helpers.convert_int_to_float(total_net_balance)) 
-            
-            # print('total_net_balance2', total_net_balance)
             
             debt = 0
             credit = 0
@@ -234,8 +190,6 @@ def user_wallet():
             net_balance_per_contact = db.session.query(func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==current_user_id).group_by(Transactions.contact_id).all()
             
             net_balance_per_contact = net_balance_per_contact or []
-            
-            # print('net_balance_per_contact', net_balance_per_contact)
             
             for net_balance, in net_balance_per_contact:
                 if net_balance > 0:
@@ -245,9 +199,6 @@ def user_wallet():
             
             debt =  app.helpers.egp(app.helpers.convert_int_to_float(debt))
             credit =  app.helpers.egp(app.helpers.convert_int_to_float(credit))
-            
-            # print('debt', debt)
-            # print('credit', credit)
             
             wallet = {'netBalance': total_net_balance, 'credit': credit, 'debt': debt}
             
@@ -277,21 +228,12 @@ def get_calendar():
 
         user_categories = db.session.query(Categories).filter(UserCategory.user_id==current_user_id).join(UserCategory).all()
         
-        print('user_categories', user_categories)
-        
         user_categories_list = [{'category_id': user_category.id, 'category_name': user_category.name} for user_category in user_categories]
         
         response_object = {'status':'success', 'categories':user_categories_list}
         
         return jsonify(response_object)
-    
-        # # THese are the expenses categories that will be sent to client, to choose one, so the expenses client made is added to that very categoty in db
-        # categories = ['Bills', 'Car', 'Clothes', 'Communication', 'Eating out', 'Entertainment', 'Food', 'Gifts', 'Health', 'House', 'Kids', 'Sports', 'Transport']
         
-        # response_object = {'status':'success', 'categories':categories}
-
-        # return jsonify(response_object)
-    
 # This route will get requested when user tries to submit his new expense
 @appRoutes.route("/add_expenses", methods=["POST","GET"])
 @login_required
@@ -299,7 +241,6 @@ def add_expenses():
     
     # Replace this user id from by the one foumd in session['user_id']
     current_user_id = session.get('user_id')
-    print('current_user_id_add_expenses', current_user_id)
     
     if request.method == "POST":
         
@@ -319,8 +260,6 @@ def add_expenses():
             if session.get('csrf_token') != request.cookies.get('csrfToken'):
                 error_message = 'Unathorised access'
                 return jsonify({'error_message': error_message}), 400
-            
-            # print("csrf_token__inPOST", csrf_token)
             
             if not all([selected_year, selected_month_num, selected_day, submitted_amount_spent, submitted_category_id]):
                     error_message = 'All fields are required'
@@ -357,7 +296,6 @@ def add_expenses():
         
         except Exception as e:
             
-            print('errrorrr', e)
             db.session.rollback()
             
             error_message = 'An error occurred while adding the expense! Error message: ' + str(e)
@@ -391,7 +329,6 @@ def add_new_category():
                     return jsonify({'error_message': error_message}), 400
             
             except Exception as e:
-                print(e)
                 error_message = 'Please Enter a valid Data'
                 return jsonify({'error_message': error_message}), 400
             
@@ -414,17 +351,6 @@ def add_new_category():
             db.session.add(new_user_category)
             db.session.commit()
 
-            
-            # print('new_category_name', new_category_name)
-            
-            # print('db_category_id', db_category_id)
-            
-            
-            
-        
-            # Try a new way to get the 'user_id', like by joininng the two tables toghether then extracting the user_id where name is 'Mohamed' --for example
-            
-            
             response_object = {'status': 'success', 'newCategoryName': new_category_name}
             
             return jsonify(response_object)
@@ -449,24 +375,17 @@ def load_recent_month_expenses():
     if request.method == "GET":
         
         try: 
-               
-            # Definition of the most recent year
             
-            # extract() is used to get the years from date object !, of the column 'date' of type 'db.date'
-            # with_entities() It gets specific columns only
             years = app.queries.expenses_queries.select_years_contains_expenses(current_user_id)
-            # print('years', years)
+            
             # This would mean that there is no expenses found in db
             if not years:
                 response_object = { 'status': 'success', 'noExpensesFound': True}
                 return jsonify(response_object)
             
-            
             most_recent_year = years[0]
-            # print('most_recent_year', most_recent_year)
             
             most_recent_month_of_expenses = app.queries.expenses_queries.select_most_recent_month(current_user_id, most_recent_year)
-            # print('most_recent_month_of_expenses', most_recent_month_of_expenses)
             
             years_and_months = []
             for year in years:
@@ -489,13 +408,8 @@ def load_recent_month_expenses():
                         
                 years_and_months.append({'year': year, 'months': months_list, 'opened': False}) 
                            
-            # print('months_list', months_list)
-            # print('years_and_months', years_and_months)
-
             month_expenses = app.queries.expenses_queries.select_expenses_in_month(current_user_id, most_recent_year, most_recent_month_of_expenses)
-            
-            # print('month_expenses', month_expenses)
-        
+                    
             total_amount_of_month_expenses = app.queries.expenses_queries.extract_total_amount_of_month_expenses(current_user_id, most_recent_year, most_recent_month_of_expenses)
     
             # Formatig the total amount spent as a currency 
@@ -543,13 +457,8 @@ def fetch_selected_month_expenses():
             # Formatig the total amount spent as a currency 
             total_amount_of_month_expenses = app.helpers.egp(app.helpers.convert_int_to_float(total_amount_of_month_expenses))
 
-            
             response_object = { 'status': 'success', 'monthly_expenses': month_expenses_list,'total_amount_of_month_expenses': total_amount_of_month_expenses}
             
-            # response_object['total_amount_of_month_expenses'] = total_amount_of_month_expenses
-
-            # response_object['monthly_expenses'] = month_expenses_list
-
             # Return response object as JSON
             return jsonify(response_object)
         
@@ -598,18 +507,11 @@ def load_people():
             #   With utlizing the 'lazy' and 'realatioship' technique/feature (this defined in the db model itself)
             transactions = db.session.query(Transactions, func.sum(Transactions.amount).label('contact_net_balance')).filter(Transactions.user_id==current_user_id).group_by(Transactions.contact_id).all()
             
-            # for transaction in transactions:
-                # print('transaction.contact_name__2', transaction[0].contact.name)
-            #     print('transaction.contact_phone', transaction[0].user.name)
-            #     print('transaction_amount', transaction.contact_net_balance)
-            
             transactions_list = [{'contact_name': transaction[0].contact.name, 'contact_phone': transaction[0].contact.phone, 'transations_net_balance': app.helpers.convert_int_to_float(transaction.contact_net_balance)} for transaction in transactions] 
             
             # We have to put "wallet" into an abject to jsonify() it later, so we can send it to the client
             response_object = { 'status': 'success', 'transactions': transactions_list }
-            
-            # print('transactions_list', transactions_list)
-            
+                        
             return jsonify(response_object)
         
      # If any problem arises then return error message to the client
@@ -633,9 +535,7 @@ def load_people():
             transactions = db.session.query(Transactions).filter(and_(Transactions.user_id==current_user_id), (Contacts.phone==contact_phone)).order_by(Transactions.date.desc()).join(Contacts)
     
             transactions_list = [{'id': transaction.id, 'date': transaction.date.strftime("%a %d/%m/%Y"), 'amount': app.helpers.convert_int_to_float(transaction.amount), 'note': transaction.note} for transaction in transactions]
-            
-            # print('transactions_list', transactions_list)
-            
+                        
             response_object = { 'status': 'success', 'transactions': transactions_list}
             
             # Return response object as JSON
@@ -660,7 +560,7 @@ def add_new_contact():
                 
                 new_contact_name = post_data.get('contactName').strip()
             
-                new_contact_phone = int(post_data.get('contactPhone'))
+                new_contact_phone = post_data.get('contactPhone')
                 
                 if not all([new_contact_name, new_contact_phone]):
                         error_message = 'All fields are required'
@@ -756,16 +656,6 @@ def new_transactions():
                 
             datetime(int(selected_year), int(selected_month_num), int(selected_day))
             
-            
-            
-            # if not bool(singedAmount.find('+')):
-            #     print('bool(singedAmount.find('+')', bool(singedAmount.find('+')))
-            #     error_message = 'Please type a transaction amount without a sign like "+" or "-" and then choose "Debt" or "Credit" !'
-            #     return jsonify({'error_message': error_message}), 400
-                
-        
-                    
-                
             if submittedAmount.find('+') == 0 or submittedAmount.find('-') == 0:
                 error_message = 'Please type a transaction amount without a sign like "+" or "-" and then choose "Debt" or "Credit" !'
                 return jsonify({'error_message': error_message}), 400
@@ -782,8 +672,6 @@ def new_transactions():
             
             singedAmount = float(singedAmount)
             
-           
-            
             if not bool(transaction_note): 
                 transaction_note = None
             elif bool(transaction_note): 
@@ -794,8 +682,6 @@ def new_transactions():
             error_message = 'Please Enter a valid Data'
             return jsonify({'error_message': error_message}), 400
     
-    
-
         try:
             
             submitted_integer_amount = app.helpers.convert_float_to_int(singedAmount)

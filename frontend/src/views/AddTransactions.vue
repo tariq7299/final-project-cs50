@@ -80,8 +80,6 @@
               
         </v-form>
   
-        <p>{{ console.log('singedAmount', singedAmount) }}</p>
-              
       </div>
     
     </div>
@@ -95,7 +93,6 @@
     // Some important notes about that JS file found inside !
     import './../../public/passive-event-notoriousBug.js';
   
-    // import { FunctionalCalendar } from 'vue-functional-calendar';
     import { VDatePicker } from 'vuetify/labs/VDatePicker'
     import { format } from 'date-fns';
   
@@ -116,10 +113,6 @@
                 debtOrCredit: ''
             }
         },
-      //   data: () => ({
-      //   selectedDate: null,
-      //   menu: false,
-      // }),
         components: {
           VDatePicker,
           Header,
@@ -175,7 +168,6 @@
                             return
                         }
   
-                        console.log('this.selectedContact', this.selectedContact)
                         // Handle success response
                         const submittedAmount = response.data.submittedAmount;
                         const submittedContactName = response.data.submittedContactName;
@@ -311,18 +303,5 @@
       width: 70%;
     }
 
-    /* @media (max-width: 450px) and (orientation: portrait) {
-
-    .add-expenses {
-    height: 100vh;
-    width: 90vw;
-    max-width: 300px;
-    margin: auto;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    flex-direction: column;
-  }
-    } */
+  
   </style>
