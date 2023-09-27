@@ -4,15 +4,9 @@
 
       <div class="view-container">
   
-          <div class="alert" v-show="successAlertFound" >
-              <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
-              </v-alert>
-          </div>
-  
-          <div class="alert" v-show="errorAlertFound">
-              <v-alert type="error" title="Error" :text="alertMessage"  variant="tonal">
-              </v-alert>
-          </div>
+        <FlashMessage type="success" title="Success" :text="alertMessage" v-show="successAlertFound"></FlashMessage>
+        <FlashMessage type="error" title="Error" :text="alertMessage" v-show="errorAlertFound"></FlashMessage>
+
           
       
       <Header class="sector" pageTitle="Register"></Header>

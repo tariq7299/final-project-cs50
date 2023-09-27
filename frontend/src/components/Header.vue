@@ -15,7 +15,7 @@
     }
 </script>
 
-<style scoped>
+<style scoped>P
     .page-title {
 
         position: relative;

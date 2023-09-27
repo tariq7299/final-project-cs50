@@ -14,14 +14,14 @@
     
                 <div class= "view-by sector">
     
-                    <input type="radio" class="radio-input" value="option3" name="view-by" id="view-by-default" checked>
-                    <label class="radio-label" for="view-by-default"><span>Default </span>View<span></span></label>
-    
                     <input type="radio" class="radio-input" value="option1" name="view-by" id="view-by-month">
                     <label class="radio-label" for="view-by-month"><span>Month </span>View<span></span></label>
-    
+                    
                     <input type="radio" class="radio-input" value="option2" name="view-by" id="view-by-day" >
                     <label class="radio-label" for="view-by-day"><span>Day </span>View<span></span></label>
+                    
+                    <input type="radio" class="radio-input" value="option3" name="view-by" id="view-by-default" checked>
+                    <label class="radio-label" for="view-by-default"><span>Default </span>View<span></span></label>
     
                     <input type="radio" class="radio-input" value="option4" name="view-by" id="view-by-custom" >
                     <label class="radio-label" for="view-by-custom"><span>Custom </span>View<span></span></label>

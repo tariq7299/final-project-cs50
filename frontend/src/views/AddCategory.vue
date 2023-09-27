@@ -4,14 +4,17 @@
 
       <div class="add-new-category-container">
   
-          <div class="alert" v-show="successAlertFound">
+        <FlashMessage type="success" title="Success" :text="alertMessage" v-show="successAlertFound"></FlashMessage>
+        <FlashMessage type="error" title="Error" :text="alertMessage" v-show="errorAlertFound"></FlashMessage>
+
+          <!-- <div class="alert" v-show="successAlertFound">
             <v-alert type="success" title="Success" :text="alertMessage" variant="tonal">
             </v-alert>
         </div>
         <div class="alert" v-show="errorAlertFound">
             <v-alert type="error" title="Error" :text="alertMessage" variant="tonal">
             </v-alert>
-        </div>
+        </div> -->
     
         <!-- '.sector' class just applies a 'margin-bottom', and it is defined globally in 'App.vue', to make consistent spacing between sectors/sections -->
         <Header class="sector" pageTitle="Add New Category"></Header>
@@ -135,5 +138,5 @@
     .input{
         width: 100%;
     }
-    
+
 </style>

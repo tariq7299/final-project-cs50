@@ -7,6 +7,7 @@ import router from './router/routes.js'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 import NavBar from "./components/NavBar.vue"
+import FlashMessage from "./components/FlashMessage.vue"
 
 loadFonts()
 
@@ -16,5 +17,6 @@ const app = createApp(App)
 app.use(vuetify)
 app.use(router)
 app.component('NavBar', NavBar)
+app.component('FlashMessage', FlashMessage)
 app.mount('#app')
 
