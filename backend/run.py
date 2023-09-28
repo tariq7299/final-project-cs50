@@ -1,14 +1,15 @@
+
 from app import create_app
 
 app = create_app()
-
-
 
 if __name__ == '__main__':
     app.run()
     
     """
 backend/
+    DockerFile
+    .dockerignore
     app/
         __init__.py
         config.py 

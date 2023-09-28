@@ -1,12 +1,10 @@
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify
 from app.models import db, Users, UsersSpendings, UsersWallets
 from datetime import datetime
 from sqlalchemy import extract, func
-from calendar import monthrange, day_name, month_abbr
-import requests
-import uuid
+from calendar import monthrange, day_name
 from functools import wraps
-from flask import redirect, render_template, session
+from flask import session
 
 
 def login_required(f):

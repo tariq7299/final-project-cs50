@@ -1,0 +1,9 @@
+__pycache__/
+*.log
+.gitignore
+Pipfile
+Pipfile.lock
+README.MD
+.env
+config.env
+flask_session

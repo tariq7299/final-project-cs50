@@ -152,7 +152,8 @@ def login():
         # Set the CSRF token as an HttpOnly cookie
         response = jsonify({'success': True, 'csrf_token': csrf_token})
         
-        response.set_cookie('csrfToken', value=str(csrf_token), httponly=True)
+        response.set_cookie('csrfToken', value=str(csrf_token), httponly=True, samesite='None', secure=True)
+        
         return response
 
 @appRoutes.route("/logout", methods=["GET"])

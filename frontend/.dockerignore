@@ -1,0 +1,5 @@
+.gitignore
+README.MD
+.env
+./public/to-do.md
+node_modules
