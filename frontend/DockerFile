@@ -17,6 +17,7 @@ RUN npm install @vue/cli -g
 
 # Copy the project files
 COPY . /app
+COPY ./frontendDockerEnvFiles/.env .
 
 # Build the project
 RUN npm run build

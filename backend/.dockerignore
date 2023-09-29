@@ -6,5 +6,4 @@ Pipfile.lock
 README.MD
 .env
 .flaskenv
-config.env
 flask_session

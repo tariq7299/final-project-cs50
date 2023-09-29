@@ -6,15 +6,15 @@ services:
         build: ./backend
         ports: 
             - 8082:8082
-        env_file:
-            - ./backend/.env # Path to your .env file
-            - ./backend/.flaskenv # Path to your .env file
+        # env_file:
+        #     - ./backend/.env # Path to your .env file
+        #     - ./backend/.flaskenv # Path to your .env file
 
         # environment:
         #     - FLASK_APP=run.py
         #     - FLASK_ENV=development
         #     - FLASK_RUN_PORT=8082
-        #     - SECRET_KEY="f7gs435-75260b-494538-8073-bb0cf45393e7gfd"
+        #     - SECRET_KEY=f74742b8-730b-4948-8073-bb0cf493e71a
         #     - API_KEY=key
         #     - SQLALCHEMY_DATABASE_URI=sqlite:///mydatabase.db
         #     - SESSION_TYPE="filesystem"
@@ -30,5 +30,5 @@ services:
         build: ./frontend
         ports: 
             - 8083:8083
-        env_file:
-            - ./frontend/.env # Path to your .env file
+        # env_file:
+        #     - ./frontend/.env # Path to your .env file

@@ -1,6 +1,5 @@
 .env
 .flaskenv
-config.py
 instance
 flask_session
 additionalComments.md
