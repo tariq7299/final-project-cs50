@@ -1,5 +1,5 @@
-#Base image
-FROM node:lts-alpine
+# Base image. Specifying the version is crucial! It's very important to specify the version of Node.js.
+FROM node:18.16.0-alpine
 
 #Install serve package
 RUN npm i -g serve
@@ -8,19 +8,22 @@ RUN npm i -g serve
 WORKDIR /app
 
 # Copy the package.json and package-lock.json
-COPY package*.json ./
+COPY ./package.json /app/package.json
+COPY ./package-lock.json /app/package-lock.json
 
 # install project dependencies
 RUN npm install
+RUN npm install @vue/cli -g
 
 # Copy the project files
-COPY . .
+COPY . /app
 
 # Build the project
 RUN npm run build
 
 # Expose a port
-EXPOSE 5000
+EXPOSE 8083
 
 # Executables
-CMD [ "serve", "-s", "dist" ]
+CMD [ "serve", "-s", "dist", "-l", "8083" ]
+# CMD [ "npm", "run", "serve", "--", "--port", "8083" ]

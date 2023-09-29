@@ -1,17 +1,34 @@
 version: '3.8'
 
 services:
+
     flask-backend:
         build: ./backend
         ports: 
-            - 5000:5000
+            - 8082:8082
         env_file:
-            - ./backend/.env
+            - ./backend/.env # Path to your .env file
             - ./backend/.flaskenv # Path to your .env file
+
+        # environment:
+        #     - FLASK_APP=run.py
+        #     - FLASK_ENV=development
+        #     - FLASK_RUN_PORT=8082
+        #     - SECRET_KEY="f7gs435-75260b-494538-8073-bb0cf45393e7gfd"
+        #     - API_KEY=key
+        #     - SQLALCHEMY_DATABASE_URI=sqlite:///mydatabase.db
+        #     - SESSION_TYPE="filesystem"
+        #     - SESSION_COOKIE_SECURE=True
+        #     - SESSION_COOKIE_SAMESITE="None"
+        #     - SESSION_COOKIE_NAME="LetsGooo"
+        #     - SQLALCHEMY_TRACK_MODIFICATIONS=False
+        #     - FLASK_DEBUG=True
+        #     - TESTING=True
+        #     - TRAP_HTTP_EXCEPTIONS=True
 
     vue-frontend:
         build: ./frontend
         ports: 
-            - 3000:5000
+            - 8083:8083
         env_file:
             - ./frontend/.env # Path to your .env file
