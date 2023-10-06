@@ -4,11 +4,51 @@ services:
 
     flask-backend:
         build: ./backend
+        container_name: back
+        hostname: back
         ports: 
             - 8084:8084
-            
+        networks:
+            net:
+                ipv4_address: 192.168.2.10
+        cap_add:
+            - NET_ADMIN
 
-    vue-frontend:
+    vue-frontend-nginx:
         build: ./frontend
-        ports: 
-            - 8083:8083
+        container_name: front-ng
+        hostname: front-ng
+        ports:
+            - 80:80
+        networks:
+            net:    
+                ipv4_address: 192.168.2.11
+        cap_add:
+            - NET_ADMIN
+
+
+    # nginx:
+    #     build: ./NGINX
+
+    #     # THis is used when you want to specofy an image to build this container from
+    #     # image: nginx OR <imageName>
+    
+    #     # This when you have a Dockerfile that is inherting from an image
+    #     # build: path/to/Dockerfile
+
+    #     volumes:
+    #         - ./frontend/dist:/usr/share/nginx/html
+    #     ports:
+    #         - 80:80
+    #     networks:
+    #         - net
+    #     depends_on:
+    #         - vue-frontend
+
+networks:
+  net:
+    # name: netTest
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.2.0/24"

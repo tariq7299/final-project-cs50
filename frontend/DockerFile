@@ -1,5 +1,5 @@
 # Base image. Specifying the version is crucial! It's very important to specify the version of Node.js.
-FROM node:18.16.0-alpine
+FROM node:18.16.0-alpine as build-stage
 
 #Install serve package
 RUN npm i -g serve
@@ -16,15 +16,38 @@ RUN npm install
 RUN npm install @vue/cli -g
 
 # Copy the project files
-COPY . /app
+COPY ./ .
 COPY ./frontendDockerEnvFiles/.env .
 
 # Build the project
 RUN npm run build
 
-# Expose a port
-EXPOSE 8083
+# EXPOSE 8083
 
 # Executables
-CMD [ "serve", "-s", "dist", "-l", "8083" ]
+# CMD [ "serve", "-s", "dist", "-l", "8083" ]
 # CMD [ "npm", "run", "serve", "--", "--port", "8083" ]
+
+
+FROM nginx as production-stage
+
+RUN apt-get update
+
+# Install the iputils-ping package
+RUN apt-get install -y iputils-ping
+
+# Install the inetutils-traceroute package
+RUN apt-get install -y inetutils-traceroute
+
+# Install the iproute2 package
+RUN apt-get install -y iproute2
+
+# Install the curl, telnet, dnsutils, and vim packages
+RUN apt-get install -y curl telnet dnsutils vim
+# copy custom Nginx configuration file
+
+RUN mkdir /app
+COPY --from=build-stage /app/dist /app
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80

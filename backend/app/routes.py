@@ -12,7 +12,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app.helpers import login_required
 from uuid import uuid4
 
-appRoutes = Blueprint("routes", __name__)
+# appRoutes = Blueprint("routes", __name__)
+
+appRoutes = Blueprint("routes", __name__, url_prefix='/api')
 
 @appRoutes.after_request
 def after_request(response):

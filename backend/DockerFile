@@ -9,6 +9,21 @@ COPY requirements.txt ./
 
 RUN pip3 install -r requirements.txt
 
+RUN apt-get update
+
+# Install the iputils-ping package
+RUN apt-get install -y iputils-ping
+
+# Install the inetutils-traceroute package
+RUN apt-get install -y inetutils-traceroute
+
+# Install the iproute2 package
+RUN apt-get install -y iproute2
+
+# Install the curl, telnet, dnsutils, and vim packages
+RUN apt-get install -y curl telnet dnsutils vim
+# copy custom Nginx configuration file
+
 COPY . .
 COPY ./backendDockerEnvFiles/.env .
 COPY ./backendDockerEnvFiles/.flaskenv .
