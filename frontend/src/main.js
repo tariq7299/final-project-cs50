@@ -20,3 +20,4 @@ app.component('NavBar', NavBar)
 app.component('FlashMessage', FlashMessage)
 app.mount('#app')
 
+document.title = 'GoldGardyn'
