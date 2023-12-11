@@ -50,6 +50,7 @@ class UsersWallets(db.Model):
     
     def __repr__(self):
         return f'UsersWallets(wallet_id={self.wallet_id}, user_id={self.user_id}, balance={self.balance/100}, debt={self.debt/100}, credit={self.credit/100})'
+        
 class UsersSpendings(db.Model):
     spending_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
