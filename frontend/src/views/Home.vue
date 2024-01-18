@@ -20,7 +20,7 @@
     
                 <Header class="sector" pageTitle="Expenses"/>
 
-            <ViewBy></ViewBy>
+                <ViewBy></ViewBy>
     
                 <MonthTimeFrame @userChoseMonthTimeFrame="extractMonthlyExpenses" @toggelChooseTimeFrame="toggelChooseTimeFrame" ></MonthTimeFrame>
                 
