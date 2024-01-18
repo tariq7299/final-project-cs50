@@ -1,0 +1,6 @@
+Package            Version
+------------------ -------
+Flask              2.3.3
+Flask-Cors         4.0.0
+Flask-SQLAlchemy   3.0.5
+SQLAlchemy         2.0.20
