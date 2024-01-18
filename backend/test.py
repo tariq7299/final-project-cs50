@@ -12,15 +12,15 @@ def create_db():
     
     db.create_all()
     
-    user_Emad = Users(name="Emad Eiad", username="emad12", phone="01100")
+    # user_Emad = Users(name="Emad Eiad", username="emad12", phone="01100")
     
-    user_salah = Users(name="Ahmed Salah", username="salah12", phone="0100")
+    # user_salah = Users(name="Ahmed Salah", username="salah12", phone="0100")
     
-    user_mark = Users(name="Mark Mork", username="mork12", phone="0121012")
+    # user_mark = Users(name="Mark Mork", username="mork12", phone="0121012")
     
-    db.session.add(user_Emad)
-    db.session.add(user_salah)
-    db.session.add(user_mark)
+    # db.session.add(user_Emad)
+    # db.session.add(user_salah)
+    # db.session.add(user_mark)
 
     db.session.commit()
     
