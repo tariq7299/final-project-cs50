@@ -57,7 +57,7 @@ See [Flask Configuration Reference](https://flask.palletsprojects.com/en/2.3.x/c
     - Bootstrap
 
 ## File and Folder Structure
-- Backend:
+### Backend
   - The backend uses the Flask microframework.
   - Instead of using Flask's templating engine (Jinja), I used Vue3 to build the user interface.
   - Flask is used as an API to fetch data stored in my database.
@@ -74,7 +74,7 @@ See [Flask Configuration Reference](https://flask.palletsprojects.com/en/2.3.x/c
         - `run.py`: Responsible for running my app.
         - `test.py`: My lab, where it holds any code that I want to test or experiment with before actually implementing it into my app.
 
-## Frontend Structure
+### Frontend
 - `public/` folder: Contains several files:
     - `index.html`: The main HTML file.
     - `additionalComments.md`: Contains additional comments about the project.
